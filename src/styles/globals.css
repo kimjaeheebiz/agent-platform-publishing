@@ -1,0 +1,6 @@
+@import '../assets/fonts/pretendard/pretendard.css';
+
+.page-title {
+    font-weight: 700;
+    text-transform: uppercase;
+}
