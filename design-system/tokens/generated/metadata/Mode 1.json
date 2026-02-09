@@ -1,7 +1,11 @@
 {
   "version": {
     "$type": "text",
-    "$value": "6.1.0"
+    "$value": "V6.1.0"
+  },
+  "version2": {
+    "$type": "text",
+    "$value": "V7.2.1"
   },
   "brandName": {
     "$type": "text",

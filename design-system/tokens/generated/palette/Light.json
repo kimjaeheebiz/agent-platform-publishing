@@ -1,37 +1,79 @@
 {
   "text": {
     "primary": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_FILLS",
+          "STROKE_COLOR"
+        ]
+      },
       "$type": "color",
-      "$value": "#000000de",
+      "$value": "{grey.900}",
       "$description": "Reflects the text.primary variable from the theme object"
     },
     "secondary": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_FILLS",
+          "STROKE_COLOR"
+        ]
+      },
       "$type": "color",
       "$value": "#00000099",
       "$description": "Reflects the text.secondary variable from the theme object"
     },
     "disabled": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_FILLS",
+          "STROKE_COLOR"
+        ]
+      },
       "$type": "color",
       "$value": "#00000061",
       "$description": "Reflects the text.disabled variable from the theme object"
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0000000a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#00000014",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0000001f",
         "$description": "Used for focus states. The token represents the value of action.focusOpacity (0.12 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0000004d",
         "$description": "Used for focus visible states. The token represents the value of focusVisibleOpacity (0.3 by default) of the main token."
@@ -44,26 +86,55 @@
       "$value": "#0000008f"
     },
     "hover": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FRAME_FILL",
+          "SHAPE_FILL"
+        ]
+      },
       "$type": "color",
       "$value": "#0000000a",
       "$description": "Reflects the action.hover variable from the theme object"
     },
     "selected": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FRAME_FILL",
+          "SHAPE_FILL"
+        ]
+      },
       "$type": "color",
       "$value": "#00000014",
       "$description": "Reflects the action.selected variable from the theme object"
     },
     "disabledBackground": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FRAME_FILL",
+          "SHAPE_FILL"
+        ]
+      },
       "$type": "color",
       "$value": "#0000001f",
       "$description": "Reflects the action.disabledBackground variable from the theme object"
     },
     "focus": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FRAME_FILL",
+          "SHAPE_FILL"
+        ]
+      },
       "$type": "color",
       "$value": "#0000001f",
       "$description": "Reflects the action.focus variable from the theme object"
     },
     "disabled": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "TEXT_FILL"
+        ]
+      },
       "$type": "color",
       "$value": "#00000061",
       "$description": "Reflects the action.disabled variable from the theme object"
@@ -72,34 +143,51 @@
   "error": {
     "main": {
       "$type": "color",
-      "$value": "{red.600}"
+      "$value": "{red.A400}"
     },
     "dark": {
       "$type": "color",
-      "$value": "{red.800}"
+      "$value": "{red.A700}"
     },
     "light": {
       "$type": "color",
-      "$value": "{red.400}"
+      "$value": "{red.A200}"
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#d32f2f0a",
+        "$value": "#ff17440a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#d32f2f14",
+        "$value": "#ff174414",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
         "$type": "color",
-        "$value": "#d32f2f4d"
+        "$value": "#ff17444d"
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
-        "$value": "#d32f2f80",
+        "$value": "#ff174480",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
       }
     },
@@ -111,34 +199,51 @@
   "warning": {
     "main": {
       "$type": "color",
-      "$value": "{orange.600}"
+      "$value": "{colors.hecto.orange.500}"
     },
     "dark": {
       "$type": "color",
-      "$value": "{orange.800}"
+      "$value": "{colors.hecto.orange.700}"
     },
     "light": {
       "$type": "color",
-      "$value": "{orange.300}"
+      "$value": "{colors.hecto.orange.300}"
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#fb8c000a",
+        "$value": "#ff783c0a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#fb8c0014",
+        "$value": "#ff783c14",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
         "$type": "color",
-        "$value": "#fb8c004d"
+        "$value": "#ff783c4d"
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
-        "$value": "#fb8c0080",
+        "$value": "#ff783c80",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
       }
     },
@@ -158,25 +263,48 @@
     },
     "light": {
       "$type": "color",
-      "$value": "{lightBlue.400}"
+      "$value": "{colors.hecto.blue.300}"
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0291fe0a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0291fe14",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0291fe4d",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
         "$value": "#0291fe80",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
@@ -190,15 +318,15 @@
   "success": {
     "main": {
       "$type": "color",
-      "$value": "{green.800}"
+      "$value": "{colors.hecto.green.600}"
     },
     "dark": {
       "$type": "color",
-      "$value": "{green.900}"
+      "$value": "{colors.hecto.green.800}"
     },
     "light": {
       "$type": "color",
-      "$value": "{green.500}"
+      "$value": "{colors.hecto.green.300}"
     },
     "contrastText": {
       "$type": "color",
@@ -206,23 +334,46 @@
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#2e7d320a",
+        "$value": "#00a5670a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#2e7d3214",
+        "$value": "#00a56714",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#2e7d324d",
+        "$value": "#00a5674d",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
-        "$value": "#2e7d3280",
+        "$value": "#00a56780",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
       }
     }
@@ -234,24 +385,53 @@
         "$value": "#ffffff"
       },
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#ffffff0a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#ffffff14",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#ffffff1f"
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#ffffff4d"
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
         "$value": "#ffffff80",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
@@ -263,25 +443,54 @@
         "$value": "#000000"
       },
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0000000a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#00000014",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0000001f"
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#0000004d",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
         "$value": "#00000080",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
@@ -290,137 +499,289 @@
   },
   "background": {
     "default": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_FILLS",
+          "STROKE_COLOR"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.default variable from the theme object"
     },
     "paper-elevation-0": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-1": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-2": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-3": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-4": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-5": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-6": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-7": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-8": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-9": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-10": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-11": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-12": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-13": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-14": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-15": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-16": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-17": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-18": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-19": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-20": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-21": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-22": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-23": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
     },
     "paper-elevation-24": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the background.paper variable from the theme object"
+    },
+    "paper": {
+      "$type": "color",
+      "$value": "{_components.paper.elevation-0}"
+    },
+    "defaultLightgray": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_FILLS",
+          "STROKE_COLOR"
+        ]
+      },
+      "$type": "color",
+      "$value": "{colors.hecto.grey.50}",
+      "$description": "Reflects the background.default variable from the theme object"
     }
   },
   "divider": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "SHAPE_FILL",
+        "STROKE_COLOR"
+      ]
+    },
     "$type": "color",
     "$value": "#0000001f",
     "$description": "Reflects the divider variable from the theme object"
@@ -477,7 +838,7 @@
     "switch": {
       "knobFillEnabled": {
         "$type": "color",
-        "$value": "{grey.50}"
+        "$value": "{colors.hecto.grey.50}"
       },
       "slideFill": {
         "$type": "color",
@@ -485,7 +846,7 @@
       },
       "knowFillDisabled": {
         "$type": "color",
-        "$value": "{grey.100}"
+        "$value": "{colors.hecto.grey.100}"
       }
     },
     "chip": {
@@ -499,7 +860,7 @@
       },
       "defaultEnabledBorder": {
         "$type": "color",
-        "$value": "{grey.400}"
+        "$value": "{colors.hecto.grey.400}"
       },
       "defaultFocusFill": {
         "$type": "color",
@@ -521,13 +882,17 @@
     "appBar": {
       "defaultFill": {
         "$type": "color",
-        "$value": "{grey.100}"
+        "$value": "{colors.hecto.grey.100}"
+      },
+      "darkFill": {
+        "$type": "color",
+        "$value": "{grey.900}"
       }
     },
     "breadcrumbs": {
       "collapseFill": {
         "$type": "color",
-        "$value": "{grey.100}"
+        "$value": "{colors.hecto.grey.100}"
       }
     },
     "alert": {
@@ -575,7 +940,7 @@
     "stepper": {
       "connector": {
         "$type": "color",
-        "$value": "{grey.400}"
+        "$value": "{colors.hecto.grey.400}"
       }
     },
     "snackbar": {
@@ -583,10 +948,308 @@
         "$type": "color",
         "$value": "#323232"
       }
+    },
+    "paper": {
+      "elevation-0": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL",
+            "STROKE_COLOR"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-1": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-2": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-3": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-4": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-5": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-6": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-7": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-8": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-9": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-10": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-11": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-12": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-13": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-14": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-15": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-16": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-17": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-18": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-19": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-20": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-21": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-22": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-23": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "elevation-24": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "#ffffff",
+        "$description": "Reflects the background.paper variable from the theme object"
+      },
+      "outlineBorder": {
+        "$type": "color",
+        "$value": "{divider}"
+      },
+      "elevation-24-grey": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
+        "$type": "color",
+        "$value": "{background.defaultLightgray}",
+        "$description": "Reflects the background.paper variable from the theme object"
+      }
     }
   },
   "elevation": {
     "outlined": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#e0e0e0"
     }
@@ -594,23 +1257,23 @@
   "_native": {
     "scrollbar-bg": {
       "$type": "color",
-      "$value": "{grey.200}"
+      "$value": "{colors.hecto.grey.200}"
     }
   },
   "primary": {
     "main": {
       "$type": "color",
-      "$value": "{colors.hecto.orange.500}",
+      "$value": "{deepPurple.A400}",
       "$description": "Reflects the primary.main variable from the theme object"
     },
     "dark": {
       "$type": "color",
-      "$value": "{colors.hecto.orange.700}",
+      "$value": "{deepPurple.A700}",
       "$description": "Used for hover states. Reflects the primary.dark variable from the theme object"
     },
     "light": {
       "$type": "color",
-      "$value": "{colors.hecto.orange.300}",
+      "$value": "{deepPurple.A100}",
       "$description": "Reflects the primary.light variable from the theme object"
     },
     "contrastText": {
@@ -620,27 +1283,50 @@
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#ff61140a",
+        "$value": "#7c4dff0a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#ff611414",
+        "$value": "#7c4dff14",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#ff61141f",
+        "$value": "#7c4dff29",
         "$description": "Used for focus states. The token represents the value of action.focusOpacity (0.12 by default) of the main token."
       },
       "focusVisible": {
         "$type": "color",
-        "$value": "#ff61144d"
+        "$value": "#7c4dff4d"
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
-        "$value": "#ff611480",
+        "$value": "#7c4dff80",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
       }
     }
@@ -648,11 +1334,11 @@
   "secondary": {
     "main": {
       "$type": "color",
-      "$value": "{colors.hecto.grey.800}"
+      "$value": "{grey.900}"
     },
     "dark": {
       "$type": "color",
-      "$value": "{colors.hecto.grey.900}"
+      "$value": "#000000"
     },
     "light": {
       "$type": "color",
@@ -664,27 +1350,50 @@
     },
     "_states": {
       "hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#2626260a",
+        "$value": "#1212120a",
         "$description": "Used for hover states. The token represents the value of action.hoverOpacity (0.04 by default) of the main token."
       },
       "selected": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#26262614",
+        "$value": "#12121214",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
-        "$value": "#2626261f",
+        "$value": "#1212121f",
         "$description": "Used for focus states. The token represents the value of action.focusOpacity (0.12 by default) of the main token."
       },
       "focusVisible": {
         "$type": "color",
-        "$value": "#2626264d"
+        "$value": "#1212124d"
       },
       "outlinedBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
-        "$value": "#26262680",
+        "$value": "#12121280",
         "$description": "Used for enabled states (e.g Button outlined variant). The token represents the value of outlinedBorderOpacity (0.5 by default) of the main token."
       }
     }

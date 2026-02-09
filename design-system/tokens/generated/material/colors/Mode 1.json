@@ -38,7 +38,7 @@
     },
     "900": {
       "$type": "color",
-      "$value": "#212121"
+      "$value": "#121212"
     },
     "A100": {
       "$type": "color",
@@ -506,7 +506,7 @@
     },
     "A100": {
       "$type": "color",
-      "$value": "#b388ff"
+      "$value": "#a288ff"
     },
     "A200": {
       "$type": "color",

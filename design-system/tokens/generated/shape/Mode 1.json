@@ -1,10 +1,18 @@
 {
   "borderRadius": {
     "$type": "number",
-    "$value": "4"
+    "$value": 4
   },
   "none": {
     "$type": "number",
-    "$value": "0"
+    "$value": 0
+  },
+  "borderRadiusMd": {
+    "$type": "number",
+    "$value": 8
+  },
+  "borderRadiusLg": {
+    "$type": "number",
+    "$value": 16
   }
 }
