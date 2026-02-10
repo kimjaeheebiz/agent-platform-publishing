@@ -420,7 +420,7 @@ function extractPaletteColor(
         light: colorGroup.light?.$value ? resolveColorRef(colorGroup.light.$value) : undefined,
         main: colorGroup.main?.$value ? resolveColorRef(colorGroup.main.$value) : undefined,
         dark: colorGroup.dark?.$value ? resolveColorRef(colorGroup.dark.$value) : undefined,
-        contrastText: colorGroup.contrastText?.$value,
+        contrastText: colorGroup.contrastText?.$value ? resolveColorRef(colorGroup.contrastText.$value) : undefined,
     };
 }
 

@@ -1844,15 +1844,15 @@
     "mode": "dark",
     "primary": {
       "light": "#ede7f6",
-      "main": "#a288ff",
+      "main": "#b388ff",
       "dark": "#4a148c",
-      "contrastText": "{grey.900}"
+      "contrastText": "#212121"
     },
     "secondary": {
       "light": "#ffffff",
       "main": "#ffffff",
       "dark": "#d9d9d9",
-      "contrastText": "{grey.900}"
+      "contrastText": "#212121"
     },
     "error": {
       "light": "#ff8a80",
@@ -1864,19 +1864,19 @@
       "light": "#ffcebb",
       "main": "#ff783c",
       "dark": "#f45c0f",
-      "contrastText": "{grey.900}"
+      "contrastText": "#212121"
     },
     "info": {
       "light": "#8dc8ff",
       "main": "#36a1ff",
       "dark": "#0e83ef",
-      "contrastText": "{grey.900}"
+      "contrastText": "#212121"
     },
     "success": {
       "light": "#7cdab9",
       "main": "#00c087",
       "dark": "#009259",
-      "contrastText": "{grey.900}"
+      "contrastText": "#212121"
     },
     "text": {
       "primary": "#ffffff",
@@ -1884,7 +1884,7 @@
       "disabled": "#ffffff61"
     },
     "background": {
-      "default": "#121212",
+      "default": "#212121",
       "paper": "#121212"
     },
     "action": {

@@ -1843,14 +1843,14 @@
   "palette": {
     "mode": "light",
     "primary": {
-      "light": "#a288ff",
+      "light": "#b388ff",
       "main": "#651fff",
       "dark": "#6200ea",
       "contrastText": "#ffffff"
     },
     "secondary": {
       "light": "#555555",
-      "main": "#121212",
+      "main": "#212121",
       "dark": "#000000",
       "contrastText": "#ffffff"
     },
@@ -1879,7 +1879,7 @@
       "contrastText": "#ffffff"
     },
     "text": {
-      "primary": "#121212",
+      "primary": "#212121",
       "secondary": "#00000099",
       "disabled": "#00000061"
     },
