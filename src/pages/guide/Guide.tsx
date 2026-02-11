@@ -1,5 +1,5 @@
 import React from 'react';
-import { orange, grey, blue, indigo, green, red } from '@mui/material/colors';
+import { deepPurple, grey, blue, indigo, green, red } from '@mui/material/colors';
 import {
     Box,
     Stack,
@@ -149,7 +149,6 @@ export const Guide = () => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, p: 3 }}>
             <GlobalStyles styles={{ '.section': { scrollMarginTop: 70 } }} />
-
             {/* 섹션 이동 메뉴 */}
             <Tabs
                 value={activeSection}
@@ -173,7 +172,6 @@ export const Guide = () => {
                     <Tab key={section.id} value={section.id} label={section.label} />
                 ))}
             </Tabs>
-
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {/* Colors */}
                 <Box component="section" className="section" id="sectionColors">
@@ -191,7 +189,7 @@ export const Guide = () => {
                     </Stack>
                     <Grid container spacing={2} sx={{ mb: 5 }}>
                         {(['primary', 'secondary', 'info', 'success', 'error', 'warning'] as const).map((colorName) => (
-                            <Grid item key={colorName}>
+                            <Grid key={colorName} size={2}>
                                 <Typography variant="caption" sx={{ mb: 0.5 }}>
                                     {colorName}
                                 </Typography>
@@ -231,7 +229,9 @@ export const Guide = () => {
                             </Stack>
                             <Grid container spacing={1} sx={{ mb: 5 }}>
                                 {getColorNamesForGroup(groupName).map((colorName) => (
-                                    <Grid item xs={12} xl={4} key={colorName}>
+                                    <Grid
+                                        key={colorName}
+                                        size={{ xs: 12, xl: 4 }}>
                                         <Typography variant="caption">{colorName}</Typography>
                                         <Stack direction="row" flexWrap="wrap">
                                             {getShadesForColor(groupName, colorName).map((shade) => (
@@ -269,7 +269,7 @@ export const Guide = () => {
                     <Grid container spacing={1} sx={{ mb: 3 }}>
                         {(
                             [
-                                ['orange', orange],
+                                ['deeppurple', deepPurple],
                                 ['blue', blue],
                                 ['indigo', indigo],
                                 ['green', green],
@@ -277,7 +277,12 @@ export const Guide = () => {
                                 ['grey', grey],
                             ] as const
                         ).map(([colorName, colorPalette]) => (
-                            <Grid item xs={12} xl={4} key={colorName}>
+                            <Grid
+                                key={colorName}
+                                size={{
+                                    xs: 12,
+                                    xl: 4
+                                }}>
                                 <Typography variant="caption" sx={{ mb: 0.5 }}>
                                     {colorName}
                                 </Typography>
@@ -370,6 +375,42 @@ export const Guide = () => {
                             }}
                         >
                             <Typography variant="subtitle2">green[500]</Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                p: 1,
+                                bgcolor: deepPurple['A100'],
+                                color: 'white',
+                            }}
+                        >
+                            <Typography variant="subtitle2">deepPurple['A100']</Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                p: 1,
+                                bgcolor: deepPurple['A200'],
+                                color: 'white',
+                            }}
+                        >
+                            <Typography variant="subtitle2">deepPurple['A200']</Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                p: 1,
+                                bgcolor: deepPurple['A400'],
+                                color: 'white',
+                            }}
+                        >
+                            <Typography variant="subtitle2">deepPurple['A400']</Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                p: 1,
+                                bgcolor: deepPurple['A700'],
+                                color: 'white',
+                            }}
+                        >
+                            <Typography variant="subtitle2">deepPurple['A700']</Typography>
                         </Box>
                     </Stack>
                 </Box>
@@ -529,19 +570,19 @@ export const Guide = () => {
                         Form
                     </Typography>
                     <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField label="Standard" variant="standard" fullWidth />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField label="Filled" variant="filled" fullWidth />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField label="Outlined" variant="outlined" fullWidth />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField label="With Helper Text" helperText="Some important text" fullWidth />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField
                                 label="With Icon"
                                 InputProps={{
@@ -554,7 +595,7 @@ export const Guide = () => {
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControl fullWidth>
                                 <InputLabel id="basicSelectLabel">Select</InputLabel>
                                 <Select
@@ -569,13 +610,13 @@ export const Guide = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControlLabel
                                 control={<Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)} />}
                                 label="Checkbox"
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -586,7 +627,7 @@ export const Guide = () => {
                                 label="Switch"
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControl fullWidth>
                                 <FormLabel>Radio Group</FormLabel>
                                 <RadioGroup value={radioValue} onChange={(e) => setRadioValue(e.target.value)}>
@@ -602,13 +643,13 @@ export const Guide = () => {
                         Sizes
                     </Typography>
                     <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField label="TextField Small" size="small" fullWidth />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <TextField label="TextField Medium" size="medium" fullWidth />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControl fullWidth size="small">
                                 <InputLabel id="sizeSmallLabel">Select Small</InputLabel>
                                 <Select
@@ -623,7 +664,7 @@ export const Guide = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControl fullWidth size="medium">
                                 <InputLabel id="sizeMediumLabel">Select Medium</InputLabel>
                                 <Select
@@ -638,7 +679,7 @@ export const Guide = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -650,13 +691,13 @@ export const Guide = () => {
                                 label="Checkbox (Small)"
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControlLabel
                                 control={<Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)} />}
                                 label="Checkbox (Medium)"
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -668,7 +709,7 @@ export const Guide = () => {
                                 label="Switch (Small)"
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -679,7 +720,7 @@ export const Guide = () => {
                                 label="Switch (Medium)"
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <FormControl>
                                 <FormLabel>Radio Group (Small vs Medium)</FormLabel>
                                 <RadioGroup row value={radioValue} onChange={(e) => setRadioValue(e.target.value)}>
@@ -901,19 +942,19 @@ export const Guide = () => {
                         Alerts
                     </Typography>
                     <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <Alert severity="error">This is an error alert!</Alert>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <Alert severity="warning">This is a warning alert!</Alert>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <Alert severity="info">This is an info alert!</Alert>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <Alert severity="success">This is a success alert!</Alert>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <Alert severity="error">
                                 <AlertTitle>Error</AlertTitle>
                                 This is an error alert with title!

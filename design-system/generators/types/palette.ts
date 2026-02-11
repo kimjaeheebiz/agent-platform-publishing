@@ -1,7 +1,15 @@
 /**
  * MUI Palette 타입 정의
+ * 토큰 소스(palette/Light.json 등)의 구조 타입
+ * 
+ * 역할: Figma/Tokens Studio에서 내보낸 palette JSON이 어떤 키 구조로 오는지 정의
  *
- * Material-UI 테마의 palette 구조를 위한 타입
+ * 흐름:
+ * 1. MUI: createTheme()에 넘긴 palette 키만 덮어쓰고, 나머지는 기본값 유지
+ * 2. 토큰: design-system/tokens/generated/palette/Light.json 에서 primary, info, text 등 정의
+ * 3. to-mui-theme: 이 타입으로 토큰을 읽어 → MUI가 기대하는 형태로 변환 → theme.*.json 생성
+ * 4. 앱: createTheme(theme.light.json) → 토큰으로 덮어쓴 palette만 반영, 나머지는 MUI 기본
+ *
  * @see https://mui.com/material-ui/customization/palette/
  */
 
@@ -15,6 +23,18 @@ export interface PaletteColorGroup {
     main?: ColorToken;
     dark?: ColorToken;
     contrastText?: ColorToken;
+    _states?: PaletteStatesGroup;
+}
+
+/**
+ * 시맨틱 상태 색상 (hover, selected 등)
+ */
+export interface PaletteStatesGroup {
+    hover?: ColorToken;
+    selected?: ColorToken;
+    focus?: ColorToken;
+    focusVisible?: ColorToken;
+    outlinedBorder?: ColorToken;
 }
 
 /**

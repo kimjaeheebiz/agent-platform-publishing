@@ -1560,9 +1560,14 @@ export class FigmaDesignExtractor {
                     } else {
                         // 진실 소스가 없으면 HEX 색상 사용 (추측 금지)
                         if (!isAvatarComponent) {
-                            properties.colorStyle = colorInfo.color;
+                            properties.backgroundColor = colorInfo.color;
+                            console.warn(`⚠️ 변수 ID 매핑 없음(배경): ${fillObj.boundVariables?.color?.id} → HEX fallback`);
                         }
-                        console.log(`🎨 진실 소스 없음: "${node.characters}" HEX 색상 사용: ${colorInfo.color}`);
+                    }
+                } else {
+                    if (!isAvatarComponent) {
+                        properties.backgroundColor = colorInfo.color;
+                        console.warn(`⚠️ boundVariables 없음 → HEX fallback`);
                     }
                 }
             }
@@ -1606,11 +1611,10 @@ export class FigmaDesignExtractor {
                     }
                     console.log(`🎨 텍스트 노드 "${node.characters}" fills에서 스타일 컬러 발견: ${colorInfo.styleName}`);
                 } else {
-                    // 진실 소스가 없으면 HEX 색상 사용 (추측 금지)
                     if (!isAvatarComponent) {
-                        properties.colorStyle = colorInfo.color;
+                        properties.backgroundColor = colorInfo.color;
+                        console.warn(`⚠️ 텍스트 색 변수 매핑 없음: "${node.characters}" → HEX fallback`);
                     }
-                    console.log(`🎨 진실 소스 없음: "${node.characters}" HEX 색상 사용: ${colorInfo.color}`);
                 }
             }
         } else if (node.children) {
@@ -1685,17 +1689,16 @@ export class FigmaDesignExtractor {
                                     }
                                     console.log(`🎨 GPT-5 방식: Variable ID ${variableId} → ${muiColorPath}`);
                                 } else {
-                                    // 진실 소스가 없으면 HEX 색상 사용 (추측 금지)
                                     if (!isAvatarComponent) {
-                                        properties.colorStyle = colorInfo.color;
+                                        properties.backgroundColor = colorInfo.color;
+                                        console.warn(`⚠️ 변수 ID 매핑 없음(텍스트): "${child.characters}" → HEX fallback`);
                                     }
-                                    console.log(`🎨 진실 소스 없음: "${child.characters}" HEX 색상 사용: ${colorInfo.color}`);
                                 }
                             } else {
                                 if (!isAvatarComponent) {
-                                    properties.colorStyle = colorInfo.color;
+                                    properties.backgroundColor = colorInfo.color;
+                                    console.warn(`⚠️ boundVariables 없음(텍스트): "${child.characters}" → HEX fallback`);
                                 }
-                                console.log(`🎨 텍스트 "${child.characters}" HEX 색상 사용: ${colorInfo.color}`);
                             }
                         }
                     }
@@ -1734,25 +1737,51 @@ export class FigmaDesignExtractor {
                 properties.alignItems = this.mapAlignment(node.counterAxisAlignItems);
             }
 
-            // 패딩
+            // 패딩: boundVariables 있으면 변수 ID → 테마 토큰, 없으면 숫자(나중에 generator에서 theme.spacing으로 변환)
+            const layoutBound = (node as { boundVariables?: Record<string, { id: string }> }).boundVariables;
             if (
                 node.paddingLeft !== undefined ||
                 node.paddingRight !== undefined ||
                 node.paddingTop !== undefined ||
                 node.paddingBottom !== undefined
             ) {
-                properties.padding = {
-                    left: node.paddingLeft || 0,
-                    right: node.paddingRight || 0,
-                    top: node.paddingTop || 0,
-                    bottom: node.paddingBottom || 0,
-                };
+                if (layoutBound?.paddingLeft?.id || layoutBound?.paddingRight?.id || layoutBound?.paddingTop?.id || layoutBound?.paddingBottom?.id) {
+                    const paddingStyle: { left?: string; right?: string; top?: string; bottom?: string } = {};
+                    for (const key of ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'] as const) {
+                        const id = layoutBound?.[key]?.id;
+                        if (id) {
+                            const token = await this.extractThemeTokenFromVariableId(id);
+                            if (token) {
+                                const k = key.replace('padding', '').toLowerCase() as 'left' | 'right' | 'top' | 'bottom';
+                                paddingStyle[k] = token;
+                            }
+                        }
+                    }
+                    if (Object.keys(paddingStyle).length) (properties as any).paddingStyle = paddingStyle;
+                }
+                if (!(properties as any).paddingStyle) {
+                    properties.padding = {
+                        left: node.paddingLeft || 0,
+                        right: node.paddingRight || 0,
+                        top: node.paddingTop || 0,
+                        bottom: node.paddingBottom || 0,
+                    };
+                }
             }
 
-            // 간격
-            if (node.itemSpacing !== undefined) {
+            // 간격: boundVariables.itemSpacing 있으면 변수 ID → 테마 토큰
+            if (layoutBound?.itemSpacing?.id) {
+                const gapToken = await this.extractThemeTokenFromVariableId(layoutBound.itemSpacing.id);
+                if (gapToken) (properties as any).gapStyle = gapToken;
+            }
+            if (node.itemSpacing !== undefined && !(properties as any).gapStyle) {
                 properties.gap = node.itemSpacing;
             }
+            // Grid auto-layout: 행/열 간격 (gridRowGap, gridColumnGap 있으면 사용)
+            const gridRowGap = (node as { gridRowGap?: number }).gridRowGap;
+            const gridColumnGap = (node as { gridColumnGap?: number }).gridColumnGap;
+            if (gridRowGap !== undefined) (properties as { rowSpacing?: number }).rowSpacing = gridRowGap;
+            if (gridColumnGap !== undefined) (properties as { columnSpacing?: number }).columnSpacing = gridColumnGap;
         }
 
         // Avatar의 배경 컬러는 인스턴스 자신(node.fills[0])의 변수명만 사용 (자식 탐색 금지)

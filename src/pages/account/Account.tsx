@@ -30,24 +30,30 @@ export const Account: React.FC = () => {
             <Stack direction="row" spacing={3}>
                 <Paper
                     sx={{
-                        backgroundColor: '#6200eaff',
+                        backgroundColor: 'primary.dark',
                         borderRadius: '4px',
                     }}
                 >
-                    <Avatar sx={{ width: '80px', height: '80px' }}>
+                    <Avatar
+                        sx={{
+                            width: '80px',
+                            height: '80px',
+                            backgroundColor: 'common.white_states.main',
+                        }}
+                    >
                         <Person />
                     </Avatar>
                     <Stack
-                        spacing={4}
+                        spacing={5}
                         alignItems="center"
                         sx={{
-                            alignItems: 'center',
+                            backgroundColor: '#ffffffff',
                         }}
                     >
                         <Typography
                             variant="h5"
                             sx={{
-                                color: '#ffffffff',
+                                color: 'common.white_states.main',
                             }}
                         >
                             홍길동
@@ -55,7 +61,7 @@ export const Account: React.FC = () => {
                         <Typography
                             variant="body2"
                             sx={{
-                                color: '#ffffffff',
+                                color: 'common.white_states.main',
                             }}
                         >
                             honggildong@hecto.co.kr
@@ -66,7 +72,7 @@ export const Account: React.FC = () => {
                         color="secondary"
                         size="small"
                         sx={{
-                            backgroundColor: '#121212ff',
+                            backgroundColor: 'secondary.main',
                             borderRadius: '100px',
                         }}
                         label="OP"
@@ -80,7 +86,7 @@ export const Account: React.FC = () => {
                         borderRadius: '4px',
                     }}
                 >
-                    <CardHeader title="계정 정보" subheader="{Subheader}" />
+                    <CardHeader title="계정 정보" subheader="{Subheader}" hasAction />
                     <CardContent>
                         <Stack spacing={4}>
                             <Stack spacing={2}>
@@ -99,16 +105,16 @@ export const Account: React.FC = () => {
                                 <Stack>
                                     <Stack direction="row">
                                         <Stack
-                                            spacing={4}
+                                            spacing={5}
                                             sx={{
-                                                backgroundColor: '#121212ff',
+                                                backgroundColor: 'text.primary',
                                             }}
                                         >
                                             <Typography
                                                 variant="body2"
                                                 sx={{
                                                     flex: 1,
-                                                    color: '#000000ff',
+                                                    color: 'text.secondary',
                                                 }}
                                             >
                                                 최소 8자 이상, 대문자, 소문자, 특수문자를 각각 1개
@@ -119,6 +125,7 @@ export const Account: React.FC = () => {
                                             spacing={3}
                                             sx={{
                                                 height: '12px',
+                                                backgroundColor: '#ffffffff',
                                             }}
                                         >
                                             <Stack></Stack>

@@ -8,55 +8,55 @@ const HomeContent = () => {
     return (
         <Box sx={{ minHeight: '100%', p: 3, gap: 3 }}>
             <Grid container spacing={2} sx={{ minHeight: '100%' }}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h5" component="h3" gutterBottom>
-                                Project
+                                에이전트
                             </Typography>
                             <Typography sx={{ mb: 2 }}>프로젝트별 워크플로우 관리 및 실행</Typography>
                             <Button
                                 variant="contained"
                                 endIcon={<ArrowForward />}
-                                onClick={() => navigate('/project/project1')}
+                                onClick={() => navigate('/project/project1/agent')}
                             >
-                                Project 1
+                                에이전트
                             </Button>
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h5" component="h3" gutterBottom>
-                                Users
+                                계정 정보
                             </Typography>
-                            <Typography sx={{ mb: 2 }}>사용자 관리</Typography>
-                            <Button variant="contained" endIcon={<ArrowForward />} onClick={() => navigate('/users')}>
-                                Users
+                            <Typography sx={{ mb: 2 }}>계정 정보</Typography>
+                            <Button variant="contained" endIcon={<ArrowForward />} onClick={() => navigate('/account')}>
+                                계정 정보
                             </Button>
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h5" component="h3" gutterBottom>
-                                UI Components
+                                컴포넌트 안내
                             </Typography>
                             <Typography sx={{ mb: 2 }}>주요 컴포넌트 참고</Typography>
                             <Button
                                 variant="contained"
                                 color="secondary"
                                 endIcon={<ArrowForward />}
-                                onClick={() => navigate('/components')}
+                                onClick={() => navigate('/guide')}
                             >
-                                Components
+                                컴포넌트 안내
                             </Button>
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h5" component="h3" gutterBottom>

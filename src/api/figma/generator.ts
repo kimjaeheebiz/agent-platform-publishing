@@ -128,11 +128,11 @@ ${typographyStyles}
     layout: {
         container: {
             maxWidth: '${layout.container?.maxWidth || '1200px'}',
-            padding: '${layout.container?.padding || '16px'}'
+            padding: ${this.parsePaddingToTheme(layout.container?.padding)}
         },
         grid: {
             columns: ${layout.grid?.columns || 12},
-            gap: '${layout.grid?.gap || '16px'}'
+            gap: ${this.parsePaddingToTheme(layout.grid?.gap)}
         }
     }
 };`;
@@ -152,16 +152,23 @@ ${typographyStyles}
     ): string {
         const jsxElements = components.map((component) => this.generateComponentJSX(component)).join('\n        ');
 
+        const gapVal = layout.spacing != null ? this.mapSpacingToVariable(layout.spacing) : '0';
+        const padVal = layout.padding
+            ? (() => {
+                const t = this.mapSpacingToVariable(layout.padding!.top);
+                const r = this.mapSpacingToVariable(layout.padding!.right);
+                const b = this.mapSpacingToVariable(layout.padding!.bottom);
+                const l = this.mapSpacingToVariable(layout.padding!.left);
+                return t === r && r === b && b === l ? `p: ${t}` : `p: [${t}, ${r}, ${b}, ${l}]`;
+            })()
+            : 'p: 0';
         return `export const ${componentName} = () => {
     return (
         <Box sx={{
             display: '${layout.containerType}',
             flexDirection: '${layout.direction}',
-            gap: ${layout.spacing},
-            padding: ${layout.padding
-                ? `${layout.padding.top}px ${layout.padding.right}px ${layout.padding.bottom}px ${layout.padding.left}px`
-                : '0px'
-            }
+            gap: ${gapVal},
+            ${padVal}
         }}>
             ${jsxElements}
         </Box>
@@ -212,9 +219,25 @@ ${typographyStyles}
         const isTableCellComponent = componentName === '<TableCell>' || componentName === 'TableCell';
         const shouldRenderChildren = (componentType === 'layout' || componentType === 'card' || componentType === 'table' || isCardSubComponent || isTableSubComponent) && children && children.length > 0;
 
+        const isGridContainer =
+            mapping?.muiName === 'Grid' &&
+            (componentName === 'Grid' || componentName === '<Grid>') &&
+            shouldRenderChildren;
+
         let content = '';
         if (shouldRenderChildren) {
-            content = children.map(child => this.generateComponentJSX(child)).join('\n        ');
+            if (isGridContainer) {
+                const layoutColumns = (properties as { layoutColumns?: number }).layoutColumns ?? 2;
+                const itemSize = Math.floor(12 / layoutColumns);
+                content = children
+                    .map(
+                        (child) =>
+                            `<Grid size={${itemSize}}>\n            ${this.generateComponentJSX(child)}\n        </Grid>`,
+                    )
+                    .join('\n        ');
+            } else {
+                content = children.map((child) => this.generateComponentJSX(child)).join('\n        ');
+            }
         } else {
             content = this.generateComponentContent(componentType, componentName, properties);
         }
@@ -266,6 +289,8 @@ ${typographyStyles}
 
         // ✅ Table 관련 컴포넌트 예외 처리
         // Table, TableHead, TableBody, TableRow, TableCell은 피그마와 개발 코드의 UI 스타일 구성 방식이 상이해 sx 속성 제거
+        const isGrid = mapping?.muiName === 'Grid';
+
         const isTableComponent = componentType === 'table' && (
             componentName === '<Table>' ||
             componentName === '<TableHead>' ||
@@ -287,8 +312,8 @@ ${typographyStyles}
 
         const sxProps: string[] = [];
 
-        // layout 타입인 경우 Auto Layout 속성 추가
-        if (componentType === 'layout') {
+        // layout 타입인 경우 Auto Layout 속성 추가 (Grid는 prop으로 처리하므로 sx 제외)
+        if (componentType === 'layout' && !isGrid) {
             // display: flex - Stack인 경우 제외 (기본값이므로 불필요)
             if (properties.display && !isStack) {
                 sxProps.push(`display: '${properties.display}'`);
@@ -309,19 +334,42 @@ ${typographyStyles}
                 sxProps.push(`alignItems: '${properties.alignItems}'`);
             }
 
-            // gap - Stack인 경우 제외 (spacing prop으로 처리)
-            if (properties.gap && !isStack) {
-                const gapValue = this.mapSpacingToVariable(properties.gap);
-                sxProps.push(`gap: ${gapValue}`);
+            // gap - 테마 토큰(gapStyle) 우선, 없으면 숫자를 theme.spacing으로 변환. px 하드코딩 없음.
+            const gapStyle = (properties as { gapStyle?: string }).gapStyle;
+            if (gapStyle !== undefined && !isStack) {
+                const n = this.spacingTokenToNumber(gapStyle);
+                sxProps.push(`gap: ${n}`);
+            } else if (properties.gap && !isStack) {
+                sxProps.push(`gap: ${this.mapSpacingToVariable(properties.gap)}`);
             }
 
-            // padding
-            if (properties.padding) {
+            // padding - 테마 토큰(paddingStyle) 우선, 없으면 숫자를 theme.spacing으로 변환. px 하드코딩 없음.
+            const paddingStyle = (properties as { paddingStyle?: { left?: string; right?: string; top?: string; bottom?: string } }).paddingStyle;
+            if (paddingStyle && (paddingStyle.top !== undefined || paddingStyle.right !== undefined || paddingStyle.bottom !== undefined || paddingStyle.left !== undefined)) {
+                const t = this.spacingTokenToNumber(paddingStyle.top ?? '0');
+                const r = this.spacingTokenToNumber(paddingStyle.right ?? '0');
+                const b = this.spacingTokenToNumber(paddingStyle.bottom ?? '0');
+                const l = this.spacingTokenToNumber(paddingStyle.left ?? '0');
+                if (t === r && r === b && b === l) {
+                    sxProps.push(`p: ${t}`);
+                } else {
+                    sxProps.push(`p: [${t}, ${r}, ${b}, ${l}]`);
+                }
+            } else if (properties.padding) {
                 if (typeof properties.padding === 'object') {
                     const { left, right, top, bottom } = properties.padding;
-                    sxProps.push(`padding: '${top}px ${right}px ${bottom}px ${left}px'`);
+                    const t = this.mapSpacingToVariable(top);
+                    const r = this.mapSpacingToVariable(right);
+                    const b = this.mapSpacingToVariable(bottom);
+                    const l = this.mapSpacingToVariable(left);
+                    if (t === r && r === b && b === l) {
+                        sxProps.push(`p: ${t}`);
+                    } else {
+                        sxProps.push(`p: [${t}, ${r}, ${b}, ${l}]`);
+                    }
                 } else {
-                    sxProps.push(`padding: '${properties.padding}'`);
+                    const v = this.mapSpacingToVariable(properties.padding);
+                    sxProps.push(`p: ${v}`);
                 }
             }
         }
@@ -352,14 +400,16 @@ ${typographyStyles}
             }
         }
         if (componentType !== 'button' && !excludeList.includes('backgroundColor')) {
-            // 색상 속성 처리 (스타일 이름 우선, 텍스트는 color, 배경은 backgroundColor)
-            if (properties.colorStyle) {
-                // properties.colorStyle은 이미 variable-mapping을 통해 MUI 테마 경로로 변환됨 (예: "primary.light")
-                // 따라서 그대로 사용하면 됨
+            // 색상 속성: 테마 변수명(colorStyle)만 사용, HEX는 backgroundColor로만 fallback
+            if (properties.colorStyle && !/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(properties.colorStyle)) {
+                // 테마 경로: "palette.primary.main" → sx에는 "primary.main" (MUI가 theme에서 해석)
+                const themeColor = properties.colorStyle.startsWith('palette.')
+                    ? properties.colorStyle.replace(/^palette\./, '')
+                    : properties.colorStyle;
                 if (componentType === 'typography') {
-                    sxProps.push(`color: '${properties.colorStyle}'`);
+                    sxProps.push(`color: '${themeColor}'`);
                 } else {
-                    sxProps.push(`backgroundColor: '${properties.colorStyle}'`);
+                    sxProps.push(`backgroundColor: '${themeColor}'`);
                 }
             } else if (properties.backgroundColor && properties.backgroundColor !== 'transparent' && !properties.colorStyle) {
                 // 스타일 이름이 없는 경우 기본 색상 사용
@@ -386,10 +436,12 @@ ${typographyStyles}
         }
         if (properties.opacity) sxProps.push(`opacity: ${properties.opacity}`);
 
-        // gap은 변수 기반으로 처리 (layout 타입이 아닌 경우만)
-        if (properties.gap && componentType !== 'layout') {
-            const gapValue = this.mapSpacingToVariable(properties.gap);
-            sxProps.push(`gap: ${gapValue}`);
+        // gap은 테마 토큰만 사용 (layout 타입이 아닌 경우만). px 하드코딩 없음.
+        const gapStyle = (properties as { gapStyle?: string }).gapStyle;
+        if (gapStyle !== undefined && componentType !== 'layout') {
+            sxProps.push(`gap: ${this.spacingTokenToNumber(gapStyle)}`);
+        } else if (properties.gap && componentType !== 'layout') {
+            sxProps.push(`gap: ${this.mapSpacingToVariable(properties.gap)}`);
         }
 
         // excludeFromSx에 있는 속성들은 sx에서 제외 (layout 타입이 아닌 경우만)
@@ -438,6 +490,9 @@ ${typographyStyles}
             }
             
             for (const [propName, propDef] of Object.entries(muiProps)) {
+                // Grid: layoutColumns는 자식 size 계산용, JSX에는 미출력
+                if (propName === 'layoutColumns') continue;
+
                 const value = transformedProperties[propName];
 
                 // union 타입인 경우 values에 포함된 값만 추가
@@ -448,18 +503,15 @@ ${typographyStyles}
                     const isIncluded = normalizedValues?.includes(normalizedValue as any);
                     
                     if (isIncluded) {
-                    // 기본값인 경우 스킵
+                        // 기본값인 경우 스킵
                         if (propDef.default !== undefined) {
                             const normalizedDefault = typeof propDef.default === 'string' ? propDef.default.toLowerCase() : propDef.default;
-                            if (normalizedValue === normalizedDefault) {
-                        continue;
-                            }
-                    }
-
-                    if (typeof value === 'string') {
-                        props.push(`${propName}="${value}"`);
-                    } else {
-                        props.push(`${propName}={${value}}`);
+                            if (normalizedValue === normalizedDefault) continue;
+                        }
+                        if (typeof value === 'string') {
+                            props.push(`${propName}="${value}"`);
+                        } else {
+                            props.push(`${propName}={${value}}`);
                         }
                     }
                 }
@@ -467,26 +519,32 @@ ${typographyStyles}
                 else if (propDef.type === 'union-number') {
                     if (value !== undefined && value !== null) {
                         const numValue = typeof value === 'number' ? value : parseInt(value as string);
-                        // 기본값인 경우 스킵
-                        if (propDef.default !== undefined && numValue === propDef.default) {
-                            continue;
-                        }
-                        // NaN이거나 유효하지 않은 숫자인 경우 스킵 (예: '자동' 처리 후 undefined)
-                        if (isNaN(numValue)) {
-                            continue;
-                        }
+                        if (propDef.default !== undefined && numValue === propDef.default) continue;
+                        if (isNaN(numValue)) continue;
 
-                        // Stack의 spacing 처리: justifyContent가 space-between이면 spacing 제거
-                        if (componentType === 'layout' && propName === 'spacing') {
-                            const isStack = mapping?.muiName === 'Stack';
-                            if (isStack && transformedProperties.justifyContent === 'space-between') {
-                                // justifyContent가 space-between이면 spacing prop 생성 안 함
+                        // Grid: rowSpacing·columnSpacing 동일하면 spacing 하나만 출력
+                        if (mapping?.muiName === 'Grid' && (propName === 'rowSpacing' || propName === 'columnSpacing')) {
+                            const row = (transformedProperties as { rowSpacing?: number }).rowSpacing;
+                            const col = (transformedProperties as { columnSpacing?: number }).columnSpacing;
+                            const rowNum = row != null ? (typeof row === 'number' ? row : parseInt(String(row), 10)) : undefined;
+                            const colNum = col != null ? (typeof col === 'number' ? col : parseInt(String(col), 10)) : undefined;
+                            if (rowNum != null && colNum != null && rowNum === colNum) {
+                                if (propName === 'columnSpacing') continue;
+                                props.push(`spacing={${this.mapSpacingToVariable(numValue)}}`);
                                 continue;
                             }
-                            const mappedValue = this.mapSpacingToVariable(numValue);
-                            props.push(`${propName}={${mappedValue}}`);
+                        }
+
+                        // Stack: spacing은 테마 토큰(gapStyle) 우선, 없으면 px→theme 변환. justifyContent가 space-between이면 spacing 제거
+                        if (componentType === 'layout' && propName === 'spacing') {
+                            const isStack = mapping?.muiName === 'Stack';
+                            if (isStack && transformedProperties.justifyContent === 'space-between') continue;
+                            const spacingStyle = (transformedProperties as { gapStyle?: string }).gapStyle;
+                            const spacingVal = spacingStyle !== undefined ? this.spacingTokenToNumber(spacingStyle) : this.mapSpacingToVariable(numValue);
+                            props.push(`${propName}={${spacingVal}}`);
                         } else {
-                            props.push(`${propName}={${numValue}}`);
+                            const mapped = (propName === 'spacing' || propName === 'rowSpacing' || propName === 'columnSpacing') ? this.mapSpacingToVariable(numValue) : numValue;
+                            props.push(`${propName}={${mapped}}`);
                         }
                     }
                 }
@@ -497,8 +555,8 @@ ${typographyStyles}
                     if (value === defaultValue) {
                         continue;
                     }
-
-                    props.push(`${propName}={${value}}`);
+                    // true는 prop만 출력 (container={true} → container)
+                    props.push(value === true ? propName : `${propName}={${value}}`);
                 }
                 // string 타입인 경우
                 else if (typeof value === 'string' && propDef.type === 'string') {
@@ -513,6 +571,13 @@ ${typographyStyles}
                     } else {
                     props.push(`${propName}="${value}"`);
                     }
+                }
+                // object 타입 (예: Grid v7 size={{ xs: 12, sm: 6 }})
+                else if (propDef.type === 'object' && value !== undefined && value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                    const entries = Object.entries(value).filter(([, v]) => v !== undefined && v !== null);
+                    if (entries.length === 0) continue;
+                    const objStr = entries.map(([k, v]) => `${k}: ${typeof v === 'string' ? `"${v}"` : v}`).join(', ');
+                    props.push(`${propName}={{{objStr}}}`);
                 }
                 // react-node 타입은 아이콘 컴포넌트로 처리
                 else if (propDef.type === 'react-node') {
@@ -553,9 +618,26 @@ ${typographyStyles}
     }
 
     /**
-     * spacing 값을 변수로 매핑
-     * @param spacingValue spacing 값
-     * @returns 변수 기반 spacing 값
+     * 테마 토큰 경로(예: "1", "2", "05")를 theme.spacing(n) 인자 숫자로 변환
+     */
+    private spacingTokenToNumber(token: string): number {
+        const n = parseInt(token.replace(/[^\d]/g, ''), 10);
+        return Number.isNaN(n) ? 0 : n;
+    }
+
+    /**
+     * 페이지 스타일용: padding/gap 값(문자열 '16px' 또는 숫자)을 theme.spacing 인자로 변환
+     */
+    private parsePaddingToTheme(val: string | number | undefined): string {
+        if (val === undefined) return '2';
+        const num = typeof val === 'string' ? parseInt(val.replace(/[^\d]/g, ''), 10) : val;
+        return this.mapSpacingToVariable(Number.isNaN(num) ? 16 : num);
+    }
+
+    /**
+     * spacing 값을 테마 배수로 매핑 (px → theme.spacing(n)). 하드코딩 px 없음.
+     * @param spacingValue spacing 값 (px 숫자 또는 문자열)
+     * @returns theme.spacing 인자 (문자열 숫자)
      */
     private mapSpacingToVariable(spacingValue: number | string): string {
         const spacingMap: Record<number, number> = {
@@ -739,19 +821,16 @@ import { ${importsList} } from '@mui/material';${iconImportsList}`;
      * @returns 유효한 JavaScript 식별자
      */
     private sanitizePropertyName(name: string): string {
-        return (
-            name
-                // < > 제거
-                .replace(/[<>]/g, '')
-                // 하이픈을 camelCase로 변환
-                .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
-                // 숫자로 시작하는 경우 앞에 문자 추가
-                .replace(/^(\d)/, 'item$1')
-                // 특수문자 제거
-                .replace(/[^a-zA-Z0-9_]/g, '') ||
-            // 빈 문자열인 경우 기본값
-            'item'
-        );
+        return (name
+            // < > 제거
+            .replace(/[<>]/g, '')
+            // 하이픈을 camelCase로 변환
+            .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+            // 숫자로 시작하는 경우 앞에 문자 추가
+            .replace(/^(\d)/, 'item$1')
+            // 특수문자 제거
+            .replace(/[^a-zA-Z0-9_]/g, '') || // 빈 문자열인 경우 기본값
+        'item');
     }
 
     /**

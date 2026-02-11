@@ -14,6 +14,7 @@ export { isTokenValue, hasProperty, asJsonRecord } from './tokens';
 // MUI 팔레트 타입
 export type {
     PaletteColorGroup,
+    PaletteStatesGroup,
     TextColorGroup,
     BackgroundColorGroup,
     ActionColorGroup,

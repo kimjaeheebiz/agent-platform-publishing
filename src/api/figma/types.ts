@@ -26,7 +26,7 @@ export interface FigmaNode {
     effects?: FigmaEffect[];
     characters?: string;
     style?: FigmaTextStyle;
-    layoutMode?: 'NONE' | 'HORIZONTAL' | 'VERTICAL';
+    layoutMode?: 'NONE' | 'HORIZONTAL' | 'VERTICAL' | 'GRID';
     primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
     counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'BASELINE';
     paddingLeft?: number;
@@ -34,6 +34,10 @@ export interface FigmaNode {
     paddingTop?: number;
     paddingBottom?: number;
     itemSpacing?: number;
+    /** Grid auto-layout: row gap (px) */
+    gridRowGap?: number;
+    /** Grid auto-layout: column gap (px) */
+    gridColumnGap?: number;
     layoutWrap?: 'NO_WRAP' | 'WRAP';
     layoutAlign?: 'MIN' | 'CENTER' | 'MAX' | 'STRETCH';
     layoutGrow?: number;
@@ -82,6 +86,10 @@ export interface FigmaFill {
         g: number;
         b: number;
         a: number;
+    };
+    /** REST API: 변수 바인딩 시 variableId 포함 (플러그인/일부 환경에서만 존재할 수 있음) */
+    boundVariables?: {
+        color?: { type: string; id: string };
     };
     gradientStops?: FigmaColorStop[];
     gradientTransform?: FigmaTransform;
@@ -326,6 +334,10 @@ export interface ComponentProperties {
     fontWeight?: number | string;
     color?: string;
     padding?: number | string;
+    /** 테마 토큰 경로 (변수 ID 매핑 결과, 예: "2" → theme.spacing(2)). px 하드코딩 대신 사용 */
+    gapStyle?: string;
+    /** 테마 토큰 경로 per side (변수 ID 매핑 결과). px 하드코딩 대신 사용 */
+    paddingStyle?: { left?: string; right?: string; top?: string; bottom?: string };
     margin?: number | string;
     display?: 'flex' | 'block' | 'inline' | 'inline-block' | 'grid';
     flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse';

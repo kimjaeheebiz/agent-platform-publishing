@@ -49,6 +49,7 @@ export const Agent: React.FC = () => {
                             size="small"
                             sx={{
                                 width: '360px',
+                                backgroundColor: '#ffffffff',
                             }}
                         ></TextField>
                         <Button variant="contained" size="small" startIcon={<Add />}>
@@ -61,7 +62,7 @@ export const Agent: React.FC = () => {
                     elevation={0}
                     variant="outlined"
                     sx={{
-                        backgroundColor: '#ffffffff',
+                        backgroundColor: '_components.paper.elevation-1',
                     }}
                 >
                     <Table size="small">
@@ -89,7 +90,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 이름
@@ -98,7 +99,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             17c5b92ee94c438ead1ef8a613269b76
@@ -111,7 +112,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 설명입니다.
@@ -124,7 +125,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.01.01
@@ -137,7 +138,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -146,7 +147,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -155,20 +156,17 @@ export const Agent: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="OP" />
+                                        <Chip
+                                            sx={{
+                                                backgroundColor: '#ffffffff',
+                                            }}
+                                            label="OP"
+                                        />
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: '#121212ff',
-                                            }}
-                                        >
-                                            Cell
-                                        </Typography>
+                                        <Button>다운로드</Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
@@ -184,7 +182,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 이름
@@ -193,7 +191,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             17c5b92ee94c438ead1ef8a613269b76
@@ -206,7 +204,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 설명입니다.
@@ -219,7 +217,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.01.01
@@ -232,7 +230,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -241,7 +239,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -250,20 +248,17 @@ export const Agent: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="OP" />
+                                        <Chip
+                                            sx={{
+                                                backgroundColor: '#ffffffff',
+                                            }}
+                                            label="OP"
+                                        />
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: '#121212ff',
-                                            }}
-                                        >
-                                            Cell
-                                        </Typography>
+                                        <Button>다운로드</Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
@@ -279,7 +274,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 이름
@@ -288,7 +283,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             17c5b92ee94c438ead1ef8a613269b76
@@ -301,7 +296,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 설명입니다.
@@ -314,7 +309,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.01.01
@@ -327,7 +322,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -336,7 +331,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -345,20 +340,17 @@ export const Agent: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="OP" />
+                                        <Chip
+                                            sx={{
+                                                backgroundColor: '#ffffffff',
+                                            }}
+                                            label="OP"
+                                        />
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: '#121212ff',
-                                            }}
-                                        >
-                                            Cell
-                                        </Typography>
+                                        <Button>다운로드</Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
@@ -374,7 +366,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 이름
@@ -383,7 +375,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             17c5b92ee94c438ead1ef8a613269b76
@@ -396,7 +388,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 설명입니다.
@@ -409,7 +401,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.01.01
@@ -422,7 +414,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -431,7 +423,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -440,20 +432,17 @@ export const Agent: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="OP" />
+                                        <Chip
+                                            sx={{
+                                                backgroundColor: '#ffffffff',
+                                            }}
+                                            label="OP"
+                                        />
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: '#121212ff',
-                                            }}
-                                        >
-                                            Cell
-                                        </Typography>
+                                        <Button>다운로드</Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
@@ -469,7 +458,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 이름
@@ -478,7 +467,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             17c5b92ee94c438ead1ef8a613269b76
@@ -491,7 +480,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             에이전트 설명입니다.
@@ -504,7 +493,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.01.01
@@ -517,7 +506,7 @@ export const Agent: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -526,7 +515,7 @@ export const Agent: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -535,20 +524,17 @@ export const Agent: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="OP" />
+                                        <Chip
+                                            sx={{
+                                                backgroundColor: '#ffffffff',
+                                            }}
+                                            label="OP"
+                                        />
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: '#121212ff',
-                                            }}
-                                        >
-                                            Cell
-                                        </Typography>
+                                        <Button>다운로드</Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>

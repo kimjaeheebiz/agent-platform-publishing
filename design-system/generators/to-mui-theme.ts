@@ -30,6 +30,7 @@ import {
     Json,
     JsonRecord,
     PaletteColorGroup,
+    PaletteStatesGroup,
     TextColorGroup,
     BackgroundColorGroup,
     ActionColorGroup,
@@ -148,18 +149,20 @@ function resolveTokenRef(raw: unknown, ...tokenSources: Json[]): unknown {
 }
 
 /**
- * lineHeight 값을 MUI 형식으로 정규화
- * "150%" → 1.5, "24" → 1.5(기본값), 숫자 → 그대로
+ * lineHeight 값을 테마 변환
+ * - "120%" 등 % 값 → 100으로 나누어 숫자 적용 (120% → 1.2)
+ * - 숫자만 있는 경우(따옴표 있거나 없거나) → "Npx"
  */
-function normalizeLineHeight(value: unknown): number {
-    if (typeof value === 'number') return value;
+function normalizeLineHeight(value: unknown): number | string | undefined {
+    if (value === undefined || value === null) return undefined;
     const s = String(value).trim();
     if (s.endsWith('%')) {
         const n = parseFloat(s);
-        return isFinite(n) ? n / 100 : 1.5;
+        return isFinite(n) ? n / 100 : undefined;
     }
-    const n = parseFloat(s);
-    return isFinite(n) && n > 0 && n < 10 ? n : 1.5; // 배수로 추정
+    const n = typeof value === 'number' ? value : parseFloat(s);
+    if (!isFinite(n)) return undefined;
+    return `${n}px`;
 }
 
 /**
@@ -247,7 +250,7 @@ function readTypographyVariant(
     const fontSizeRaw = resolveTokenRef(v.fontSize, tokensCore, tokensTypos);
     const fontSize = normalizeRem(fontSizeRaw as string | number);
 
-    // lineHeight: {lineHeights.0} → "120%" → 1.2
+    // lineHeight: {lineHeights.0} → "120%" 그대로 / 숫자 → "24px"
     const lineHeightRaw = resolveTokenRef(v.lineHeight, tokensCore, tokensTypos);
     const lineHeight = normalizeLineHeight(lineHeightRaw as string | number);
 
@@ -263,7 +266,8 @@ function readTypographyVariant(
     const textCaseRaw = resolveTokenRef(v.textCase, tokensCore, tokensTypos);
     const textTransform = String(textCaseRaw).toLowerCase() === 'uppercase' ? 'uppercase' : undefined;
 
-    const result: Record<string, unknown> = { fontSize, lineHeight, fontWeight };
+    const result: Record<string, unknown> = { fontSize, fontWeight };
+    if (lineHeight !== undefined) result.lineHeight = lineHeight;
     if (letterSpacing !== undefined && letterSpacing !== 0) result.letterSpacing = letterSpacing;
     if (textTransform) result.textTransform = textTransform;
 
@@ -409,19 +413,40 @@ function resolveColorRef(value: unknown) {
     return value;
 }
 
-// 헬퍼: 색상 그룹에서 값 추출
+// 헬퍼: _states 그룹에서 값 추출 (hover, selected, focusVisible, outlinedBorder, focus)
+function extractPaletteStates(states: unknown): Record<string, string> | undefined {
+    if (!states || typeof states !== 'object') return undefined;
+    const s = states as Record<string, { $value?: string } | undefined>;
+    const out: Record<string, string> = {};
+    const keys = ['hover', 'selected', 'focusVisible', 'outlinedBorder', 'focus'] as const;
+    for (const k of keys) {
+        const token = s[k];
+        if (token && typeof token === 'object' && token.$value) {
+            const v = resolveColorRef(token.$value);
+            if (typeof v === 'string') out[k] = v;
+        }
+    }
+    return Object.keys(out).length ? out : undefined;
+}
+
+// 헬퍼: 색상 그룹에서 값 추출 (light, main, dark, contrastText, _states)
 function extractPaletteColor(
     group: unknown,
-): { light?: unknown; main?: unknown; dark?: unknown; contrastText?: unknown } | undefined {
+): { light?: unknown; main?: unknown; dark?: unknown; contrastText?: unknown; _states?: Record<string, string> } | undefined {
     if (!hasProperty(group, 'main')) return undefined;
 
     const colorGroup = group as PaletteColorGroup;
-    return {
+    const result: Record<string, unknown> = {
         light: colorGroup.light?.$value ? resolveColorRef(colorGroup.light.$value) : undefined,
         main: colorGroup.main?.$value ? resolveColorRef(colorGroup.main.$value) : undefined,
         dark: colorGroup.dark?.$value ? resolveColorRef(colorGroup.dark.$value) : undefined,
         contrastText: colorGroup.contrastText?.$value ? resolveColorRef(colorGroup.contrastText.$value) : undefined,
     };
+    if (hasProperty(colorGroup, '_states')) {
+        const states = extractPaletteStates(colorGroup._states);
+        if (states) result._states = states;
+    }
+    return result as { light?: unknown; main?: unknown; dark?: unknown; contrastText?: unknown; _states?: Record<string, string> };
 }
 
 function buildPalette(mode: 'light' | 'dark') {
@@ -534,7 +559,8 @@ function buildComponentsOverrides(tokensCore: Json, tokensTypos: Json): JsonReco
         const textCaseRaw = resolveTokenRef(token.textCase, tokensCore, tokensTypos);
         const textTransform = String(textCaseRaw).toLowerCase() === 'uppercase' ? 'uppercase' : undefined;
 
-        const result: JsonRecord = { fontSize, lineHeight, fontWeight };
+        const result: JsonRecord = { fontSize, fontWeight };
+        if (lineHeight !== undefined) result.lineHeight = lineHeight;
         if (letterSpacing !== undefined && letterSpacing !== 0) result.letterSpacing = letterSpacing;
         if (textTransform) result.textTransform = textTransform;
         return result;

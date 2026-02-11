@@ -9,6 +9,8 @@ import { loadLibraryVariableMappings } from './library-loader';
 
 /**
  * 변수 매핑 매니저
+ * 변수 ID → 토큰 경로 매핑은 design-system/tokens/generated/$themes.json 의
+ * $figmaVariableReferences 만 사용. 별도 플랫폼 매핑 파일 없음.
  */
 export class VariableMappingManager {
     private cache = new Map<string, VariableMappingInfo>();
@@ -16,18 +18,16 @@ export class VariableMappingManager {
     
     constructor(token: string) {
         this.fetcher = new FigmaVariableFetcher(token);
-        this.loadLibraryMappings(); // 라이브러리 변수 매핑 로드
+        this.loadLibraryMappings();
     }
 
     /**
-     * 라이브러리 파일에서 Variable ID 매핑 로드
+     * $themes.json ($figmaVariableReferences) 에서 Variable ID 매핑 로드
      */
     private loadLibraryMappings(): void {
         const mappings = loadLibraryVariableMappings();
-        
-        // 캐시에 추가 (해시값만 저장)
         for (const [id, info] of mappings.entries()) {
-            const hash = this.extractVariableHash(id);
+            const hash = this.normalizeVariableId(id);
             this.cache.set(hash, info);
         }
     }
@@ -36,39 +36,32 @@ export class VariableMappingManager {
      * Variable ID로 매핑 정보 가져오기 (캐시 우선)
      */
     async getMapping(variableId: string): Promise<VariableMappingInfo | null> {
-        // Variable ID에서 해시값 추출
-        const hash = this.extractVariableHash(variableId);
-        console.log(`🔍 Variable ID에서 해시 추출: ${variableId} → ${hash}`);
-        
-        // 해시값으로 캐시 확인
+        const hash = this.normalizeVariableId(variableId);
         if (this.cache.has(hash)) {
             const mapping = this.cache.get(hash)!;
-            console.log(`✅ 캐시에서 매핑 발견: ${hash} → ${mapping.muiThemePath}`);
+            console.log(`✅ 변수 ID 매핑: ${hash} → ${mapping.muiThemePath}`);
             return mapping;
         }
-        
-        // API에서 가져오기
         const mapping = await this.fetcher.fetchVariableById(variableId);
         if (mapping) {
             this.cache.set(hash, mapping);
+            return mapping;
         }
-        
-        return mapping;
+        console.warn(
+            `⚠️ 변수 ID 매핑 없음 (테마 대신 HEX 적용): rawId="${variableId}" → normalizedHash="${hash}"\n` +
+            `   → $themes.json에 위 hash가 있는지 확인하세요. 플랫폼 Figma 파일이 라이브러리와 동일한 변수 컬렉션을 사용해야 합니다.`
+        );
+        return null;
     }
 
     /**
-     * Variable ID에서 해시값 추출
-     * VariableID:93911b632d.../14026:22 → 93911b632d...
+     * API/export 공통: Variable ID 정규화
+     * VariableID:hash/nodeId → hash  /  hash/nodeId → hash  /  hash → hash
      */
-    private extractVariableHash(variableId: string): string {
-        // VariableID:{hash}/{node_id} 형식
-        const match = variableId.match(/VariableID:(.+?)\//);
-        if (match) {
-            return match[1];
-        }
-        
-        // VariableID:{hash} 형식 (노드 ID 없음)
-        return variableId.replace('VariableID:', '');
+    private normalizeVariableId(variableId: string): string {
+        const withoutPrefix = variableId.replace(/^VariableID:/i, '').trim();
+        const hash = withoutPrefix.includes('/') ? withoutPrefix.split('/')[0].trim() : withoutPrefix;
+        return hash || variableId;
     }
 
     /**

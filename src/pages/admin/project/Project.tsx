@@ -45,7 +45,7 @@ export const Project: React.FC = () => {
                         <Typography
                             variant="body1"
                             sx={{
-                                color: '#121212ff',
+                                color: 'text.primary',
                             }}
                         >
                             총 500건
@@ -56,6 +56,7 @@ export const Project: React.FC = () => {
                             size="small"
                             sx={{
                                 width: '160px',
+                                backgroundColor: '#ffffffff',
                             }}
                         ></Select>
                         <TextField
@@ -63,6 +64,7 @@ export const Project: React.FC = () => {
                             size="small"
                             sx={{
                                 width: '360px',
+                                backgroundColor: '#ffffffff',
                             }}
                         ></TextField>
                         <Button variant="contained" size="small" startIcon={<Add />}>
@@ -72,7 +74,7 @@ export const Project: React.FC = () => {
                 </Stack>
                 <TableContainer
                     sx={{
-                        backgroundColor: '#ffffffff',
+                        backgroundColor: '_components.paper.elevation-1',
                     }}
                 >
                     <Table>
@@ -95,7 +97,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             프로젝트 이름
@@ -104,7 +106,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             2eb8fa4703f4482a93f281e07232bdcb
@@ -117,7 +119,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -130,7 +132,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -143,7 +145,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.02.01
@@ -156,7 +158,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -165,7 +167,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -178,7 +180,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             (주)헥토
@@ -198,7 +200,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             프로젝트 이름
@@ -207,7 +209,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             2eb8fa4703f4482a93f281e07232bdcb
@@ -220,7 +222,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -233,7 +235,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -246,7 +248,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.02.01
@@ -259,7 +261,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -268,7 +270,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -281,7 +283,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             (주)헥토이노베이션
@@ -301,7 +303,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             프로젝트 이름
@@ -310,7 +312,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             2eb8fa4703f4482a93f281e07232bdcb
@@ -323,7 +325,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -336,7 +338,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -349,7 +351,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.02.01
@@ -362,7 +364,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -371,7 +373,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -384,7 +386,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             (주)헥토
@@ -404,7 +406,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             프로젝트 이름
@@ -413,7 +415,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             2eb8fa4703f4482a93f281e07232bdcb
@@ -426,7 +428,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -439,7 +441,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -452,7 +454,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.02.01
@@ -465,7 +467,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -474,7 +476,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -487,7 +489,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             (주)헥토이노베이션
@@ -507,7 +509,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             프로젝트 이름
@@ -516,7 +518,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             2eb8fa4703f4482a93f281e07232bdcb
@@ -529,7 +531,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -542,7 +544,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             1
@@ -555,7 +557,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             2025.02.01
@@ -568,7 +570,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             홍길동
@@ -577,7 +579,7 @@ export const Project: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 flex: 1,
-                                                color: '#000000ff',
+                                                color: 'text.disabled',
                                             }}
                                         >
                                             honggildong@hecto.co.kr
@@ -590,7 +592,7 @@ export const Project: React.FC = () => {
                                             variant="body2"
                                             sx={{
                                                 flex: 1,
-                                                color: '#121212ff',
+                                                color: 'text.primary',
                                             }}
                                         >
                                             (주)헥토
