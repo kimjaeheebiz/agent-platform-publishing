@@ -14,8 +14,7 @@
     "secondary": {
       "$extensions": {
         "com.figma.scopes": [
-          "ALL_FILLS",
-          "STROKE_COLOR"
+          "ALL_FILLS"
         ]
       },
       "$type": "color",
@@ -82,6 +81,11 @@
   },
   "action": {
     "active": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#0000008f"
     },
@@ -142,14 +146,29 @@
   },
   "error": {
     "main": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{red.A400}"
     },
     "dark": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{red.A700}"
     },
     "light": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{red.A200}"
     },
@@ -177,6 +196,12 @@
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#ff17444d"
       },
@@ -192,20 +217,40 @@
       }
     },
     "contrastText": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff"
     }
   },
   "warning": {
     "main": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.orange.500}"
     },
     "dark": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.orange.700}"
     },
     "light": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.orange.300}"
     },
@@ -233,6 +278,12 @@
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#ff783c4d"
       },
@@ -248,20 +299,40 @@
       }
     },
     "contrastText": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff"
     }
   },
   "info": {
     "main": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.blue.500}"
     },
     "dark": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.blue.700}"
     },
     "light": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.blue.300}"
     },
@@ -311,24 +382,49 @@
       }
     },
     "contrastText": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff"
     }
   },
   "success": {
     "main": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.green.600}"
     },
     "dark": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.green.800}"
     },
     "light": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.green.300}"
     },
     "contrastText": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff"
     },
@@ -381,6 +477,11 @@
   "common": {
     "white_states": {
       "main": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#ffffff"
       },
@@ -439,6 +540,11 @@
     },
     "black_states": {
       "main": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#000000"
       },
@@ -509,257 +615,12 @@
       "$value": "#ffffff",
       "$description": "Reflects the background.default variable from the theme object"
     },
-    "paper-elevation-0": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-1": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-2": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-3": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-4": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-5": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-6": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-7": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-8": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-9": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-10": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-11": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-12": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-13": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-14": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-15": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-16": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-17": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-18": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-19": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-20": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-21": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-22": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-23": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
-    "paper-elevation-24": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      },
-      "$type": "color",
-      "$value": "#ffffff",
-      "$description": "Reflects the background.paper variable from the theme object"
-    },
     "paper": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{_components.paper.elevation-0}"
     },
@@ -789,16 +650,31 @@
   "_components": {
     "rating": {
       "enabledBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#0000003b"
       },
       "activeFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#ffb400"
       }
     },
     "avatar": {
       "fill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{grey.400}"
       }
@@ -806,30 +682,60 @@
     "input": {
       "standard": {
         "enabledBorder": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#0000006b"
         },
         "hoverBorder": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#000000"
         }
       },
       "filled": {
         "enabledFill": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#0000000f"
         },
         "hoverFill": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#00000017"
         }
       },
       "outlined": {
         "enabledBorder": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#0000003b"
         },
         "hoverBorder": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#000000"
         }
@@ -837,60 +743,120 @@
     },
     "switch": {
       "knobFillEnabled": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{colors.hecto.grey.50}"
       },
       "slideFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#000000"
       },
       "knowFillDisabled": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{colors.hecto.grey.100}"
       }
     },
     "chip": {
       "defaultCloseFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#000000"
       },
       "defaultHoverFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#0000001f"
       },
       "defaultEnabledBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{colors.hecto.grey.400}"
       },
       "defaultFocusFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#00000033"
       }
     },
     "tooltip": {
       "fill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#616161e6"
       }
     },
     "backdrop": {
       "fill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#00000080"
       }
     },
     "appBar": {
       "defaultFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{colors.hecto.grey.100}"
       },
       "darkFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{grey.900}"
       }
     },
     "breadcrumbs": {
       "collapseFill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{colors.hecto.grey.100}"
       }
@@ -898,40 +864,80 @@
     "alert": {
       "error": {
         "color": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#5f2120"
         },
         "background": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#fdeded"
         }
       },
       "warning": {
         "color": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#663c00"
         },
         "background": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#fff4e5"
         }
       },
       "info": {
         "color": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#014361"
         },
         "background": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#e5f6fd"
         }
       },
       "success": {
         "color": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#1e4620"
         },
         "background": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ]
+          },
           "$type": "color",
           "$value": "#edf7ed"
         }
@@ -939,12 +945,22 @@
     },
     "stepper": {
       "connector": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "{colors.hecto.grey.400}"
       }
     },
     "snackbar": {
       "fill": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        },
         "$type": "color",
         "$value": "#323232"
       }
@@ -1227,6 +1243,12 @@
         "$description": "Reflects the background.paper variable from the theme object"
       },
       "outlineBorder": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL",
+            "STROKE_COLOR"
+          ]
+        },
         "$type": "color",
         "$value": "{divider}"
       },
@@ -1243,40 +1265,54 @@
       }
     }
   },
-  "elevation": {
-    "outlined": {
+  "_native": {
+    "scrollbar-bg": {
       "$extensions": {
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]
       },
       "$type": "color",
-      "$value": "#e0e0e0"
-    }
-  },
-  "_native": {
-    "scrollbar-bg": {
-      "$type": "color",
       "$value": "{colors.hecto.grey.200}"
     }
   },
   "primary": {
     "main": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{deepPurple.A400}",
       "$description": "Reflects the primary.main variable from the theme object"
     },
     "dark": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{deepPurple.A700}",
       "$description": "Used for hover states. Reflects the primary.dark variable from the theme object"
     },
     "light": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{deepPurple.A100}",
       "$description": "Reflects the primary.light variable from the theme object"
     },
     "contrastText": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff",
       "$description": "Reflects the primary.contrast variable from the theme object. Color that keeps a contrast ratio above AA when XX.main is used as a bg. color"
@@ -1316,6 +1352,12 @@
         "$description": "Used for focus states. The token represents the value of action.focusOpacity (0.12 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#7c4dff4d"
       },
@@ -1333,18 +1375,38 @@
   },
   "secondary": {
     "main": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{grey.900}"
     },
     "dark": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#000000"
     },
     "light": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "{colors.hecto.grey.600}"
     },
     "contrastText": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      },
       "$type": "color",
       "$value": "#ffffff"
     },
@@ -1383,6 +1445,12 @@
         "$description": "Used for focus states. The token represents the value of action.focusOpacity (0.12 by default) of the main token."
       },
       "focusVisible": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ]
+        },
         "$type": "color",
         "$value": "#1212124d"
       },
