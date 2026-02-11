@@ -1,58 +1,123 @@
 {
   "fontFamily": {
     "primary": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_FAMILY"
+        ]
+      },
       "$type": "text",
       "$value": "Pretendard Variable"
     }
   },
   "_fontSize": {
     "1rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 16
+      "$value": "16"
     },
     "0,75rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 12
+      "$value": "12"
     },
     "0,875rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 14
+      "$value": "14"
     },
     "1,25rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 20
+      "$value": "20"
     },
     "1,5rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 24
+      "$value": "24"
     },
     "2,125rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 34
+      "$value": "34"
     },
     "3rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 48
+      "$value": "48"
     },
     "3,75rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 60
+      "$value": "60"
     },
     "6rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 96
+      "$value": "96"
     },
     "0,625rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 10
+      "$value": "10"
     },
     "0,8125rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 13
+      "$value": "13"
     },
     "0,9375rem": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FONT_SIZE"
+        ]
+      },
       "$type": "number",
-      "$value": 15
+      "$value": "15"
     }
   },
   "fontWeightThin": {
@@ -62,7 +127,7 @@
       ]
     },
     "$type": "number",
-    "$value": 100
+    "$value": "100"
   },
   "fontWeightExtraLight": {
     "$extensions": {
@@ -71,7 +136,7 @@
       ]
     },
     "$type": "number",
-    "$value": 200
+    "$value": "200"
   },
   "fontWeightLight": {
     "$extensions": {
@@ -80,7 +145,7 @@
       ]
     },
     "$type": "number",
-    "$value": 300
+    "$value": "300"
   },
   "fontWeightRegular": {
     "$extensions": {
@@ -89,7 +154,7 @@
       ]
     },
     "$type": "number",
-    "$value": 400
+    "$value": "400"
   },
   "fontWeightMedium": {
     "$extensions": {
@@ -98,7 +163,7 @@
       ]
     },
     "$type": "number",
-    "$value": 500
+    "$value": "500"
   },
   "fontWeightBold": {
     "$extensions": {
@@ -107,7 +172,7 @@
       ]
     },
     "$type": "number",
-    "$value": 700
+    "$value": "700"
   },
   "fontWeightSemiBold": {
     "$extensions": {
@@ -116,7 +181,7 @@
       ]
     },
     "$type": "number",
-    "$value": 600
+    "$value": "600"
   },
   "fontWeightExtraBold": {
     "$extensions": {
@@ -125,7 +190,7 @@
       ]
     },
     "$type": "number",
-    "$value": 800
+    "$value": "800"
   },
   "fontWeightBlack": {
     "$extensions": {
@@ -134,6 +199,6 @@
       ]
     },
     "$type": "number",
-    "$value": 900
+    "$value": "900"
   }
 }

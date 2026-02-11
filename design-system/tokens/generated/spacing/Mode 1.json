@@ -1,54 +1,136 @@
 {
   "1": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 8
   },
   "2": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 16
   },
   "3": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 24
   },
   "4": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 32
   },
   "5": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 40
   },
   "6": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 48
   },
   "7": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 56
   },
   "8": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 64
   },
   "9": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 72
   },
   "10": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 80
   },
   "11": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 88
   },
   "12": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 96
   },
-  "05": {
+  "0,5": {
     "$type": "number",
     "$value": 4
+  },
+  "1,5": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
+    "$type": "number",
+    "$value": 12
   }
 }

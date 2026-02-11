@@ -1,14 +1,16 @@
 {
-  "version": {
-    "$type": "text",
-    "$value": "V6.1.0"
-  },
-  "version2": {
-    "$type": "text",
-    "$value": "V7.2.1"
-  },
   "brandName": {
     "$type": "text",
     "$value": "Agent Platform"
+  },
+  "mui": {
+    "version": {
+      "$type": "text",
+      "$value": "V6.1.0"
+    },
+    "version2": {
+      "$type": "text",
+      "$value": "V7.2.1"
+    }
   }
 }
