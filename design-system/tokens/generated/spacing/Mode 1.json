@@ -120,6 +120,12 @@
     "$value": 96
   },
   "0,5": {
+    "$extensions": {
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ]
+    },
     "$type": "number",
     "$value": 4
   },
