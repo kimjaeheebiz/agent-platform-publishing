@@ -4,6 +4,13 @@
 import '@mui/material/styles';
 import { BrandTokens, BrandColorGroup } from '../../design-system/generators/types';
 
+// Button 커스텀 size (테마 variants와 쌍으로 사용)
+declare module '@mui/material/Button' {
+    interface ButtonPropsSizeOverrides {
+        xsmall: true;
+    }
+}
+
 declare module '@mui/material/styles' {
     // Theme에 brand 속성 추가
     interface Theme {

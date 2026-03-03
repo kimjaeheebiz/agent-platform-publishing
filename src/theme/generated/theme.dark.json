@@ -1785,6 +1785,16 @@
             "letterSpacing": 0.46,
             "textTransform": "uppercase"
           }
+        },
+        {
+          "props": {
+            "size": "xsmall"
+          },
+          "style": {
+            "fontSize": "0.75rem",
+            "padding": "2px 6px",
+            "minWidth": 0
+          }
         }
       ]
     },

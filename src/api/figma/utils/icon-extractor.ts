@@ -99,7 +99,11 @@ export async function fetchIconName(
     }
 
     try {
-        // 1. extractor의 componentInfo에서 먼저 조회
+        // 1. 페이지 파싱 시 채워둔 아이콘 캐시 사용 (API 호출 감소)
+        const cached = (extractor as any).iconNodeNameCache?.get(iconComponentId);
+        if (cached) return cached;
+
+        // 2. extractor의 componentInfo에서 먼저 조회
         if ((extractor as any).componentInfo && (extractor as any).componentInfo.has(iconComponentId)) {
             const componentInfo = (extractor as any).componentInfo.get(iconComponentId);
             const iconName = componentInfo?.name || componentInfo?.description || componentInfo?.key;
@@ -108,7 +112,7 @@ export async function fetchIconName(
             }
         }
 
-        // 2. Figma API로 조회
+        // 3. Figma API로 조회
         const fileKey = (extractor as any).fileKey || (extractor as any)._fileKey;
         if (!fileKey || !(extractor as any).client) {
             return undefined;
@@ -183,6 +187,19 @@ export async function fetchIconNames(
     }
 
     try {
+        const cache = (extractor as any).iconNodeNameCache as Map<string, string> | undefined;
+        const missingIds = cache
+            ? iconComponentIds.filter((id) => {
+                  const name = cache.get(id);
+                  if (name) {
+                      iconNamesMap.set(id, name);
+                      return false;
+                  }
+                  return true;
+              })
+            : [...iconComponentIds];
+        if (missingIds.length === 0) return iconNamesMap;
+
         const fileKey = (extractor as any).fileKey || (extractor as any)._fileKey;
         if (!fileKey || !(extractor as any).client) {
             console.warn(`⚠️ fileKey 또는 client 정보가 없습니다.`);
@@ -191,7 +208,7 @@ export async function fetchIconNames(
 
         const iconNodesResponse = await (extractor as any).client.getFileNodes(
             fileKey,
-            iconComponentIds
+            missingIds
         );
 
         if (iconNodesResponse.nodes) {

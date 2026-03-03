@@ -38,36 +38,23 @@ export const TableMapping: ComponentMapping = {
             type: 'union',
             values: ['checkbox', 'none', 'normal'] as const,
             default: 'normal',
-    },
-    
-        // component
-        // MUI API: https://mui.com/material-ui/api/table/#table-prop-component
+        },
+        // component (기본 table)
         component: {
             type: 'string',
         },
     },
-    
-    // 하위 컴포넌트 import 목록
-    // Table 구조: Table > TableHead + TableBody + TableFooter
-    subComponents: [
-        'TableHead', 'TableBody', 'TableFooter'
-    ],
-    
-    // ✅ Props 변환: 피그마의 small boolean prop을 size="small"로 변환
+    /** MUI 기본 구조로 렌더되므로 레이아웃/테두리 등은 테마로 처리, sx 중복 제외 */
+    excludeFromSx: ['width', 'backgroundColor', 'borderColor', 'borderWidth', 'borderRadius'],
+    subComponents: ['TableHead', 'TableBody', 'TableFooter'],
     transformProps: (properties: ComponentProperties) => {
         const transformed = { ...properties };
-        
-        // small={true}를 size="small"로 변환
         if (transformed['small'] === true) {
             transformed['size'] = 'small';
             delete transformed['small'];
         }
-        
         return transformed;
     },
-    
-    // ✅ JSX 생성 템플릿 정의
-    // Table 관련 컴포넌트는 피그마와 개발 코드의 UI 스타일 구성 방식이 상이해 sx 속성 제거
     generateJSX: (componentName, props, content, sx) => {
         return `<Table${props}>
             ${content}

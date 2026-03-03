@@ -7,6 +7,7 @@ import {
     TextField,
     Button,
     TableContainer,
+    Paper,
     Table,
     TableHead,
     TableRow,
@@ -35,14 +36,7 @@ export const Users: React.FC = () => {
                     gap: 1,
                 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        height: '30px',
-                    }}
-                >
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Tabs
                             sx={{
@@ -71,12 +65,8 @@ export const Users: React.FC = () => {
                         </Button>
                     </Stack>
                 </Stack>
-                <TableContainer
-                    sx={{
-                        backgroundColor: '_components.paper.elevation-1',
-                    }}
-                >
-                    <Table>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>사용자</TableCell>
@@ -90,462 +80,227 @@ export const Users: React.FC = () => {
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            (주)헥토
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">(주)헥토</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            관리자
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">관리자</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                flex: 1,
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>수정</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            (주)헥토이노베이션
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">(주)헥토이노베이션</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            일반사용자
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                flex: 1,
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>수정</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            (주)헥토
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">(주)헥토</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            일반사용자
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                flex: 1,
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>수정</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            (주)헥토이노베이션
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">(주)헥토이노베이션</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            일반사용자
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                flex: 1,
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>수정</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            (주)헥토
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">(주)헥토</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            일반사용자
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                flex: 1,
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>수정</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>

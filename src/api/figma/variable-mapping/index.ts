@@ -1,11 +1,13 @@
 /**
  * 변수 매핑 관리 (캐시 + API)
+ * + spacing 토큰 유틸 엔트리 포인트
  */
 
 import { VariableMappingInfo } from './types';
 import { FigmaVariableFetcher } from './variable-fetcher';
 import { formatMuiPath, determineVariableType } from './theme-mapper';
 import { loadLibraryVariableMappings } from './library-loader';
+export { getSpacingTokenFromPx } from './spacing-resolver';
 
 /**
  * 변수 매핑 매니저

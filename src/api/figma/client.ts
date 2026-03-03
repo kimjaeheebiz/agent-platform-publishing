@@ -38,6 +38,7 @@ export class FigmaAPIClient {
      * @returns 피그마 파일 데이터
      */
     async getFile(fileKey: string): Promise<FigmaFileResponse> {
+        // rate limit 대기 시간 단축을 위해 재시도 횟수·간격을 최소화
         return retryWithBackoff(async () => {
             try {
                 const response = await fetch(`${this.baseURL}/files/${fileKey}`, {
@@ -71,7 +72,7 @@ export class FigmaAPIClient {
                 }
                 handleFigmaError(error, `getFile(${fileKey})`);
             }
-        });
+        }, 1, 500);
     }
 
     /**
@@ -81,6 +82,7 @@ export class FigmaAPIClient {
      * @returns 피그마 노드 데이터
      */
     async getFileNodes(fileKey: string, nodeIds: string[]): Promise<FigmaNodesResponse> {
+        // rate limit 대기 시간 단축을 위해 재시도 횟수·간격을 최소화
         return retryWithBackoff(async () => {
             try {
                 if (!nodeIds || nodeIds.length === 0) {
@@ -123,7 +125,7 @@ export class FigmaAPIClient {
                 }
                 handleFigmaError(error, `getFileNodes(${fileKey}, [${nodeIds.join(',')}])`);
             }
-        });
+        }, 1, 500);
     }
 
     /**

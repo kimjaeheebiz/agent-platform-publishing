@@ -48,21 +48,22 @@ export const ButtonMapping: ComponentMapping = {
         },
         
         // size 속성 (MUI 기본값: 'medium')
+        // xsmall은 테마 variants + theme.d.ts ButtonPropsSizeOverrides로 확장
         size: {
             type: 'union',
-            values: ['small', 'medium', 'large'] as const,
+            values: ['xsmall', 'small', 'medium', 'large'] as const,
             default: 'medium',
             extractFromFigma: (node) => {
                 const sizeProps = (node as any).componentProperties?.Size || 
                                   (node as any).componentProperties?.size;
                 if (sizeProps) {
-                    const value = typeof sizeProps === 'object' && 'value' in sizeProps 
-                        ? sizeProps.value 
+                    const raw = typeof sizeProps === 'object' && 'value' in sizeProps 
+                        ? (sizeProps as { value: unknown }).value 
                         : sizeProps;
-                    if (typeof value === 'string') {
-                        return value.toLowerCase();
+                    if (typeof raw === 'string') {
+                        return raw.toLowerCase();
                     }
-                    return value;
+                    return raw;
                 }
                 return null;
             }
@@ -170,7 +171,7 @@ export const ButtonMapping: ComponentMapping = {
             type: 'string',
         },
     },
-    
+
     // sx에서 제외할 속성 (MUI가 관리)
     excludeFromSx: [
         'backgroundColor',   // variant가 관리

@@ -566,7 +566,8 @@ function buildComponentsOverrides(tokensCore: Json, tokensTypos: Json): JsonReco
         return result;
     };
 
-    // MuiButton: core.button.large/medium/small
+    // MuiButton: core.button.large/medium/small + 커스텀 xsmall (Figma/디자인 시스템용)
+    // 참조: https://mui.com/material-ui/customization/theme-components/#adding-new-component-variants
     if (tokensCore?.button) {
         const btn = asJsonRecord(tokensCore.button);
         const variants: Array<{ props: JsonRecord; style: JsonRecord }> = [];
@@ -579,9 +580,14 @@ function buildComponentsOverrides(tokensCore: Json, tokensTypos: Json): JsonReco
         if (btn.small && typeof btn.small === 'object' && btn.small !== null && '$value' in btn.small) {
             variants.push({ props: { size: 'small' }, style: parseTypoToken(asJsonRecord(btn.small).$value) });
         }
-        if (variants.length > 0) {
-            components.MuiButton = { variants };
-        }
+        // xsmall: core에 없으면 small보다 작은 고정 스타일로 추가 (Figma XSmall 등)
+        const xsmallStyle: JsonRecord = {
+            fontSize: '0.75rem',
+            padding: '2px 6px',
+            minWidth: 0,
+        };
+        variants.push({ props: { size: 'xsmall' }, style: xsmallStyle });
+        components.MuiButton = { variants };
     }
 
     // MuiChip: core.chip.label

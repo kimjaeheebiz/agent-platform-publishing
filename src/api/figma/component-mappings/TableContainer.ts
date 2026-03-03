@@ -2,198 +2,106 @@ import { ComponentMapping } from './types/PropertyMapper';
 import { FigmaNode, ComponentProperties } from '../types';
 import { findMappingByFigmaName } from './index';
 
+/** componentProperties에서 값 추출 (value 필드 또는 원시값) */
+function getPropValue(props: Record<string, unknown>, keyLower: string): unknown {
+    const entry = Object.entries(props).find(([k]) => k.toLowerCase() === keyLower);
+    if (!entry) return undefined;
+    const v = entry[1];
+    return v != null && typeof v === 'object' && 'value' in v ? (v as { value: unknown }).value : v;
+}
+
 /**
  * MUI TableContainer 컴포넌트 매핑
+ *
+ * 공식 문서: https://mui.com/material-ui/react-table/
+ * 구조: TableContainer > Table > TableHead | TableBody | TableFooter
+ * 피그마 인스턴스: componentProperties(variant, elevation)로 Paper 래핑 여부 및 스타일 자동 파악
  */
 export const TableContainerMapping: ComponentMapping = {
     figmaNames: ['<TableContainer>'] as const,
     muiName: 'TableContainer',
-    
-    // MUI API: https://mui.com/material-ui/api/table-container/
-    // TableContainer는 기본적으로 component, sx만 지원
-    // elevation과 variant는 component={Paper}일 때만 의미가 있음
     muiProps: {
-        // component
-        component: {
-            type: 'string',
-        },
-        // elevation (component={Paper}일 때만 사용)
-        elevation: {
-            type: 'union-number',
-        },
-        // variant (component={Paper}일 때만 사용)
+        component: { type: 'string' },
+        elevation: { type: 'union-number' },
         variant: {
             type: 'union',
             values: ['elevation', 'outlined'] as const,
         },
     },
-    
     excludeFromSx: [
         'width',
+        'backgroundColor',
         'borderColor',
         'borderWidth',
-        'borderRadius', // variant="outlined"일 때 Paper가 자동으로 처리하므로 제외
+        'borderRadius',
     ],
-    
-    // 하위 컴포넌트 import 목록
-    // TableContainer 구조: TableContainer > Table
-    subComponents: [
-        'Table', 'Paper' // Paper는 component prop으로 사용될 수 있음
-    ],
-    
-    // ✅ TableContainer 노드가 Paper 인스턴스인 경우 처리 (Paper 인스턴스를 TableContainer로 이름 변경한 경우)
-    extractProperties: async (node: FigmaNode, extractor?: any): Promise<ComponentProperties> => {
+    subComponents: ['Table', 'Paper'],
+    extractProperties: async (node: FigmaNode): Promise<ComponentProperties> => {
         const properties: ComponentProperties = {};
-        
-        console.log(`🔍 [TableContainer] extractProperties 호출: ${node.name}`);
-        
-        // 방법 1: 노드 자체가 Paper 인스턴스인 경우 (componentProperties에 Paper 속성이 있음)
         const nodeProps = (node as any).componentProperties || {};
-        const hasPaperProperties = Object.keys(nodeProps).some(key => 
-            key.toLowerCase() === 'variant' || key.toLowerCase() === 'elevation'
+        const hasPaperLikeProps = Object.keys(nodeProps).some(
+            (k) => k.toLowerCase() === 'variant' || k.toLowerCase() === 'elevation'
         );
-        
-        if (hasPaperProperties || node.type === 'INSTANCE') {
-            console.log(`✅ [TableContainer] 노드가 Paper 인스턴스로 판단됨`);
-            // component prop에 Paper 설정
+
+        if (hasPaperLikeProps) {
             properties.component = 'Paper';
-            
-            // Paper 매핑을 찾아서 variant, elevation 추출
             const paperMapping = findMappingByFigmaName('<Paper>');
-            
-            // Variant 속성 추출
-            if (paperMapping?.muiProps?.variant) {
-                const variantDef = paperMapping.muiProps.variant;
-                let variantValue: any = undefined;
-                
-                // componentProperties에서 직접 추출
-                const matchingKey = Object.keys(nodeProps).find(
-                    key => key.toLowerCase() === 'variant'
-                );
-                
-                if (matchingKey) {
-                    const propData = nodeProps[matchingKey];
-                    if (propData && typeof propData === 'object' && 'value' in propData) {
-                        variantValue = propData.value;
-                    } else if (propData !== undefined) {
-                        variantValue = propData;
-                    }
-                }
-                
-                if (variantValue) {
-                    const normalized = variantDef.transform 
-                        ? variantDef.transform(variantValue)
-                        : (typeof variantValue === 'string' ? variantValue.toLowerCase() : variantValue);
-                    
-                    if (variantDef.values?.includes(normalized as any)) {
-                        properties.variant = normalized;
-                    }
+            const variantDef = paperMapping?.muiProps?.variant;
+            const elevationDef = paperMapping?.muiProps?.elevation;
+
+            const variantValue = getPropValue(nodeProps, 'variant');
+            if (variantValue && variantDef?.values) {
+                const normalized =
+                    typeof variantValue === 'string' ? variantValue.toLowerCase() : variantValue;
+                if (variantDef.values.includes(normalized as 'elevation' | 'outlined')) {
+                    properties.variant = normalized as 'elevation' | 'outlined';
                 }
             }
-            
-            // Elevation 속성 추출
-            if (paperMapping?.muiProps?.elevation) {
-                const elevationDef = paperMapping.muiProps.elevation;
-                let elevationValue: any = undefined;
-                
-                // componentProperties에서 직접 추출
-                const matchingKey = Object.keys(nodeProps).find(
-                    key => key.toLowerCase() === 'elevation'
-                );
-                
-                if (matchingKey) {
-                    const propData = nodeProps[matchingKey];
-                    if (propData && typeof propData === 'object' && 'value' in propData) {
-                        elevationValue = propData.value;
-                    } else if (propData !== undefined) {
-                        elevationValue = propData;
-                    }
-                }
-                
-                if (elevationValue !== undefined && elevationValue !== null) {
-                    const finalValue = elevationDef.transform 
-                        ? elevationDef.transform(elevationValue)
-                        : (typeof elevationValue === 'number' 
-                            ? elevationValue 
-                            : parseInt(String(elevationValue)));
-                    
-                    if (!isNaN(finalValue as number)) {
-                        properties.elevation = finalValue as number;
-                    }
-                }
+
+            const elevationRaw = getPropValue(nodeProps, 'elevation');
+            if (elevationRaw !== undefined && elevationRaw !== null && elevationDef) {
+                const num =
+                    typeof elevationRaw === 'number'
+                        ? elevationRaw
+                        : parseInt(String(elevationRaw), 10);
+                if (!isNaN(num)) properties.elevation = num;
             }
-            
-            console.log(`✅ [TableContainer] Paper 인스턴스 속성 추출 완료:`, properties);
-        } 
-        // 방법 2: 자식 노드에서 Paper를 찾는 경우 (기존 로직 유지)
-        else if (node.children && node.children.length > 0) {
-            const paperNode = node.children.find(child => 
-                child.name === '<Paper>' || 
-                child.name.toLowerCase().includes('paper')
+        } else if (node.children?.length) {
+            const paperNode = node.children.find(
+                (c) =>
+                    c.name === '<Paper>' || String(c.name).toLowerCase().includes('paper')
             );
-            
             if (paperNode) {
-                console.log(`✅ [TableContainer] Paper 자식 노드 발견: ${paperNode.name}`);
                 properties.component = 'Paper';
-                
-                const paperMapping = findMappingByFigmaName('<Paper>');
                 const paperProps = (paperNode as any).componentProperties || {};
-                
-                // Variant 속성 추출
-                if (paperMapping?.muiProps?.variant) {
-                    const variantDef = paperMapping.muiProps.variant;
-                    const matchingKey = Object.keys(paperProps).find(
-                        key => key.toLowerCase() === 'variant'
-                    );
-                    
-                    if (matchingKey) {
-                        const propData = paperProps[matchingKey];
-                        const variantValue = propData && typeof propData === 'object' && 'value' in propData
-                            ? propData.value
-                            : propData;
-                        
-                        if (variantValue) {
-                            const normalized = typeof variantValue === 'string' 
-                                ? variantValue.toLowerCase() 
-                                : variantValue;
-                            if (variantDef.values?.includes(normalized as any)) {
-                                properties.variant = normalized;
-                            }
-                        }
+                const paperMapping = findMappingByFigmaName('<Paper>');
+                const variantDef = paperMapping?.muiProps?.variant;
+                const elevationDef = paperMapping?.muiProps?.elevation;
+
+                const variantValue = getPropValue(paperProps, 'variant');
+                if (variantValue && variantDef?.values) {
+                    const normalized =
+                        typeof variantValue === 'string'
+                            ? variantValue.toLowerCase()
+                            : variantValue;
+                    if (variantDef.values.includes(normalized as 'elevation' | 'outlined')) {
+                        properties.variant = normalized as 'elevation' | 'outlined';
                     }
                 }
-                
-                // Elevation 속성 추출
-                if (paperMapping?.muiProps?.elevation) {
-                    const elevationDef = paperMapping.muiProps.elevation;
-                    const matchingKey = Object.keys(paperProps).find(
-                        key => key.toLowerCase() === 'elevation'
-                    );
-                    
-                    if (matchingKey) {
-                        const propData = paperProps[matchingKey];
-                        const elevationValue = propData && typeof propData === 'object' && 'value' in propData
-                            ? propData.value
-                            : propData;
-                        
-                        if (elevationValue !== undefined && elevationValue !== null) {
-                            const finalValue = typeof elevationValue === 'number'
-                                ? elevationValue
-                                : parseInt(String(elevationValue));
-                            if (!isNaN(finalValue)) {
-                                properties.elevation = finalValue;
-                            }
-                        }
-                    }
+
+                const elevationRaw = getPropValue(paperProps, 'elevation');
+                if (elevationRaw !== undefined && elevationRaw !== null && elevationDef) {
+                    const num =
+                        typeof elevationRaw === 'number'
+                            ? elevationRaw
+                            : parseInt(String(elevationRaw), 10);
+                    if (!isNaN(num)) properties.elevation = num;
                 }
             }
         }
-        
-        console.log(`📤 [TableContainer] extractProperties 반환:`, properties);
+
         return properties;
     },
-    
-    // ✅ JSX 생성 템플릿 정의
     generateJSX: (componentName, props, content, sx) => {
         const sxAttribute = sx ? `\n            sx={${sx}}` : '';
         return `<TableContainer${props}${sxAttribute}>
@@ -201,4 +109,3 @@ export const TableContainerMapping: ComponentMapping = {
         </TableContainer>`;
     },
 };
-

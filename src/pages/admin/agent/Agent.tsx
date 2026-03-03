@@ -6,6 +6,7 @@ import {
     Select,
     TextField,
     TableContainer,
+    Paper,
     Table,
     TableHead,
     TableRow,
@@ -34,14 +35,7 @@ export const Agent: React.FC = () => {
                     gap: 1,
                 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        height: '30px',
-                    }}
-                >
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Tabs
                             sx={{
@@ -67,68 +61,31 @@ export const Agent: React.FC = () => {
                         ></TextField>
                     </Stack>
                 </Stack>
-                <TableContainer
-                    sx={{
-                        backgroundColor: '_components.paper.elevation-1',
-                    }}
-                >
-                    <Table>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>즐겨찾기</TableCell>
-                                <TableCell>소속 프로젝트</TableCell>
                                 <TableCell>에이전트</TableCell>
                                 <TableCell>설명</TableCell>
-                                <TableCell>수정일</TableCell>
-                                <TableCell>소유자</TableCell>
+                                <TableCell>소속 프로젝트</TableCell>
                                 <TableCell>상태</TableCell>
+                                <TableCell>등록자</TableCell>
+                                <TableCell>수정일</TableCell>
                                 <TableCell>관리</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Stack alignItems="center" justifyContent="center">
-                                        <Button></Button>
-                                    </Stack>
+                                <TableCell align="center">
+                                    <Button></Button>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            2eb8fa4703f4482a93f281e07232bdcb
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -136,47 +93,36 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 설명입니다.
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">에이전트 설명입니다.</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            2eb8fa4703f4482a93f281e07232bdcb
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -184,65 +130,33 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>다운로드</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복제
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Stack alignItems="center" justifyContent="center">
-                                        <Button></Button>
-                                    </Stack>
+                                <TableCell align="center">
+                                    <Button></Button>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            2eb8fa4703f4482a93f281e07232bdcb
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -250,47 +164,36 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 설명입니다.
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">에이전트 설명입니다.</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            2eb8fa4703f4482a93f281e07232bdcb
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -298,65 +201,33 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>다운로드</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복제
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Stack alignItems="center" justifyContent="center">
-                                        <Button></Button>
-                                    </Stack>
+                                <TableCell align="center">
+                                    <Button></Button>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            2eb8fa4703f4482a93f281e07232bdcb
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -364,47 +235,36 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 설명입니다.
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">에이전트 설명입니다.</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            2eb8fa4703f4482a93f281e07232bdcb
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -412,65 +272,33 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>다운로드</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복제
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Stack alignItems="center" justifyContent="center">
-                                        <Button></Button>
-                                    </Stack>
+                                <TableCell align="center">
+                                    <Button></Button>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            2eb8fa4703f4482a93f281e07232bdcb
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -478,47 +306,36 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 설명입니다.
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">에이전트 설명입니다.</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            2eb8fa4703f4482a93f281e07232bdcb
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -526,65 +343,33 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>다운로드</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복제
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Stack alignItems="center" justifyContent="center">
-                                        <Button></Button>
-                                    </Stack>
+                                <TableCell align="center">
+                                    <Button></Button>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            2eb8fa4703f4482a93f281e07232bdcb
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -592,47 +377,36 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 설명입니다.
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">에이전트 설명입니다.</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            2eb8fa4703f4482a93f281e07232bdcb
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: '#ffffffff',
+                                        }}
+                                        label="OP"
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -640,19 +414,20 @@ export const Agent: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Chip
-                                            sx={{
-                                                backgroundColor: '#ffffffff',
-                                            }}
-                                            label="OP"
-                                        />
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>다운로드</Button>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복제
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>

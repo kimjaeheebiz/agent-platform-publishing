@@ -1,7 +1,7 @@
 import { FigmaAPIClient } from './client';
 import { FIGMA_CONFIG } from './config';
 import { findMappingByFigmaName, findMappingByType, findMappingKeyByFigmaName, COMPONENT_MAPPINGS } from './component-mappings';
-import { VariableMappingManager } from './variable-mapping';
+import { VariableMappingManager, getSpacingTokenFromPx } from './variable-mapping';
 import {
     FigmaNode,
     FigmaComponent,
@@ -21,6 +21,8 @@ export class FigmaDesignExtractor {
     private styleInfo: Map<string, unknown> = new Map(); // 스타일 정보 캐시
     private variableInfo: Map<string, unknown> = new Map(); // 변수 정보 캐시
     private variableMappingManager: VariableMappingManager; // 변수 매핑 매니저
+    /** 페이지 한 번 파싱 시 아이콘 노드 ID → 아이콘 이름 캐시 (getFileNodes 호출 수 감소) */
+    private iconNodeNameCache: Map<string, string> = new Map();
 
     constructor(token: string) {
         this.client = new FigmaAPIClient(token);
@@ -342,6 +344,24 @@ export class FigmaDesignExtractor {
         return null;
     }
 
+    /**
+     * 노드 트리에서 INSTANCE_SWAP(아이콘) 컴포넌트 ID 수집
+     * 한 번에 getFileNodes 호출해 요청 수를 줄이기 위함
+     */
+    private collectIconNodeIdsFromTree(node: FigmaNode): string[] {
+        const ids: string[] = [];
+        const props = (node as any).componentProperties || {};
+        for (const prop of Object.values(props) as any[]) {
+            if (prop?.type === 'INSTANCE_SWAP' && prop.value) ids.push(prop.value);
+        }
+        if (node.children) {
+            for (const child of node.children) {
+                ids.push(...this.collectIconNodeIdsFromTree(child));
+            }
+        }
+        return ids;
+    }
+
     async extractPageDesigns(fileKey: string, pageNodeIds: string[]): Promise<PageDesignConfig[]> {
         try {
             // 파일 키 저장
@@ -368,6 +388,21 @@ export class FigmaDesignExtractor {
             for (const nodeId of pageNodeIds) {
                 const node = fileData.nodes[nodeId]?.document;
                 if (node) {
+                    this.iconNodeNameCache.clear();
+                    const iconIds = [...new Set(this.collectIconNodeIdsFromTree(node))];
+                    if (iconIds.length > 0 && this.fileKey) {
+                        try {
+                            const iconRes = await this.client.getFileNodes(this.fileKey, iconIds);
+                            if (iconRes.nodes) {
+                                for (const [nid, data] of Object.entries(iconRes.nodes)) {
+                                    const name = data.document?.name;
+                                    if (name) this.iconNodeNameCache.set(nid, name);
+                                }
+                            }
+                        } catch (e) {
+                            console.warn('⚠️ 아이콘 노드 일괄 조회 실패:', e);
+                        }
+                    }
                     const pageDesign = await this.parsePageNode(node);
                     pageDesigns.push(pageDesign);
                 }
@@ -837,13 +872,12 @@ export class FigmaDesignExtractor {
                                 if (textContent) {
                                     cellProperties.text = textContent;
                                 }
-                                
                                 const tableCell: ComponentDesignConfig = {
                                     componentId: cellRowChild.id,
                                     componentName: '<TableCell>',
                                     componentType: 'table',
                                     properties: cellProperties,
-                                    children: cellChildren
+                                    children: this.flattenLayoutWrappersInTableCell(cellChildren),
                                 };
                                 tableCellChildren.push(tableCell);
                             } else {
@@ -884,13 +918,12 @@ export class FigmaDesignExtractor {
                                 if (textContent) {
                                     cellProperties.text = textContent;
                                 }
-                                
                                 const tableCell: ComponentDesignConfig = {
                                     componentId: cellRowChild.id,
                                     componentName: '<TableCell>',
                                     componentType: 'table',
                                     properties: cellProperties,
-                                    children: cellChildren
+                                    children: this.flattenLayoutWrappersInTableCell(cellChildren),
                                 };
                                 tableCellChildren.push(tableCell);
                             }
@@ -1019,6 +1052,19 @@ export class FigmaDesignExtractor {
     }
 
     /**
+     * TableCell 자식에서 단일 레이아웃 래퍼(Box, ActionButton 등)를 제거하여
+     * Stack/Button 등 실제 MUI 자식을 TableCell 직계로 노출
+     */
+    private flattenLayoutWrappersInTableCell(children: ComponentDesignConfig[]): ComponentDesignConfig[] {
+        return children.flatMap((c) => {
+            if (c.componentType === 'layout' && c.children?.length === 1) {
+                return this.flattenLayoutWrappersInTableCell(c.children);
+            }
+            return [c];
+        });
+    }
+
+    /**
      * 컴포넌트 타입 결정 (새로운 매핑 시스템 사용)
      * @param node 피그마 노드
      * @returns 컴포넌트 타입
@@ -1058,6 +1104,7 @@ export class FigmaDesignExtractor {
                 const frameChildren = node.children.filter(c => c.type === 'FRAME');
 
                 // 각 child의 매핑을 먼저 확인
+                const layoutLikeKeys = ['stack', 'box', 'layout', 'content', 'submenu', 'controlArea', 'grid', 'container'];
                 for (const child of node.children) {
                     const childMappingKey = findMappingKeyByFigmaName(child.name);
                     if (childMappingKey) {
@@ -1065,8 +1112,18 @@ export class FigmaDesignExtractor {
                         if (childType && childType !== 'layout') {
                             return childType;
                         }
+                        if (layoutLikeKeys.includes(childMappingKey)) {
+                            return 'layout';
+                        }
                     }
-
+                    if (child.type === 'INSTANCE' && (child as any).componentId && this.componentInfo.has((child as any).componentId)) {
+                        const info = this.componentInfo.get((child as any).componentId)!;
+                        const actualName = info.name || (info as any).description || (info as any).key || '';
+                        const actualKey = findMappingKeyByFigmaName(actualName);
+                        if (actualKey && layoutLikeKeys.includes(actualKey)) {
+                            return 'layout';
+                        }
+                    }
                     if (child.type === 'TEXT' && child.name.toLowerCase().includes('button')) {
                         return 'button';
                     }
@@ -1471,24 +1528,13 @@ export class FigmaDesignExtractor {
                     }
                 }
 
-                if (iconNodeIds.length > 0 && this.fileKey) {
-                    try {
-                        const iconNodesResponse = await this.client.getFileNodes(this.fileKey, iconNodeIds);
-                        if (iconNodesResponse.nodes) {
-                            for (const [nodeId, nodeData] of Object.entries(iconNodesResponse.nodes)) {
-                                const iconNode = nodeData.document;
-                                const iconName = iconNode.name;
-
-                                if (nodeId === properties.startIconComponentId) {
-                                    properties['startIconName'] = iconName;
-                                }
-                                if (nodeId === properties.endIconComponentId) {
-                                    properties['endIconName'] = iconName;
-                                }
-                            }
+                if (iconNodeIds.length > 0) {
+                    for (const nid of iconNodeIds) {
+                        const iconName = this.iconNodeNameCache.get(nid);
+                        if (iconName) {
+                            if (nid === properties.startIconComponentId) properties['startIconName'] = iconName;
+                            if (nid === properties.endIconComponentId) properties['endIconName'] = iconName;
                         }
-                    } catch (error) {
-                        console.warn(`⚠️ 아이콘 노드 조회 실패: ${error}`);
                     }
                 }
             }
@@ -1769,13 +1815,15 @@ export class FigmaDesignExtractor {
                 }
             }
 
-            // 간격: boundVariables.itemSpacing 있으면 변수 ID → 테마 토큰
+            // 간격: boundVariables(변수) → 테마 토큰, 없으면 디자인 토큰 파일(px→토큰)로 gapStyle 설정
             if (layoutBound?.itemSpacing?.id) {
                 const gapToken = await this.extractThemeTokenFromVariableId(layoutBound.itemSpacing.id);
                 if (gapToken) (properties as any).gapStyle = gapToken;
             }
             if (node.itemSpacing !== undefined && !(properties as any).gapStyle) {
-                properties.gap = node.itemSpacing;
+                const token = getSpacingTokenFromPx(node.itemSpacing);
+                if (token) (properties as any).gapStyle = token;
+                else properties.gap = node.itemSpacing;
             }
             // Grid auto-layout: 행/열 간격 (gridRowGap, gridColumnGap 있으면 사용)
             const gridRowGap = (node as { gridRowGap?: number }).gridRowGap;

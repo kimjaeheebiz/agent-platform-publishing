@@ -2,40 +2,21 @@ import { ComponentMapping } from './types/PropertyMapper';
 
 /**
  * MUI TableRow 컴포넌트 매핑
+ *
+ * 공식 문서: https://mui.com/material-ui/react-table/
+ * MUI API: hover, selected, component (tr)
  */
 export const TableRowMapping: ComponentMapping = {
     figmaNames: ['<TableRow>'] as const,
     muiName: 'TableRow',
-    
-    // MUI API: https://mui.com/material-ui/api/table-row/
     muiProps: {
-        // hover
-        hover: {
-            type: 'boolean',
-            default: false,
-        },
-        
-        // selected
-        selected: {
-            type: 'boolean',
-            default: false,
-        },
-        
-        // component
-        component: {
-            type: 'string',
-        },
+        hover: { type: 'boolean', default: false },
+        selected: { type: 'boolean', default: false },
+        component: { type: 'string' },
     },
-    
-    // 하위 컴포넌트 import 목록
-    // TableRow 구조: TableRow > TableCell
-    subComponents: [
-        'TableCell'
-    ],
-    
-    // ✅ JSX 생성 템플릿 정의
-    // Table 관련 컴포넌트는 피그마와 개발 코드의 UI 스타일 구성 방식이 상이해 sx 속성 제거
-    generateJSX: (componentName, props, content, sx) => {
+    excludeFromSx: ['width', 'backgroundColor', 'borderColor', 'borderWidth', 'borderRadius'],
+    subComponents: ['TableCell'],
+    generateJSX: (componentName, props, content) => {
         return `<TableRow${props}>
             ${content}
         </TableRow>`;

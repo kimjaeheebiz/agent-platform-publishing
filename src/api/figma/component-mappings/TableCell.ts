@@ -1,86 +1,71 @@
 import { ComponentMapping } from './types/PropertyMapper';
 import { ComponentProperties } from '../types';
+import type { FigmaNode } from '../types';
+
+/**
+ * 피그마 오토레이아웃 정렬 → MUI TableCell align
+ * - primaryAxisAlignItems만 사용 (가로 정렬 기준)
+ * - counterAxisAlignItems(세로 정렬)는 TableCell align에 영향을 주지 않도록 무시
+ * Figma: MIN = 시작(좌), CENTER = 가운데, MAX = 끝(우). LTR에서 MIN=left, MAX=right
+ */
+function figmaAlignmentToTableCellAlign(node: FigmaNode): 'left' | 'center' | 'right' | undefined {
+    const n = node as { primaryAxisAlignItems?: string };
+    const v = n.primaryAxisAlignItems;
+    if (v === 'MIN') return 'left';
+    if (v === 'CENTER') return 'center';
+    if (v === 'MAX') return 'right';
+    return undefined;
+}
 
 /**
  * MUI TableCell 컴포넌트 매핑
- * 
+ *
  * 공식 문서: https://mui.com/material-ui/react-table/
- * 
- * 변환 규칙:
- * - 피그마 <TableHead> 인스턴스는 TableHeadRow 내부에서만 TableCell로 변환됨 (extractor에서 처리)
+ * MUI API: align, padding, size, variant(head|body|footer), sortDirection, scope, component
+ * 피그마: Small → size="small", 위치(Position) 정렬 → align (primaryAxisAlignItems/counterAxisAlignItems)
  */
 export const TableCellMapping: ComponentMapping = {
     figmaNames: ['<TableCell>'] as const,
     muiName: 'TableCell',
-    
-    // MUI API: https://mui.com/material-ui/api/table-cell/
     muiProps: {
-        // align
         align: {
             type: 'union',
             values: ['left', 'right', 'center', 'inherit', 'justify'] as const,
             default: 'inherit',
+            extractFromFigma: (node: FigmaNode) => figmaAlignmentToTableCellAlign(node),
         },
-        
-        // padding
         padding: {
             type: 'union',
             values: ['normal', 'checkbox', 'none'] as const,
             default: 'normal',
         },
-        
-        // size (피그마에서는 small boolean prop으로 설정될 수 있음)
         size: {
             type: 'union',
             values: ['small', 'medium'] as const,
             default: 'medium',
         },
-        
-        // small (피그마 boolean prop, size="small"로 변환됨)
-        small: {
-            type: 'boolean',
-            default: false,
-        },
-        
-        // sortDirection
+        small: { type: 'boolean', default: false },
         sortDirection: {
             type: 'union',
             values: ['asc', 'desc', 'false'] as const,
         },
-        
-        // scope
-        scope: {
-            type: 'string',
-        },
-        
-        // variant
+        scope: { type: 'string' },
         variant: {
             type: 'union',
             values: ['head', 'body', 'footer'] as const,
         },
-        
-        // component
-        component: {
-            type: 'string',
-        },
+        component: { type: 'string' },
     },
-    
-    // ✅ Props 변환: 피그마의 small boolean prop을 size="small"로 변환
+    excludeFromSx: ['width', 'backgroundColor', 'borderColor', 'borderWidth', 'borderRadius'],
     transformProps: (properties: ComponentProperties) => {
         const transformed = { ...properties };
-        
-        // small={true}를 size="small"로 변환
         if (transformed['small'] === true) {
             transformed['size'] = 'small';
             delete transformed['small'];
         }
-        
         return transformed;
     },
-    
-    // ✅ JSX 생성 템플릿 정의
-    // Table 관련 컴포넌트는 피그마와 개발 코드의 UI 스타일 구성 방식이 상이해 sx 속성 제거
-    generateJSX: (componentName, props, content, sx) => {
+    generateJSX: (componentName, props, content) => {
         return `<TableCell${props}>
             ${content}
         </TableCell>`;

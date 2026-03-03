@@ -5,6 +5,7 @@ import {
     Tabs,
     TextField,
     TableContainer,
+    Paper,
     Table,
     TableHead,
     TableRow,
@@ -32,14 +33,7 @@ export const Recycle: React.FC = () => {
                     gap: 1,
                 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        height: '30px',
-                    }}
-                >
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Tabs
                             sx={{
@@ -58,40 +52,27 @@ export const Recycle: React.FC = () => {
                         ></TextField>
                     </Stack>
                 </Stack>
-                <TableContainer
-                    sx={{
-                        backgroundColor: '_components.paper.elevation-1',
-                    }}
-                >
-                    <Table>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>소속 프로젝트</TableCell>
-                                <TableCell>리소스 유형</TableCell>
                                 <TableCell>리소스 이름</TableCell>
+                                <TableCell>리소스 유형</TableCell>
+                                <TableCell>소속 프로젝트</TableCell>
                                 <TableCell>등록자</TableCell>
-                                <TableCell>삭제일</TableCell>
                                 <TableCell>삭제 실행자</TableCell>
+                                <TableCell>삭제일</TableCell>
                                 <TableCell>관리</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -99,34 +80,15 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">프로젝트</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -134,21 +96,12 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -156,34 +109,12 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -191,63 +122,27 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>복원</Button>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복원
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            영구 삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            2eb8fa4703f4482a93f281e07232bdcb
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            에이전트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -255,85 +150,15 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">에이전트</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            honggildong@hecto.co.kr
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            honggildong@hecto.co.kr
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>복원</Button>
-                                    </Stack>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -341,34 +166,53 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            지식베이스
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            지식베이스 이름
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복원
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            영구 삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">지식베이스 이름</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -376,85 +220,15 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            honggildong@hecto.co.kr
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.disabled',
-                                            }}
-                                        >
-                                            honggildong@hecto.co.kr
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>복원</Button>
-                                    </Stack>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -462,34 +236,55 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
-                                            variant="body2"
+                                            variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
+                                                color: 'text.disabled',
                                             }}
                                         >
-                                            지식베이스 문서
+                                            honggildong@hecto.co.kr
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
-                                            variant="body2"
+                                            variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
+                                                color: 'text.disabled',
                                             }}
                                         >
-                                            문서 이름
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복원
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            영구 삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">
+                                            지식베이스 문서 이름
                                         </Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -497,21 +292,28 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스 문서</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            2eb8fa4703f4482a93f281e07232bdcb
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -519,34 +321,12 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -554,28 +334,27 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>복원</Button>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복원
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            영구 삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -583,34 +362,15 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트
-                                        </Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">프로젝트</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            프로젝트 이름
-                                        </Typography>
+                                        <Typography variant="body2">소속 프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -618,21 +378,12 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -640,34 +391,12 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            2025.01.01
-                                        </Typography>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                flex: 1,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            홍길동
-                                        </Typography>
+                                        <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
                                                 color: 'text.disabled',
                                             }}
                                         >
@@ -675,9 +404,17 @@ export const Recycle: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
-                                        <Button>복원</Button>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            복원
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            영구 삭제
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
