@@ -4,16 +4,19 @@ import {
     Stack,
     Tabs,
     TextField,
+    InputAdornment,
     TableContainer,
-    Paper,
     Table,
+    Paper,
     TableHead,
+    TableBody,
+    TableFooter,
     TableRow,
     TableCell,
-    TableBody,
     Typography,
     Button,
 } from '@mui/material';
+import { Search, ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 // Import page-specific types
 import { RecyclePageState } from './Recycle.types';
@@ -43,11 +46,19 @@ export const Recycle: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            variant="outlined"
                             size="small"
+                            placeholder="리소스 이름, 소속 프로젝트 이름"
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             sx={{
                                 width: '360px',
-                                backgroundColor: '#ffffffff',
                             }}
                         ></TextField>
                     </Stack>

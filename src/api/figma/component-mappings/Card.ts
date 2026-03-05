@@ -1,5 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
-import { FigmaNode, ComponentProperties } from '../types';
+import type { FigmaNode, ComponentProperties } from '../types';
 
 /**
  * MUI Card 컴포넌트 매핑
@@ -7,7 +7,7 @@ import { FigmaNode, ComponentProperties } from '../types';
  * 공식 문서: https://mui.com/material-ui/react-card/
  */
 export const CardMapping: ComponentMapping = {
-    figmaNames: ['<Card>', '<Paper>'] as const,
+    figmaNames: ['<Card>', 'Card', '<Paper>', 'Paper'] as const,
     muiName: 'Card',
     
     muiProps: {

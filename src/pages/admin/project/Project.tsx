@@ -4,17 +4,22 @@ import {
     Stack,
     Typography,
     Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
     TextField,
+    InputAdornment,
     Button,
     TableContainer,
-    Paper,
     Table,
+    Paper,
     TableHead,
+    TableBody,
+    TableFooter,
     TableRow,
     TableCell,
-    TableBody,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Search, Add, ChevronRight, ChevronLeft } from '@mui/icons-material';
 
 // Import page-specific types
 import { ProjectPageState } from './Project.types';
@@ -39,19 +44,36 @@ export const Project: React.FC = () => {
                         <Typography variant="body1">총 500건</Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Select
+                        <FormControl
                             size="small"
                             sx={{
                                 width: '160px',
-                                backgroundColor: '#ffffffff',
                             }}
-                        ></Select>
+                        >
+                            <InputLabel id="select-소유자-소속-label">소유자 소속</InputLabel>
+                            <Select
+                                labelId="select-소유자-소속-label"
+                                value="전체"
+                                size="small"
+                                label="소유자 소속"
+                            >
+                                <MenuItem value={`전체`}>전체</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
-                            variant="outlined"
                             size="small"
+                            placeholder="프로젝트 이름, 소유자 이름, 소유자 이메일"
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             sx={{
                                 width: '360px',
-                                backgroundColor: '#ffffffff',
                             }}
                         ></TextField>
                         <Button variant="contained" size="small" startIcon={<Add />}>
@@ -67,7 +89,7 @@ export const Project: React.FC = () => {
                                 <TableCell>에이전트</TableCell>
                                 <TableCell>구성원</TableCell>
                                 <TableCell>소유자</TableCell>
-                                <TableCell>소속</TableCell>
+                                <TableCell>소유자 소속</TableCell>
                                 <TableCell>등록일</TableCell>
                                 <TableCell>관리</TableCell>
                             </TableRow>

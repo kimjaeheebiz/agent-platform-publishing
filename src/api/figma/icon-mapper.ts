@@ -69,16 +69,16 @@ export function hasIcon(properties: Record<string, any>): boolean {
 export function getRequiredIconNames(properties: Record<string, any>): string[] {
     const icons = new Set<string>();
     
-    // ✅ 실제로 사용되는 경우에만 import 추가
-    if (properties.startIcon === true && properties.startIconComponentId) {
-        const iconName = getMuiIconName(properties.startIconComponentId, properties.startIconName);
+    // ✅ 실제로 사용되는 경우에만 import 추가 (Button: startIcon===true, TextField: startIconComponentId+startIconName)
+    if ((properties.startIcon === true || properties.startIconComponentId) && (properties.startIconComponentId || properties.startIconName)) {
+        const iconName = getMuiIconName(properties.startIconComponentId || '', properties.startIconName);
         if (iconName) {
             icons.add(iconName);
         }
     }
     
-    if (properties.endIcon === true && properties.endIconComponentId) {
-        const iconName = getMuiIconName(properties.endIconComponentId, properties.endIconName);
+    if ((properties.endIcon === true || properties.endIconComponentId) && (properties.endIconComponentId || properties.endIconName)) {
+        const iconName = getMuiIconName(properties.endIconComponentId || '', properties.endIconName);
         if (iconName) {
             icons.add(iconName);
         }

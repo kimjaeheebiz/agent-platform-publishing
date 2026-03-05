@@ -55,6 +55,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { Add, Search, Star, Settings, Person, Delete, Edit, Share, Home, Work, School } from '@mui/icons-material';
+import { StatusChip, FavoriteButton, FilterToggleGroup } from '@/components';
 
 export const Guide = () => {
     const theme = useTheme();
@@ -82,13 +83,14 @@ export const Guide = () => {
     const [checked, setChecked] = React.useState(false);
     const [switchChecked, setSwitchChecked] = React.useState(false);
     const [radioValue, setRadioValue] = React.useState('option1');
-    const [selectValue, setSelectValue] = React.useState('');
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [toggleValueSmall, setToggleValueSmall] = React.useState('left');
     const [toggleValueMedium, setToggleValueMedium] = React.useState('left');
     const [toggleValueLarge, setToggleValueLarge] = React.useState('left');
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    // const [customFavorite, setCustomFavorite] = React.useState(false);
+    const [filterToggleValue, setFilterToggleValue] = React.useState('all');
 
     // 코드 힌트 공통 스타일
     const codeHintSx = {
@@ -119,6 +121,7 @@ export const Guide = () => {
         { id: 'sectionAlerts', label: 'Alerts' },
         { id: 'sectionDialogs', label: 'Dialogs & Menus' },
         { id: 'sectionSnackbar', label: 'Snackbar' },
+        { id: 'sectionCustom', label: 'Custom' },
     ];
 
     const [activeSection, setActiveSection] = React.useState<string>('sectionColors');
@@ -175,12 +178,12 @@ export const Guide = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {/* Colors */}
                 <Box component="section" className="section" id="sectionColors">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Colors
                     </Typography>
 
                     <Stack direction="row" spacing={0.5} alignItems="flex-end" sx={{ mb: 1 }}>
-                        <Typography component="h3" variant="h6">
+                        <Typography component="h3" variant="h5">
                             Theme Color (Mode/Theme 자동 반영)
                         </Typography>
                         <Typography component="code" variant="caption" sx={codeHintSx}>
@@ -220,7 +223,7 @@ export const Guide = () => {
                     {colorGroups.map((groupName) => (
                         <React.Fragment key={groupName}>
                             <Stack direction="row" spacing={0.5} alignItems="flex-end" sx={{ mb: 1 }}>
-                                <Typography component="h3" variant="h6">
+                                <Typography component="h3" variant="h5">
                                     Brand Colors ({groupName})
                                 </Typography>
                                 <Typography component="code" variant="caption" sx={codeHintSx}>
@@ -259,7 +262,7 @@ export const Guide = () => {
                     ))}
 
                     <Stack direction="row" spacing={0.5} alignItems="flex-end" sx={{ mb: 1 }}>
-                        <Typography component="h3" variant="h6">
+                        <Typography component="h3" variant="h5">
                             Material Color
                         </Typography>
                         <Typography component="code" variant="caption" sx={codeHintSx}>
@@ -310,7 +313,7 @@ export const Guide = () => {
                     </Grid>
 
                     {/* 색상 패턴 테스트 */}
-                    <Typography component="h3" variant="h6" sx={{ mb: 1 }}>
+                    <Typography component="h3" variant="h5" sx={{ mb: 1 }}>
                         *Color Pattern Test
                     </Typography>
                     <Stack direction="row" spacing={1} sx={{ mb: 3 }} flexWrap="wrap">
@@ -417,7 +420,7 @@ export const Guide = () => {
 
                 {/* Typography */}
                 <Box component="section" className="section" id="sectionTypography">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Typography
                     </Typography>
                     <Typography variant="h1">Heading 1</Typography>
@@ -438,7 +441,7 @@ export const Guide = () => {
 
                 {/* Buttons */}
                 <Box component="section" className="section" id="sectionButtons">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Buttons
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
@@ -484,6 +487,9 @@ export const Guide = () => {
                         </IconButton>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
+                        <Button variant="contained" size="xsmall">
+                            Extra Small
+                        </Button>
                         <Button variant="contained" size="small">
                             Small
                         </Button>
@@ -507,7 +513,7 @@ export const Guide = () => {
 
                 {/* Toggle Buttons */}
                 <Box component="section" className="section" id="sectionToggleButtons">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Toggle Buttons
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -532,7 +538,7 @@ export const Guide = () => {
 
                 {/* Chips & Avatars */}
                 <Box component="section" className="section" id="sectionChipsAvatars">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Chips & Avatars
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
@@ -554,19 +560,53 @@ export const Guide = () => {
                         <Chip label="Small" size="small" />
                         <Chip label="Default(Medium)" />
                     </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                        <Avatar>A</Avatar>
-                        <Avatar sx={{ bgcolor: 'primary.main' }}>B</Avatar>
-                        <Avatar sx={{ bgcolor: 'secondary.main' }}>C</Avatar>
-                        <Avatar>
-                            <Person />
+                    <Typography variant="subtitle2" sx={{ mt: 2 }}>
+                        Avatar - variant
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>A</Avatar>
+                        <Avatar sx={{ bgcolor: 'secondary.main' }} variant="rounded">B</Avatar>
+                        <Avatar sx={{ bgcolor: 'success.main' }} variant="square">C</Avatar>
+                    </Stack>
+                    <Typography variant="subtitle2">
+                        Avatar - size
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
+                        <Avatar sx={{ width: 18, height: 18, bgcolor: 'primary.main', fontSize: '10px' }}>XS</Avatar>
+                        <Avatar sx={{ width: 24, height: 24, bgcolor: 'primary.main', fontSize: '13px' }}>S</Avatar>
+                        <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '16px' }}>M</Avatar>
+                        <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main', fontSize: '20px' }}>L</Avatar>
+                    </Stack>
+                    <Typography variant="subtitle2">
+                        Avatar - color (letter)
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>P</Avatar>
+                        <Avatar sx={{ bgcolor: 'secondary.main' }}>S</Avatar>
+                        <Avatar sx={{ bgcolor: 'success.main' }}>S</Avatar>
+                        <Avatar sx={{ bgcolor: 'error.main' }}>E</Avatar>
+                        <Avatar sx={{ bgcolor: 'warning.main' }}>W</Avatar>
+                        <Avatar sx={{ bgcolor: 'info.main' }}>I</Avatar>
+                    </Stack>
+                    <Typography variant="subtitle2">
+                        Avatar - icon
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Avatar sx={{ width: 24, height: 24, bgcolor: 'primary.main' }}>
+                            <Person fontSize="inherit" sx={{ fontSize: '16px' }} />
+                        </Avatar>
+                        <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                            <Person fontSize="inherit" />
+                        </Avatar>
+                        <Avatar sx={{ width: 40, height: 40, bgcolor: 'success.main' }}>
+                            <Person fontSize="medium" />
                         </Avatar>
                     </Stack>
                 </Box>
 
                 {/* Form */}
                 <Box component="section" className="section" id="sectionFormControls">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Form
                     </Typography>
                     <Grid container spacing={2}>
@@ -600,9 +640,8 @@ export const Guide = () => {
                                 <InputLabel id="basicSelectLabel">Select</InputLabel>
                                 <Select
                                     labelId="basicSelectLabel"
-                                    value={selectValue}
+                                    defaultValue="option1"
                                     label="Select"
-                                    onChange={(e) => setSelectValue(e.target.value)}
                                 >
                                     <MenuItem value="option1">Option 1</MenuItem>
                                     <MenuItem value="option2">Option 2</MenuItem>
@@ -639,7 +678,7 @@ export const Guide = () => {
                     </Grid>
 
                     {/* Form Sizes */}
-                    <Typography component="h3" variant="h6" gutterBottom sx={{ mt: 3 }}>
+                    <Typography component="h3" variant="h5" gutterBottom sx={{ mt: 3 }}>
                         Sizes
                     </Typography>
                     <Grid container spacing={2}>
@@ -654,9 +693,8 @@ export const Guide = () => {
                                 <InputLabel id="sizeSmallLabel">Select Small</InputLabel>
                                 <Select
                                     labelId="sizeSmallLabel"
-                                    value={selectValue}
+                                    defaultValue="option1"
                                     label="Select Small"
-                                    onChange={(e) => setSelectValue(e.target.value)}
                                 >
                                     <MenuItem value="option1">Option 1</MenuItem>
                                     <MenuItem value="option2">Option 2</MenuItem>
@@ -669,9 +707,8 @@ export const Guide = () => {
                                 <InputLabel id="sizeMediumLabel">Select Medium</InputLabel>
                                 <Select
                                     labelId="sizeMediumLabel"
-                                    value={selectValue}
+                                    defaultValue="option1"
                                     label="Select Medium"
-                                    onChange={(e) => setSelectValue(e.target.value)}
                                 >
                                     <MenuItem value="option1">Option 1</MenuItem>
                                     <MenuItem value="option2">Option 2</MenuItem>
@@ -734,7 +771,7 @@ export const Guide = () => {
 
                 {/* Cards */}
                 <Box component="section" className="section" id="sectionCards">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Cards
                     </Typography>
                     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -770,13 +807,13 @@ export const Guide = () => {
 
                 {/* Tables */}
                 <Box component="section" className="section" id="sectionTables">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Tables
                     </Typography>
 
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                         <Box>
-                            <Typography component="h3" variant="h6" gutterBottom>
+                            <Typography component="h3" variant="h5" gutterBottom>
                                 Default (Medium)
                             </Typography>
                             <TableContainer component={Paper} elevation={0} variant="outlined">
@@ -823,7 +860,7 @@ export const Guide = () => {
                         </Box>
 
                         <Box>
-                            <Typography component="h3" variant="h6" gutterBottom>
+                            <Typography component="h3" variant="h5" gutterBottom>
                                 Small
                             </Typography>
                             <TableContainer component={Paper} elevation={0} variant="outlined">
@@ -873,12 +910,12 @@ export const Guide = () => {
 
                 {/* Lists */}
                 <Box component="section" className="section" id="sectionLists">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Lists
                     </Typography>
                     <Stack direction="row" spacing={2} flexWrap="wrap">
                         <Box>
-                            <Typography component="h3" variant="h6" gutterBottom>
+                            <Typography component="h3" variant="h5" gutterBottom>
                                 Default
                             </Typography>
                             <Paper sx={{ maxWidth: 400 }}>
@@ -906,7 +943,7 @@ export const Guide = () => {
                             </Paper>
                         </Box>
                         <Box>
-                            <Typography component="h3" variant="h6" gutterBottom>
+                            <Typography component="h3" variant="h5" gutterBottom>
                                 Dense
                             </Typography>
                             <Paper sx={{ maxWidth: 400 }}>
@@ -938,7 +975,7 @@ export const Guide = () => {
 
                 {/* Alerts */}
                 <Box component="section" className="section" id="sectionAlerts">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Alerts
                     </Typography>
                     <Grid container spacing={2}>
@@ -965,7 +1002,7 @@ export const Guide = () => {
 
                 {/* Dialogs & Menus */}
                 <Box component="section" className="section" id="sectionDialogs">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Dialogs & Menus
                     </Typography>
                     <Stack direction="row" spacing={1}>
@@ -1014,7 +1051,7 @@ export const Guide = () => {
 
                 {/* Snackbar */}
                 <Box component="section" className="section" id="sectionSnackbar">
-                    <Typography component="h2" variant="h5" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         Snackbar
                     </Typography>
                     <Button variant="contained" onClick={() => setSnackbarOpen(true)}>
@@ -1026,6 +1063,47 @@ export const Guide = () => {
                         onClose={() => setSnackbarOpen(false)}
                         message="This is a snackbar message"
                     />
+                </Box>
+
+                {/* Custom */}
+                <Box component="section" className="section" id="sectionCustom">
+                    <Typography component="h2" variant="h4" gutterBottom>
+                        Custom (공통 컴포넌트 추가, MUI X)
+                    </Typography>
+                    <Stack spacing={2}>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 120 }}>
+                                FilterToggleGroup
+                            </Typography>
+                            <FilterToggleGroup
+                                options={[
+                                    { value: 'all', label: '전체', count: 100 },
+                                    { value: 'filter1', label: '필터명 1', count: 99 },
+                                    { value: 'filter2', label: '필터명 2', count: 1 },
+                                ]}
+                                value={filterToggleValue}
+                                onChange={setFilterToggleValue}
+                                size="small"
+                            />
+                        </Stack>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 120 }}>
+                                StatusChip
+                            </Typography>
+                            <StatusChip status="active" />
+                            <StatusChip status="inactive" />
+                            <StatusChip status="stop" />
+                            <StatusChip status="undeployed" />
+                            <StatusChip status="expired" />
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 120 }}>
+                                FavoriteButton
+                            </Typography>
+                            <FavoriteButton />
+                            <FavoriteButton selected />
+                        </Stack>
+                    </Stack>
                 </Box>
             </Box>
         </Box>

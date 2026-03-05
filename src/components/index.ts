@@ -5,5 +5,8 @@ export type { BrandProps } from './Brand';
 export { StatusChip } from './StatusChip';
 export type { Status } from './StatusChip';
 
+export { FavoriteButton } from './FavoriteButton';
+export type { FavoriteButtonProps } from './FavoriteButton';
+
 export { FilterToggleGroup } from './FilterToggleGroup';
 export type { FilterOption, FilterToggleGroupProps } from './FilterToggleGroup';

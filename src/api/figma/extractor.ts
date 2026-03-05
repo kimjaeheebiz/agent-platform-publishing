@@ -12,6 +12,7 @@ import {
     ThemeConfig,
     TypographyConfig,
 } from './types';
+import { rgbaToHex, extractColorFromFill } from './utils/figma-paint-utils';
 
 export class FigmaDesignExtractor {
     private client: FigmaAPIClient;
@@ -1465,10 +1466,12 @@ export class FigmaDesignExtractor {
                         } else {
                             properties[propName] = Boolean(value);
                         }
+                    } else if (typeof value === 'string' && ['label', 'placeholder', 'text', 'helperText', 'defaultValue'].includes(propName)) {
+                        properties[propName] = value;
                     } else {
                         properties[propName] = typeof value === 'string' ? value.toLowerCase() : value;
                     }
-                    
+
                     // 디버깅: small prop 추출 확인
                     if ((propName === 'small') && (node.name === '<Table>' || node.name === 'Table' || node.name === '<TableCell>' || node.name === 'TableCell' || node.name === '<TableHead>' || node.name === 'TableHead')) {
                         console.log(`🔍 [${node.name}] extractComponentProperties: ${propName}=${value} (hasTransformProps=${hasTransformProps})`);
@@ -1621,7 +1624,7 @@ export class FigmaDesignExtractor {
 
         // 테두리 정보
         if (node.strokes && node.strokes.length > 0) {
-            properties.borderColor = this.extractColor(node.strokes[0]);
+            properties.borderColor = extractColorFromFill(node.strokes[0]);
             properties.borderWidth = 1; // 기본값
         }
 
@@ -1832,6 +1835,54 @@ export class FigmaDesignExtractor {
             if (gridColumnGap !== undefined) (properties as { columnSpacing?: number }).columnSpacing = gridColumnGap;
         }
 
+        // FavoriteButton: Figma Selected → selected(boolean)
+        try {
+            const nodeName = (node as any).name || '';
+            const isFavoriteButton = nodeName === '<FavoriteButton>' || nodeName === 'FavoriteButton';
+            if (isFavoriteButton) {
+                const rawProps = (node as any).componentProperties || {};
+                const favoriteKey = Object.keys(rawProps).find(
+                    (key) => key.toLowerCase() === 'selected',
+                );
+                if (favoriteKey) {
+                    const raw = (rawProps as any)[favoriteKey];
+                    let value: any;
+                    if (raw && typeof raw === 'object' && 'value' in raw) {
+                        value = (raw as any).value;
+                    } else {
+                        value = raw;
+                    }
+                    const boolVal =
+                        typeof value === 'string' ? value.toLowerCase() === 'true' : Boolean(value);
+                    (properties as any).selected = boolVal;
+                }
+            }
+        } catch {}
+
+        // StatusChip: Figma State → status (active/inactive/stop/undeployed/expired)
+        try {
+            const nodeName = (node as any).name || '';
+            const isStatusChip = nodeName === '<StatusChip>' || nodeName === 'StatusChip';
+            if (isStatusChip) {
+                const rawProps = (node as any).componentProperties || {};
+                const stateKey = Object.keys(rawProps).find(
+                    (key) => key.toLowerCase() === 'state',
+                );
+                if (stateKey) {
+                    const raw = (rawProps as any)[stateKey];
+                    let value: any;
+                    if (raw && typeof raw === 'object' && 'value' in raw) {
+                        value = (raw as any).value;
+                    } else {
+                        value = raw;
+                    }
+                    if (typeof value === 'string') {
+                        (properties as any).status = value.toLowerCase();
+                    }
+                }
+            }
+        } catch {}
+
         // Avatar의 배경 컬러는 인스턴스 자신(node.fills[0])의 변수명만 사용 (자식 탐색 금지)
         try {
             const mappingForAvatar = findMappingByFigmaName(node.name) || (componentType ? findMappingByType(componentType) : null);
@@ -1964,7 +2015,7 @@ export class FigmaDesignExtractor {
         if (node.fills && node.fills.length > 0) {
             const fill = node.fills[0];
             if (fill.type === 'SOLID' && fill.color) {
-                colors[node.name.toLowerCase().replace(/\s+/g, '-')] = this.rgbaToHex(fill.color);
+                colors[node.name.toLowerCase().replace(/\s+/g, '-')] = rgbaToHex(fill.color);
             }
         }
 
@@ -2143,13 +2194,13 @@ export class FigmaDesignExtractor {
                 console.log(`🔍 스타일 ID ${fill.styleId}에 대한 정보:`, styleInfo);
                 if (styleInfo) {
                     return {
-                        color: this.extractColor(fill),
+                        color: extractColorFromFill(fill),
                         styleName: styleInfo.name
                     };
                 }
             }
             return {
-                color: this.extractColor(fill)
+                color: extractColorFromFill(fill)
             };
         }
 
@@ -2184,7 +2235,7 @@ export class FigmaDesignExtractor {
                 // variable-mapping에서 MUI 테마 경로 반환 (예: "primary.main")
                 console.log(`🎨 MUI 테마 경로: ${themeToken}`);
                 return {
-                    color: this.extractColor(fillObj),
+                    color: extractColorFromFill(fillObj),
                     styleName: themeToken
                 };
             }
@@ -2195,7 +2246,7 @@ export class FigmaDesignExtractor {
             const style = this.styleInfo.get(fillObj.styleId) as { name: string } | undefined;
             if (style) {
                 return {
-                    color: this.extractColor(fillObj),
+                    color: extractColorFromFill(fillObj),
                     styleName: style.name
                 };
             }
@@ -2203,7 +2254,7 @@ export class FigmaDesignExtractor {
 
         // 스타일 ID가 없는 경우 기본 색상 추출
         return {
-            color: this.extractColor(fillObj)
+            color: extractColorFromFill(fillObj)
         };
     }
 
@@ -2385,38 +2436,6 @@ export class FigmaDesignExtractor {
             .toLowerCase()
             .replace(/\//g, '.')
             .replace(/\s+/g, '');
-    }
-
-    /**
-     * 색상 추출
-     * @param fill 피그마 Fill 객체
-     * @returns 색상 문자열
-     */
-    private extractColor(fill: { type: string; color?: { r: number; g: number; b: number; a?: number } }): string {
-        if (fill.type === 'SOLID' && fill.color) {
-            return this.rgbaToHex(fill.color);
-        }
-        return '#000000';
-    }
-
-    /**
-     * RGBA를 HEX로 변환
-     * @param color RGBA 색상 객체
-     * @returns HEX 색상 문자열
-     */
-    private rgbaToHex(color: { r: number; g: number; b: number; a?: number }): string {
-        const r = Math.round(color.r * 255);
-        const g = Math.round(color.g * 255);
-        const b = Math.round(color.b * 255);
-        const a = Math.round((color.a ?? 1) * 255);
-
-        // 8자리 HEX 코드로 반환 (RRGGBBAA)
-        const rHex = r.toString(16).padStart(2, '0');
-        const gHex = g.toString(16).padStart(2, '0');
-        const bHex = b.toString(16).padStart(2, '0');
-        const aHex = a.toString(16).padStart(2, '0');
-
-        return `#${rHex}${gHex}${bHex}${aHex}`;
     }
 
     /**

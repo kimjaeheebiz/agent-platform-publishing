@@ -1,14 +1,7 @@
 import { ComponentMapping } from './types/PropertyMapper';
-import { FigmaNode, ComponentProperties } from '../types';
+import type { FigmaNode, ComponentProperties } from '../types';
 import { findMappingByFigmaName } from './index';
-
-/** componentProperties에서 값 추출 (value 필드 또는 원시값) */
-function getPropValue(props: Record<string, unknown>, keyLower: string): unknown {
-    const entry = Object.entries(props).find(([k]) => k.toLowerCase() === keyLower);
-    if (!entry) return undefined;
-    const v = entry[1];
-    return v != null && typeof v === 'object' && 'value' in v ? (v as { value: unknown }).value : v;
-}
+import { getPropValue } from '../utils/figma-node-utils';
 
 /**
  * MUI TableContainer 컴포넌트 매핑

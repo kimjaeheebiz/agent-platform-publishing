@@ -1,6 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
-import { ComponentProperties } from '../types';
-import type { FigmaNode } from '../types';
+import type { FigmaNode, ComponentProperties } from '../types';
 
 /**
  * 피그마 오토레이아웃 정렬 → MUI TableCell align

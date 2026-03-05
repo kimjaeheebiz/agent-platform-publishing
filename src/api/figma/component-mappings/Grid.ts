@@ -1,6 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
-import { ComponentProperties } from '../types';
-import type { FigmaNode } from '../types';
+import type { FigmaNode, ComponentProperties } from '../types';
 
 /** Grid 전용 속성 (추출/변환용, ComponentProperties에 선택적 포함) */
 type GridProps = ComponentProperties & {

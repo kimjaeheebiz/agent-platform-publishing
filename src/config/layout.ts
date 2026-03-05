@@ -3,7 +3,7 @@
  */
 
 // PC 전용 최소 사이즈
-export const MIN_WIDTH = 1280;
+export const MIN_WIDTH = 1500;
 
 // 헤더 높이
 export const HEADER_HEIGHT = 48;

@@ -9,12 +9,13 @@ import {
     Card,
     CardHeader,
     CardContent,
+    CardActions,
+    CardMedia,
     FormControl,
     TextField,
-    CardActions,
     Button,
 } from '@mui/material';
-import { Person } from '@mui/icons-material';
+import { Person, ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 // Import page-specific types
 import { AccountPageState } from './Account.types';
@@ -35,19 +36,15 @@ export const Account: React.FC = () => {
                     }}
                 >
                     <Avatar
-                        sx={{
-                            width: '80px',
-                            height: '80px',
-                            backgroundColor: 'common.white_states.main',
-                        }}
+                        sx={{ width: 40, height: 40, backgroundColor: 'common.white_states.main' }}
                     >
                         <Person />
                     </Avatar>
                     <Stack
-                        spacing={5}
+                        spacing={0.5}
                         alignItems="center"
                         sx={{
-                            backgroundColor: '#ffffffff',
+                            backgroundColor: '#ffffff',
                         }}
                     >
                         <Typography
@@ -67,16 +64,7 @@ export const Account: React.FC = () => {
                             honggildong@hecto.co.kr
                         </Typography>
                     </Stack>
-                    <Chip
-                        variant="filled"
-                        color="secondary"
-                        size="small"
-                        sx={{
-                            backgroundColor: 'secondary.main',
-                            borderRadius: '100px',
-                        }}
-                        label="OP"
-                    />
+                    <Chip label="일반사용자" color="secondary" size="small" />
                 </Paper>
                 <Card
                     elevation={0}
@@ -90,22 +78,14 @@ export const Account: React.FC = () => {
                     <CardContent>
                         <Stack spacing={4}>
                             <Stack spacing={2}>
-                                <FormControl
-                                    sx={{
-                                        flex: 1,
-                                    }}
-                                ></FormControl>
-                                <FormControl
-                                    sx={{
-                                        flex: 1,
-                                    }}
-                                ></FormControl>
+                                <FormControl></FormControl>
+                                <FormControl></FormControl>
                             </Stack>
                             <Stack spacing={1}>
                                 <Stack>
                                     <Stack direction="row">
                                         <Stack
-                                            spacing={5}
+                                            spacing={0.5}
                                             sx={{
                                                 backgroundColor: 'text.primary',
                                             }}
@@ -113,7 +93,6 @@ export const Account: React.FC = () => {
                                             <Typography
                                                 variant="body2"
                                                 sx={{
-                                                    flex: 1,
                                                     color: 'text.secondary',
                                                 }}
                                             >
@@ -125,7 +104,7 @@ export const Account: React.FC = () => {
                                             spacing={3}
                                             sx={{
                                                 height: '12px',
-                                                backgroundColor: '#ffffffff',
+                                                backgroundColor: '#ffffff',
                                             }}
                                         >
                                             <Stack></Stack>
@@ -133,16 +112,8 @@ export const Account: React.FC = () => {
                                     </Stack>
                                 </Stack>
                                 <Stack direction="row" spacing={2}>
-                                    <TextField
-                                        sx={{
-                                            flex: 1,
-                                        }}
-                                    ></TextField>
-                                    <TextField
-                                        sx={{
-                                            flex: 1,
-                                        }}
-                                    ></TextField>
+                                    <TextField label="새 비밀번호">새 비밀번호</TextField>
+                                    <TextField label="새 비밀번호 확인">새 비밀번호 확인</TextField>
                                 </Stack>
                             </Stack>
                         </Stack>

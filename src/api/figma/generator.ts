@@ -15,7 +15,29 @@ import { getSpacingTokenFromPx } from './variable-mapping';
 const TABLE_STRUCTURE_MUI_NAMES = new Set([
     'Table', 'TableHead', 'TableBody', 'TableRow', 'TableCell', 'TableFooter',
 ]);
+
+/** 피그마 인스턴스 이름이 @/components 와 동일한 커스텀 컴포넌트일 때 해당 컴포넌트를 주입 (MUI 매핑보다 우선) */
+const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
+    '<FavoriteButton>',
+    'FavoriteButton',
+    '<StatusChip>',
+    'StatusChip',
+    '<FilterToggleGroup>',
+    'FilterToggleGroup',
+]);
+
+function isCustomComponent(figmaName: string): boolean {
+    const trimmed = (figmaName || '').trim();
+    return CUSTOM_COMPONENT_FIGMA_NAMES.has(trimmed);
+}
+
+function getCustomComponentName(figmaName: string): string {
+    const trimmed = (figmaName || '').trim();
+    return trimmed.replace(/^<|>$/g, '') || trimmed;
+}
+
 import { getMuiIconName, hasIcon as hasIconProperty, getRequiredIconNames } from './icon-mapper';
+import { toPascalCase } from './utils/string-utils';
 import * as prettier from 'prettier';
 
 export class FigmaCodeGenerator {
@@ -80,7 +102,7 @@ export const ${componentName}: React.FC = () => {
     generatePageComponent(pageConfig: PageComponentConfig): string {
         const { pageName, components, layout, styles } = pageConfig;
 
-        const componentName = this.toPascalCase(pageName);
+        const componentName = toPascalCase(pageName);
         const imports = this.generateImports(components);
         const componentCode = this.generateComponentCode(componentName, components, layout);
         const pageStyles = this.generatePageStyles(styles);
@@ -203,6 +225,13 @@ ${typographyStyles}
     private generateComponentJSX(component: ComponentDesignConfig): string {
         const { componentType, componentName, properties, children } = component;
 
+        // @/components 에 동일명 컴포넌트가 있으면 해당 컴포넌트 사용 (피그마 <FavoriteButton> 등)
+        if (isCustomComponent(componentName)) {
+            const customName = getCustomComponentName(componentName);
+            const props = this.generateCustomComponentProps(customName, properties);
+            return `<${customName}${props} />`;
+        }
+
         // 먼저 componentName으로 매핑을 찾고, 없으면 componentType으로 찾음
         const mapping = findMappingByFigmaName(componentName) || findMappingByType(componentType);
 
@@ -268,6 +297,29 @@ ${typographyStyles}
         >
         ${content}
         </${muiComponent}>`;
+    }
+
+    /**
+     * @/components 커스텀 컴포넌트용 최소 props (피그마에서 추출 가능한 값만, 없으면 빈 문자열)
+     */
+    private generateCustomComponentProps(componentName: string, properties: ComponentProperties): string {
+        const props: string[] = [];
+        const p = properties as Record<string, unknown>;
+
+        // FavoriteButton: true일 때만 shorthand prop으로 출력, false면 생략
+        if (componentName === 'FavoriteButton' && typeof p.selected === 'boolean') {
+            if (p.selected === true) {
+                props.push('selected');
+            }
+        }
+        if (componentName === 'StatusChip' && typeof p.status === 'string') {
+            const status = String(p.status);
+            if (status) {
+                props.push(`status="${status}"`);
+            }
+        }
+        if (props.length === 0) return '';
+        return ' ' + props.join(' ');
     }
 
     /**
@@ -542,6 +594,8 @@ ${typographyStyles}
                 }
                 // boolean 타입인 경우
                 else if (typeof value === 'boolean' && propDef.type === 'boolean') {
+                    // Chip deletable → onDelete는 아래 Chip 전용 블록에서 처리
+                    if (propName === 'deletable' && mapping?.muiName === 'Chip') continue;
                     // 기본값인 경우 스킵 (MUI 기본값은 false)
                     const defaultValue = propDef.default !== undefined ? propDef.default : false;
                     if (value === defaultValue) {
@@ -602,6 +656,60 @@ ${typographyStyles}
                             // value가 true지만 아이콘 ID가 없으면 아무것도 추가하지 않음
                         }
                     }
+                }
+            }
+        }
+
+        // ✅ TextField: slotProps.input / Select: InputBase 상속으로 startAdornment·endAdornment 직접 prop
+        const hasAdorn = properties.startIconName || properties.endIconName;
+        if (hasAdorn) {
+            if (mapping?.muiName === 'TextField') {
+                const adornParts: string[] = [];
+                if (properties.startIconName) {
+                    const muiIcon = getMuiIconName(properties.startIconComponentId || '', properties.startIconName);
+                    if (muiIcon) {
+                        adornParts.push(`startAdornment: <InputAdornment position="start"><${muiIcon} /></InputAdornment>`);
+                    }
+                }
+                if (properties.endIconName) {
+                    const muiIcon = getMuiIconName(properties.endIconComponentId || '', properties.endIconName);
+                    if (muiIcon) {
+                        adornParts.push(`endAdornment: <InputAdornment position="end"><${muiIcon} /></InputAdornment>`);
+                    }
+                }
+                if (adornParts.length > 0) {
+                    props.push(`slotProps={{ input: { ${adornParts.join(', ')} } }}`);
+                }
+            } else if (mapping?.muiName === 'Select') {
+                if (properties.startIconName) {
+                    const muiIcon = getMuiIconName(properties.startIconComponentId || '', properties.startIconName);
+                    if (muiIcon) {
+                        props.push(`startAdornment={<InputAdornment position="start"><${muiIcon} /></InputAdornment>}`);
+                    }
+                }
+                if (properties.endIconName) {
+                    const muiIcon = getMuiIconName(properties.endIconComponentId || '', properties.endIconName);
+                    if (muiIcon) {
+                        props.push(`endAdornment={<InputAdornment position="end"><${muiIcon} /></InputAdornment>}`);
+                    }
+                }
+            }
+        }
+
+        // ✅ Chip: Deletable(onDelete), Adornments(avatar/icon) — https://mui.com/material-ui/react-chip/#deletable #chip-adornments
+        if (mapping?.muiName === 'Chip') {
+            if ((properties as any).deletable === true) {
+                props.push('onDelete={() => {}}');
+            }
+            const chipAvatarInitials = (properties as any).__chipAvatarInitials;
+            const chipIconName = (properties as any).__chipIconName;
+            if (typeof chipAvatarInitials === 'string' && chipAvatarInitials) {
+                const escaped = chipAvatarInitials.replace(/"/g, '\\"');
+                props.push(`avatar={<Avatar>${escaped}</Avatar>}`);
+            } else if (typeof chipIconName === 'string' && chipIconName) {
+                const muiIconName = getMuiIconName('', chipIconName);
+                if (muiIconName) {
+                    props.push(`icon={<${muiIconName} />}`);
                 }
             }
         }
@@ -669,7 +777,7 @@ ${typographyStyles}
      * @returns 컴포넌트 내용 문자열
      */
     private generateComponentContent(componentType: string, componentName: string, properties: ComponentProperties): string {
-        const mapping = findMappingByType(componentType);
+        const mapping = findMappingByFigmaName(componentName) || findMappingByType(componentType);
 
         // ✅ 매핑에 extractContent가 있으면 사용
         if (mapping?.extractContent) {
@@ -708,41 +816,59 @@ ${typographyStyles}
     private generateImports(components: ComponentDesignConfig[]): string {
         const imports = new Set<string>();
         const iconImports = new Set<string>();
+        const customComponentImports = new Set<string>();
 
         // 기본 MUI 컴포넌트들
         imports.add('Box');
 
         // 컴포넌트별 필요한 임포트 추가 (children 포함)
-        this.collectImportsRecursively(components, imports, iconImports);
+        this.collectImportsRecursively(components, imports, iconImports, customComponentImports);
 
         const importsList = Array.from(imports).join(', ');
         let iconImportsList = '';
         if (iconImports.size > 0) {
             iconImportsList = `\nimport { ${Array.from(iconImports).join(', ')} } from '@mui/icons-material';`;
         }
+        let customImportsList = '';
+        if (customComponentImports.size > 0) {
+            customImportsList = `\nimport { ${Array.from(customComponentImports).sort().join(', ')} } from '@/components';`;
+        }
 
         return `import React from 'react';
-import { ${importsList} } from '@mui/material';${iconImportsList}`;
+import { ${importsList} } from '@mui/material';${iconImportsList}${customImportsList}`;
     }
 
     /**
      * 컴포넌트와 그 children을 재귀적으로 순회하며 필요한 import 수집
-     * @param components 컴포넌트 배열
-     * @param imports MUI 컴포넌트 import Set
-     * @param iconImports 아이콘 import Set
+     * @param customComponentImports @/components 에서 가져올 커스텀 컴포넌트명 (FavoriteButton, StatusChip 등)
      */
     private collectImportsRecursively(
         components: ComponentDesignConfig[],
         imports: Set<string>,
-        iconImports: Set<string>
+        iconImports: Set<string>,
+        customComponentImports: Set<string>
     ): void {
         components.forEach((component) => {
+            // ✅ 피그마 인스턴스가 @/components 와 동일명이면 커스텀 컴포넌트 import만 추가 (MUI 매핑 사용 안 함)
+            if (isCustomComponent(component.componentName)) {
+                customComponentImports.add(getCustomComponentName(component.componentName));
+                if (component.children?.length) {
+                    this.collectImportsRecursively(component.children, imports, iconImports, customComponentImports);
+                }
+                return;
+            }
+
             // ✅ 컴포넌트 이름으로 직접 매핑 찾기
             const mapping = findMappingByFigmaName(component.componentName) || findMappingByType(component.componentType);
             const muiComponent = mapping?.muiName;
 
             if (muiComponent) {
                 imports.add(muiComponent);
+
+                // Select 등 JSX 내부에서 사용하는 subComponents(MenuItem 등) import
+                if (mapping?.subComponents) {
+                    mapping.subComponents.forEach((name: string) => imports.add(name));
+                }
 
                 // TableContainer가 component={Paper} 같은 프롭으로 다른 MUI 컴포넌트를 참조하는 경우 해당 컴포넌트도 import
                 const referencedComponent = (component.properties as any)?.component;
@@ -757,11 +883,33 @@ import { ${importsList} } from '@mui/material';${iconImportsList}`;
                     const iconNames = getRequiredIconNames(component.properties);
                     iconNames.forEach(iconName => iconImports.add(iconName));
                 }
+                // ✅ TextField / Select 어돈먼트 사용 시 InputAdornment import
+                const hasAdorn = component.properties && (component.properties.startIconName || component.properties.endIconName);
+                if ((muiComponent === 'TextField' || muiComponent === 'Select') && hasAdorn) {
+                    imports.add('InputAdornment');
+                }
+                // ✅ Select에 라벨이 있으면 FormControl + InputLabel 래핑 시 사용
+                if (muiComponent === 'Select' && component.properties && (component.properties as any).label) {
+                    imports.add('FormControl');
+                    imports.add('InputLabel');
+                }
+
+                // ✅ Chip adornments (avatar/icon) — https://mui.com/material-ui/react-chip/#chip-adornments
+                if (muiComponent === 'Chip' && component.properties) {
+                    if ((component.properties as any).__chipAvatarInitials) {
+                        imports.add('Avatar');
+                    }
+                    const chipIcon = (component.properties as any).__chipIconName;
+                    if (typeof chipIcon === 'string' && chipIcon) {
+                        const muiIcon = getMuiIconName('', chipIcon);
+                        if (muiIcon) iconImports.add(muiIcon);
+                    }
+                }
 
                 // ✅ layout, card, table 타입이거나 children이 있는 경우 children도 처리
                 // 실제로 사용되는 컴포넌트만 재귀적으로 import하므로 subComponents는 자동으로 처리됨
                 if ((component.componentType === 'layout' || component.componentType === 'card' || component.componentType === 'table' || component.children) && component.children) {
-                    this.collectImportsRecursively(component.children, imports, iconImports);
+                    this.collectImportsRecursively(component.children, imports, iconImports, customComponentImports);
                 }
             }
         });
@@ -775,11 +923,11 @@ import { ${importsList} } from '@mui/material';${iconImportsList}`;
      * @returns 유효한 컴포넌트 이름
      */
     private sanitizeComponentName(name: string, componentType: string, index: number): string {
-        const sanitized = this.toPascalCase(name);
+        const sanitized = toPascalCase(name);
 
         // 빈 문자열이거나 유효하지 않은 경우 컴포넌트 타입 기반으로 생성
         if (!sanitized || sanitized.length === 0) {
-            return `${this.toPascalCase(componentType)}${index + 1}`;
+            return `${toPascalCase(componentType)}${index + 1}`;
         }
 
         return sanitized;
@@ -796,21 +944,6 @@ import { ${importsList} } from '@mui/material';${iconImportsList}`;
         // 이미 올바른 형태인 경우 그대로 반환 (primary.light)
         // 슬래시가 있는 경우 점으로 변환 (text/secondary -> text.secondary)
         return figmaStyleName.includes('/') ? figmaStyleName.replace(/\//g, '.') : figmaStyleName;
-    }
-
-    /**
-     * 문자열을 PascalCase로 변환
-     * @param str 입력 문자열
-     * @returns PascalCase 문자열
-     */
-    private toPascalCase(str: string): string {
-        return str
-            .replace(/[<>]/g, '') // < > 문자 제거
-            .replace(/[^a-zA-Z0-9\s\-_]/g, '') // 한글 등 유효하지 않은 문자 제거
-            .split(/[\s\-_]+/)
-            .filter(word => word.length > 0) // 빈 문자열 제거
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join('');
     }
 
     /**

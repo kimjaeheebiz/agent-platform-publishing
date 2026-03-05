@@ -2,21 +2,25 @@ import React from 'react';
 import {
     Box,
     Stack,
-    Tabs,
     Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
     TextField,
+    InputAdornment,
     Button,
     TableContainer,
-    Paper,
     Table,
+    Paper,
     TableHead,
+    TableBody,
+    TableFooter,
     TableRow,
     TableCell,
-    TableBody,
     Typography,
-    Chip,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Search, Add, ChevronRight, ChevronLeft } from '@mui/icons-material';
+import { FilterToggleGroup, StatusChip } from '@/components';
 
 // Import page-specific types
 import { UsersPageState } from './Users.types';
@@ -38,26 +42,39 @@ export const Users: React.FC = () => {
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Tabs
-                            sx={{
-                                borderRadius: '4px',
-                            }}
-                        ></Tabs>
+                        <FilterToggleGroup />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Select
+                        <FormControl
                             size="small"
                             sx={{
                                 width: '160px',
-                                backgroundColor: '#ffffffff',
                             }}
-                        ></Select>
+                        >
+                            <InputLabel id="select-소속-label">소속</InputLabel>
+                            <Select
+                                labelId="select-소속-label"
+                                value="전체"
+                                size="small"
+                                label="소속"
+                            >
+                                <MenuItem value={`전체`}>전체</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
-                            variant="outlined"
                             size="small"
+                            placeholder="사용자 이름, 사용자 이메일"
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             sx={{
                                 width: '360px',
-                                backgroundColor: '#ffffffff',
                             }}
                         ></TextField>
                         <Button variant="contained" size="small" startIcon={<Add />}>
@@ -100,12 +117,7 @@ export const Users: React.FC = () => {
                                     <Typography variant="body2">관리자</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="active" />
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
@@ -145,12 +157,7 @@ export const Users: React.FC = () => {
                                     <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="stop" />
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
@@ -190,12 +197,7 @@ export const Users: React.FC = () => {
                                     <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="active" />
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
@@ -235,12 +237,7 @@ export const Users: React.FC = () => {
                                     <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="active" />
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
@@ -280,12 +277,7 @@ export const Users: React.FC = () => {
                                     <Typography variant="body2">일반사용자</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="active" />
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>

@@ -1,5 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
-import { ComponentProperties } from '../types';
+import type { ComponentProperties } from '../types';
 
 /**
  * MUI Table 컴포넌트 매핑

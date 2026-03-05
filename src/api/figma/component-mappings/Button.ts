@@ -1,4 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
+import { findTextRecursively } from '../utils/figma-node-utils';
 
 /**
  * MUI Button 컴포넌트 매핑
@@ -220,20 +221,4 @@ export const ButtonMapping: ComponentMapping = {
         return `<Button${props}${sxAttribute}>${content}</Button>`;
     },
 };
-
-/**
- * 재귀적으로 텍스트 찾기
- */
-function findTextRecursively(children: any[]): string | null {
-    for (const child of children) {
-        if (child.characters) {
-            return child.characters;
-        }
-        if (child.children && child.children.length > 0) {
-            const text = findTextRecursively(child.children);
-            if (text) return text;
-        }
-    }
-    return null;
-}
 

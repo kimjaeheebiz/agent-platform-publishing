@@ -261,6 +261,85 @@ export async function fetchIconNames(
 }
 
 /**
+ * Adorn Start/End 컨테이너에서 아이콘 추출 (TextField, Select 등 input 계열 공통)
+ * Figma 구조: 컴포넌트 → … → Adorn. Start Container / Adorn. End Container → Icon INSTANCE
+ */
+export async function extractAdornIconsFromNode(
+    node: FigmaNode,
+    extractor?: any
+): Promise<IconData> {
+    const result: IconData = {};
+
+    // Figma 컴포넌트 프로퍼티에서 Adorn/Action Start/End 토글(BOOLEAN) 확인
+    // - 예: "Adorn Start?", "Action_Start?", "Adorn Start? 123#id" 등
+    // - 해당 토글이 false인 경우에는 해당 위치의 아이콘을 추출하지 않음
+    const componentProps = (node as any).componentProperties || {};
+    const isAdornEnabled = (position: 'start' | 'end'): boolean => {
+        let enabled: boolean | undefined;
+        for (const [rawKey, rawProp] of Object.entries(componentProps)) {
+            const key = rawKey.toLowerCase();
+            const prop = rawProp as any;
+            if (
+                (key.includes('adorn') || key.includes('action')) &&
+                key.includes(position) &&
+                prop &&
+                typeof prop === 'object' &&
+                prop.type === 'BOOLEAN'
+            ) {
+                enabled = Boolean(prop.value);
+            }
+        }
+        // 명시적으로 false인 경우에만 비활성 처리, 그 외(없음/true)는 활성으로 간주
+        return enabled !== false;
+    };
+
+    const findAdornContainer = (root: any, namePart: string): any | undefined => {
+        const children = root?.children || [];
+        const target = namePart.toLowerCase();
+        for (const c of children) {
+            const name = String((c as any).name ?? '');
+            if (
+                name.includes('Adorn') &&
+                name.toLowerCase().includes(target) &&
+                // Figma에서 레이어를 숨긴 경우(visible === false)는 무시
+                (c as any).visible !== false
+            ) {
+                return c;
+            }
+            const found = findAdornContainer(c, namePart);
+            if (found) return found;
+        }
+        return undefined;
+    };
+
+    const findIconInNode = (n: any): string | undefined => {
+        if (!n) return undefined;
+        if (n.type === 'INSTANCE' && (n.componentId || (n.name && (n.name.includes('Icon') || n.name.includes('Filled'))))) {
+            return n.componentId;
+        }
+        const children = n?.children || [];
+        for (const ch of children) {
+            const id = findIconInNode(ch);
+            if (id) return id;
+        }
+        return undefined;
+    };
+
+    const startContainer = isAdornEnabled('start') ? findAdornContainer(node as any, 'Start') : undefined;
+    const endContainer = isAdornEnabled('end') ? findAdornContainer(node as any, 'End') : undefined;
+    if (startContainer) result.startIconComponentId = findIconInNode(startContainer);
+    if (endContainer) result.endIconComponentId = findIconInNode(endContainer);
+
+    if ((result.startIconComponentId || result.endIconComponentId) && extractor) {
+        const ids = [result.startIconComponentId, result.endIconComponentId].filter(Boolean) as string[];
+        const namesMap = await fetchIconNames(ids, extractor);
+        if (result.startIconComponentId) result.startIcon = namesMap.get(result.startIconComponentId);
+        if (result.endIconComponentId) result.endIcon = namesMap.get(result.endIconComponentId);
+    }
+    return result;
+}
+
+/**
  * Button용 Icon 추출 (기존 API와 호환)
  */
 export async function extractIconsForButton(

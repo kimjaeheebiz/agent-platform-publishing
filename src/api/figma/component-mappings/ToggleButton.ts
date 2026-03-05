@@ -1,4 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
+import { findTextRecursively } from '../utils/figma-node-utils';
 
 /**
  * MUI ToggleButton 컴포넌트 매핑
@@ -76,17 +77,4 @@ export const ToggleButtonMapping: ComponentMapping = {
         </ToggleButton>`;
     },
 };
-
-function findTextRecursively(children: any[]): string | null {
-    for (const child of children) {
-        if (child.characters) {
-            return child.characters;
-        }
-        if (child.children && child.children.length > 0) {
-            const text = findTextRecursively(child.children);
-            if (text) return text;
-        }
-    }
-    return null;
-}
 

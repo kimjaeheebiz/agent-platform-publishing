@@ -2,50 +2,51 @@ import { ComponentMapping } from './types/PropertyMapper';
 
 /**
  * MUI Avatar 컴포넌트 매핑
- * 
+ *
  * 공식 문서: https://mui.com/material-ui/react-avatar/
+ * API: https://mui.com/material-ui/api/avatar/
+ * (Badge 래핑은 Figma에서 적용하지 않음 — 공식 컴포넌트만 사용)
  */
 export const AvatarMapping: ComponentMapping = {
     figmaNames: ['<Avatar>'] as const,
     muiName: 'Avatar',
-    
+
     muiProps: {
-        // src
-        src: {
-            type: 'string',
-        },
-        
-        // alt
-        alt: {
-            type: 'string',
-        },
-        
-        // variant
+        src: { type: 'string' },
+        alt: { type: 'string' },
+        srcSet: { type: 'string' },
         variant: {
             type: 'union',
             values: ['circular', 'rounded', 'square'] as const,
             default: 'circular',
-        },
-        
-        // color
-        color: {
-            type: 'union',
-            values: ['default'] as const,
+            extractFromFigma: (node) => {
+                const v = (node as any).componentProperties?.Variant ?? (node as any).componentProperties?.variant;
+                const val = typeof v === 'object' && v?.value != null ? v.value : v;
+                if (typeof val !== 'string') return undefined;
+                const lower = val.toLowerCase();
+                if (lower.includes('rounded')) return 'rounded';
+                if (lower.includes('square')) return 'square';
+                return 'circular';
+            },
         },
     },
-    
-    excludeFromSx: [
-        'borderRadius',
-        'backgroundColor',
-        'width',
-        'height',
-    ],
-    
-    // 속성 추출: 아이콘 콘텐츠 + 배경색(BG) 보존 및 자식 fill fallback
+
+    excludeFromSx: ['borderRadius', 'backgroundColor', 'width', 'height'],
+
     extractProperties: async (node, extractor) => {
         const properties: Record<string, any> = {};
-        
-        // 아이콘 콘텐츠 추출: <Avatar> > <Icon> > 인스턴스명 구조에서 무조건 인스턴스 가져오기
+        const props = (node as any).componentProperties || {};
+        const children = (node as any).children || [];
+
+        // Size: Figma "Size" (18px 등) → __avatarSizePx
+        const sizeProp = props.Size ?? props.size;
+        const sizeVal = typeof sizeProp === 'object' && sizeProp?.value != null ? sizeProp.value : sizeProp;
+        if (sizeVal != null) {
+            const num = typeof sizeVal === 'number' ? sizeVal : parseInt(String(sizeVal).replace(/px/gi, ''), 10);
+            if (!Number.isNaN(num)) properties.__avatarSizePx = num;
+        }
+
+        // 아이콘 콘텐츠 추출: <Avatar> > <Icon> > 인스턴스명
         try {
             // <Icon> 컨테이너 찾기
             const findIconContainer = (children: any[]): any => {
@@ -112,29 +113,23 @@ export const AvatarMapping: ComponentMapping = {
         return properties as any;
     },
     
-    // ✅ JSX 생성 템플릿 정의
     generateJSX: (componentName, props, content, sx, properties) => {
-        // Avatar 전용 추가 sx 구성: 배경색, 절대 width/height
         const extraEntries: string[] = [];
+        const sizePx = (properties as any)?.__avatarSizePx;
         const absW = (properties as any)?.absoluteWidth;
         const absH = (properties as any)?.absoluteHeight;
         const avatarBG = (properties as any)?.__avatarColorStyle;
-        // width/height가 'hug'가 아닐 때만 sx에 추가
-        if (typeof absW === 'number' && properties?.width !== 'hug') {
-            extraEntries.push(`width: '${absW}px'`);
-        }
-        if (typeof absH === 'number' && properties?.height !== 'hug') {
-            extraEntries.push(`height: '${absH}px'`);
-        }
+        // Figma Size(18px 등) 우선, 없으면 absoluteWidth/height
+        const w = typeof sizePx === 'number' ? sizePx : (properties?.width !== 'hug' && typeof absW === 'number' ? absW : null);
+        const h = typeof sizePx === 'number' ? sizePx : (properties?.height !== 'hug' && typeof absH === 'number' ? absH : null);
+        if (typeof w === 'number') extraEntries.push(`width: ${w}`);
+        if (typeof h === 'number') extraEntries.push(`height: ${h}`);
         if (avatarBG) extraEntries.push(`backgroundColor: '${avatarBG}'`);
 
         let mergedSx = '';
         if (sx && extraEntries.length > 0) {
-            // sx는 "{ ... }" 형태의 문자열이므로 바깥 중괄호를 제거해 병합
             const trimmed = sx.trim();
-            const inner = trimmed.startsWith('{') && trimmed.endsWith('}')
-                ? trimmed.slice(1, -1).trim()
-                : trimmed;
+            const inner = trimmed.startsWith('{') && trimmed.endsWith('}') ? trimmed.slice(1, -1).trim() : trimmed;
             const comma = inner.length > 0 ? ', ' : '';
             mergedSx = `\n            sx={{ ${inner}${comma}${extraEntries.join(', ')} }}`;
         } else if (sx) {
@@ -142,18 +137,20 @@ export const AvatarMapping: ComponentMapping = {
         } else if (extraEntries.length > 0) {
             mergedSx = `\n            sx={{ ${extraEntries.join(', ')} }}`;
         }
-        
-        // Icon 콘텐츠가 감지된 경우 아이콘 컴포넌트로 렌더링
+
+        let avatarJsx: string;
         if (properties && (properties as any).__avatarIconName) {
             const icon = (properties as any).__avatarIconName as string;
-            return `<Avatar${props}${mergedSx}>
+            avatarJsx = `<Avatar${props}${mergedSx}>
             <${icon} />
         </Avatar>`;
-        }
-        
-        return `<Avatar${props}${mergedSx}>
+        } else {
+            avatarJsx = `<Avatar${props}${mergedSx}>
             ${content}
         </Avatar>`;
+        }
+
+        return avatarJsx;
     },
 };
 

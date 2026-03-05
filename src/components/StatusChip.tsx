@@ -12,7 +12,14 @@ type Props = {
 
 // 타입 가드: status가 유효한 Status인지 확인
 function isStatus(status: unknown): status is Status {
-    return typeof status === 'string' && (status === 'active' || status === 'inactive' || status === 'stop');
+    if (typeof status !== 'string') return false;
+    return (
+        status === 'active' ||
+        status === 'inactive' ||
+        status === 'stop' ||
+        status === 'undeployed' ||
+        status === 'expired'
+    );
 }
 
 const STATUS_LABEL: Record<Status, string> = {

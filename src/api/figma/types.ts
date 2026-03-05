@@ -1,4 +1,7 @@
-// 피그마 API 타입 정의
+/**
+ * 피그마 API·매핑 공통 타입 정의 (FigmaNode, ComponentProperties 등)
+ * 컴포넌트 매핑에서는 import type { FigmaNode, ComponentProperties } from '../types' 로만 참조.
+ */
 export interface FigmaFile {
     document: FigmaNode;
     components: Record<string, FigmaComponent>;

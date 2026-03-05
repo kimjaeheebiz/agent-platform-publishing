@@ -1,4 +1,4 @@
-import { FigmaNode, ComponentProperties } from '../../types';
+import type { FigmaNode, ComponentProperties } from '../../types';
 
 /**
  * 속성 추출 함수 타입

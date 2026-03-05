@@ -1,5 +1,5 @@
 import { ComponentMapping } from './types/PropertyMapper';
-import { FigmaNode, ComponentProperties } from '../types';
+import type { FigmaNode, ComponentProperties } from '../types';
 import { getMuiIconName } from '../icon-mapper';
 import { extractIconsForCardHeader } from '../utils/icon-extractor';
 

@@ -2,20 +2,25 @@ import React from 'react';
 import {
     Box,
     Stack,
-    Tabs,
     Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
     TextField,
+    InputAdornment,
     TableContainer,
-    Paper,
     Table,
+    Paper,
     TableHead,
+    TableBody,
+    TableFooter,
     TableRow,
     TableCell,
-    TableBody,
-    Button,
     Typography,
-    Chip,
+    Button,
 } from '@mui/material';
+import { Search, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { FavoriteButton, FilterToggleGroup, StatusChip } from '@/components';
 
 // Import page-specific types
 import { AgentPageState } from './Agent.types';
@@ -37,26 +42,39 @@ export const Agent: React.FC = () => {
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Tabs
-                            sx={{
-                                borderRadius: '4px',
-                            }}
-                        ></Tabs>
+                        <FilterToggleGroup />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Select
+                        <FormControl
                             size="small"
                             sx={{
                                 width: '160px',
-                                backgroundColor: '#ffffffff',
                             }}
-                        ></Select>
+                        >
+                            <InputLabel id="select-소속-프로젝트-label">소속 프로젝트</InputLabel>
+                            <Select
+                                labelId="select-소속-프로젝트-label"
+                                value="전체"
+                                size="small"
+                                label="소속 프로젝트"
+                            >
+                                <MenuItem value={`전체`}>전체</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
-                            variant="outlined"
                             size="small"
+                            placeholder="에이전트 이름, 등록자 이름, 등록자 이메일"
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             sx={{
                                 width: '360px',
-                                backgroundColor: '#ffffffff',
                             }}
                         ></TextField>
                     </Stack>
@@ -78,7 +96,7 @@ export const Agent: React.FC = () => {
                         <TableBody>
                             <TableRow>
                                 <TableCell align="center">
-                                    <Button></Button>
+                                    <FavoriteButton selected />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -110,12 +128,7 @@ export const Agent: React.FC = () => {
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="active" />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -149,7 +162,7 @@ export const Agent: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell align="center">
-                                    <Button></Button>
+                                    <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -181,12 +194,7 @@ export const Agent: React.FC = () => {
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="stop" />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -220,7 +228,7 @@ export const Agent: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell align="center">
-                                    <Button></Button>
+                                    <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -252,12 +260,7 @@ export const Agent: React.FC = () => {
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="undeployed" />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -291,7 +294,7 @@ export const Agent: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell align="center">
-                                    <Button></Button>
+                                    <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -323,12 +326,7 @@ export const Agent: React.FC = () => {
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="expired" />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -362,7 +360,7 @@ export const Agent: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell align="center">
-                                    <Button></Button>
+                                    <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -394,12 +392,7 @@ export const Agent: React.FC = () => {
                                     </Stack>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
-                                        sx={{
-                                            backgroundColor: '#ffffffff',
-                                        }}
-                                        label="OP"
-                                    />
+                                    <StatusChip status="inactive" />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>

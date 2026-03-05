@@ -6,10 +6,9 @@ import {
     PageDesignConfig,
     ComponentProperties,
     FigmaNode,
-    FigmaFill,
-    TypographyConfig,
-    ComponentDesignConfig,
 } from './types';
+import { extractColorFromFill } from './utils/figma-paint-utils';
+import { toKebabCase, toPascalCase } from './utils/string-utils';
 import { PageTemplateManager, PageContentConfig, LayoutType } from './pageTemplateManager';
 import { FileSystemManager } from './fileSystem';
 import { handleFigmaError } from './errors';
@@ -216,7 +215,7 @@ export class FigmaIntegrationService {
             const componentCode = await this.generateLibraryComponentCode(componentName, componentType, properties);
 
             // 파일 저장
-            const fileName = this.toKebabCase(componentName);
+            const fileName = toKebabCase(componentName);
             const outputBase = this.getOutputPath();
             const filePath = `${outputBase}/${fileName}.tsx`;
             await this.saveFile(filePath, componentCode);
@@ -266,7 +265,7 @@ export class FigmaIntegrationService {
         }
 
         if (componentNode.fills && componentNode.fills.length > 0) {
-            properties.backgroundColor = this.extractColor(componentNode.fills[0]);
+            properties.backgroundColor = extractColorFromFill(componentNode.fills[0]);
         }
 
         if (componentNode.cornerRadius !== undefined) {
@@ -288,7 +287,7 @@ export class FigmaIntegrationService {
         componentType: string,
         properties: ComponentProperties,
     ): Promise<string> {
-        const pascalName = this.toPascalCase(componentName);
+        const pascalName = toPascalCase(componentName);
         const { findMappingByType } = await import('./component-mappings');
         const mapping = findMappingByType(componentType);
         const muiComponent = mapping?.muiName || 'Box';
@@ -321,28 +320,6 @@ export const ${pascalName}: React.FC<${pascalName}Props> = (props) => {
         </${muiComponent}>
     );
 };`;
-    }
-
-    /**
-     * 색상 추출
-     * @param fill Fill 객체
-     * @returns 색상 문자열
-     */
-    private extractColor(fill: FigmaFill): string {
-        if (fill.type === 'SOLID' && fill.color) {
-            const { r, g, b, a = 1 } = fill.color;
-            const red = Math.round(r * 255);
-            const green = Math.round(g * 255);
-            const blue = Math.round(b * 255);
-
-            if (a < 1) {
-                return `rgba(${red}, ${green}, ${blue}, ${a})`;
-            }
-
-            return `#${red.toString(16).padStart(2, '0')}${green.toString(16).padStart(2, '0')}${blue.toString(16).padStart(2, '0')}`;
-        }
-
-        return '#000000';
     }
 
     /**
@@ -426,233 +403,6 @@ export const ${pascalName}: React.FC<${pascalName}Props> = (props) => {
             fileName: fileName, // 'agent'
             componentName: componentName, // 'Agent'
         };
-    }
-
-    /**
-     * 문자열을 kebab-case로 변환
-     * @param str 입력 문자열
-     * @returns kebab-case 문자열
-     */
-    private toKebabCase(str: string): string {
-        return str
-            .split(/[\s\-_]+/)
-            .map((word) => word.toLowerCase())
-            .join('-');
-    }
-
-    /**
-     * 문자열을 PascalCase로 변환
-     * @param str 입력 문자열
-     * @returns PascalCase 문자열
-     */
-    private toPascalCase(str: string): string {
-        return str
-            .split(/[\s\-_]+/)
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join('');
-    }
-
-    /**
-     * 콘텐츠 색상 추출
-     * @param pageDesign 페이지 디자인 설정
-     * @returns 콘텐츠 색상 설정
-     */
-    private extractContentColors(pageDesign: PageDesignConfig): Record<string, string> {
-        const colors: Record<string, string> = {};
-
-        // 테마에서 색상 추출
-        if (pageDesign.theme?.colors) {
-            Object.entries(pageDesign.theme.colors).forEach(([key, value]) => {
-                colors[key] = value;
-            });
-        }
-
-        // 기본 색상 설정
-        if (!colors.contentBackground) colors.contentBackground = 'transparent';
-        if (!colors.contentText) colors.contentText = 'inherit';
-        if (!colors.accentColor) colors.accentColor = 'primary.main';
-
-        return colors;
-    }
-
-    /**
-     * 콘텐츠 간격 추출
-     * @param pageDesign 페이지 디자인 설정
-     * @returns 콘텐츠 간격 설정
-     */
-    private extractContentSpacing(pageDesign: PageDesignConfig): Record<string, string> {
-        const spacing: Record<string, string> = {};
-
-        // 레이아웃에서 간격 추출
-        if (pageDesign.layout?.spacing !== undefined) {
-            spacing.componentGap = `${pageDesign.layout.spacing}px`;
-        }
-
-        // 테마에서 간격 추출
-        if (pageDesign.theme?.spacing) {
-            Object.entries(pageDesign.theme.spacing).forEach(([key, value]) => {
-                spacing[key] = `${value}px`;
-            });
-        }
-
-        // 기본 간격 설정
-        if (!spacing.contentPadding) spacing.contentPadding = '24px';
-        if (!spacing.sectionGap) spacing.sectionGap = '32px';
-        if (!spacing.componentGap) spacing.componentGap = '16px';
-
-        return spacing;
-    }
-
-    /**
-     * 콘텐츠 타이포그래피 추출
-     * @param pageDesign 페이지 디자인 설정
-     * @returns 콘텐츠 타이포그래피 설정
-     */
-    private extractContentTypography(pageDesign: PageDesignConfig): Record<string, TypographyConfig> {
-        const typography: Record<string, TypographyConfig> = {};
-
-        // 테마에서 타이포그래피 추출
-        if (pageDesign.theme?.typography) {
-            Object.entries(pageDesign.theme.typography).forEach(([key, config]) => {
-                typography[key] = {
-                    fontFamily: config.fontFamily || 'inherit',
-                    fontSize: config.fontSize || 16,
-                    fontWeight: config.fontWeight || 400,
-                    lineHeight: config.lineHeight || 1.5,
-                    letterSpacing: config.letterSpacing || 0,
-                };
-            });
-        }
-
-        // 기본 타이포그래피 설정
-        if (!typography.pageTitle) {
-            typography.pageTitle = {
-                fontFamily: 'inherit',
-                fontSize: 24,
-                fontWeight: 600,
-                lineHeight: 1.2,
-            };
-        }
-
-        if (!typography.bodyText) {
-            typography.bodyText = {
-                fontFamily: 'inherit',
-                fontSize: 14,
-                fontWeight: 400,
-                lineHeight: 1.5,
-            };
-        }
-
-        return typography;
-    }
-
-    /**
-     * 문자열을 PascalCase로 변환
-     * @param str 입력 문자열
-     * @returns PascalCase 문자열
-     */
-    /**
-     * 레이아웃 컴포넌트 연동 (기존 컴포넌트와 피그마 디자인 동기화)
-     * @param pageDesign 페이지 디자인 설정
-     * @param pageId pages.ts의 id
-     */
-    async syncLayoutComponents(pageDesign: PageDesignConfig, pageId: string): Promise<void> {
-        try {
-            console.log(`🔄 ${pageId} 페이지 레이아웃 컴포넌트 동기화 중...`);
-
-            // 레이아웃 컴포넌트 추출 (페이지 노드에서)
-            const pageNode = await this.getPageNode(pageDesign.pageId);
-            const layoutComponents = this.extractor.extractLayoutComponents(pageNode);
-
-            // 각 레이아웃 컴포넌트별로 처리
-            for (const [componentType, componentDesign] of Object.entries(layoutComponents)) {
-                if (componentDesign) {
-                    await this.syncLayoutComponent(componentType, componentDesign);
-                }
-            }
-
-            console.log(`✅ 레이아웃 컴포넌트 동기화 완료`);
-        } catch (error) {
-            console.error('레이아웃 컴포넌트 동기화 실패:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * 페이지 노드 가져오기
-     * @param pageId 페이지 ID
-     * @returns 페이지 노드
-     */
-    private async getPageNode(pageId: string): Promise<FigmaNode> {
-        const platformFileKey = FIGMA_CONFIG.files.platform;
-        const fileData = await this.client.getFileNodes(platformFileKey, [pageId]);
-        const node = fileData.nodes[pageId]?.document;
-
-        if (!node) {
-            throw new Error(`Page node not found: ${pageId}`);
-        }
-
-        return node;
-    }
-
-    /**
-     * 개별 레이아웃 컴포넌트 동기화
-     * @param componentType 컴포넌트 타입
-     * @param componentDesign 컴포넌트 디자인
-     */
-    private async syncLayoutComponent(componentType: string, componentDesign: ComponentDesignConfig): Promise<void> {
-        const componentPath = this.getLayoutComponentPath(componentType);
-
-        if (await this.fileSystem.fileExists(componentPath)) {
-            console.log(`📝 기존 ${componentType} 컴포넌트 업데이트 중...`);
-
-            // 기존 컴포넌트 업데이트 (스타일만)
-            const styleUpdates = this.generateStyleUpdates(componentDesign);
-            await this.updateComponentStyles(componentPath, styleUpdates);
-        } else {
-            console.log(`🆕 새 ${componentType} 컴포넌트 생성 중...`);
-
-            // 새 컴포넌트 생성
-            const componentCode = await this.generator.generatePageContent({
-                pageId: componentType.toLowerCase(),
-                components: [componentDesign],
-            });
-            await this.fileSystem.saveFile(componentPath, componentCode);
-        }
-    }
-
-    /**
-     * 레이아웃 컴포넌트 경로 가져오기
-     * @param componentType 컴포넌트 타입
-     * @returns 컴포넌트 파일 경로
-     */
-    private getLayoutComponentPath(componentType: string): string {
-        const componentName = this.toPascalCase(componentType);
-        return `src/layouts/${componentName}.tsx`;
-    }
-
-    /**
-     * 스타일 업데이트 생성
-     * @param componentDesign 컴포넌트 디자인
-     * @returns 스타일 업데이트 코드
-     */
-    private generateStyleUpdates(componentDesign: ComponentDesignConfig): string {
-        // 피그마 디자인에서 스타일 정보 추출하여 기존 컴포넌트에 적용
-        return JSON.stringify(componentDesign.properties, null, 2);
-    }
-
-    /**
-     * 컴포넌트 스타일 업데이트
-     * @param componentPath 컴포넌트 파일 경로
-     * @param styleUpdates 스타일 업데이트 코드
-     */
-    private async updateComponentStyles(componentPath: string, styleUpdates: string): Promise<void> {
-        // 기존 컴포넌트 파일 읽기
-        await this.fileSystem.readFile(componentPath);
-
-        // 스타일 부분만 업데이트 (복잡한 로직 필요)
-        // TODO: 실제 구현 시 기존 컴포넌트 구조를 유지하면서 스타일만 업데이트
-        console.log(`Style updates for ${componentPath}:`, styleUpdates);
     }
 
 }
