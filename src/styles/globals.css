@@ -10,3 +10,6 @@
 .MuiChip-root {
     white-space: nowrap;
 }
+.MuiButtonBase-root {
+    gap: 4px;
+}

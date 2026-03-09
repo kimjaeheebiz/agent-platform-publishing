@@ -1,25 +1,24 @@
 import React from 'react';
 import {
     Box,
-    Stack,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    TextField,
-    InputAdornment,
     Button,
-    TableContainer,
-    Table,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
     Paper,
-    TableHead,
+    Select,
+    Stack,
+    Table,
     TableBody,
-    TableFooter,
-    TableRow,
     TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
     Typography,
 } from '@mui/material';
-import { Search, Add, ChevronRight, ChevronLeft } from '@mui/icons-material';
+import { Add, Search } from '@mui/icons-material';
 import { FilterToggleGroup, StatusChip } from '@/components';
 
 // Import page-specific types
@@ -42,7 +41,13 @@ export const Users: React.FC = () => {
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <FilterToggleGroup />
+                        <FilterToggleGroup
+                            options={[
+                                { value: 'all', label: '전체', count: 5, selected: true },
+                                { value: 'user', label: '일반사용자', count: 4 },
+                                { value: 'admin', label: '관리자', count: 1 },
+                            ]}
+                        />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <FormControl

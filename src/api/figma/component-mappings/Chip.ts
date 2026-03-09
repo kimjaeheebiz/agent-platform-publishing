@@ -1,5 +1,40 @@
+import type { FigmaNode } from '../types';
 import { ComponentMapping } from './types/PropertyMapper';
-import { getFigmaBooleanProp } from '../utils/figma-node-utils';
+import { getFigmaBooleanProp, findTextRecursively } from '../utils/figma-node-utils';
+
+/**
+ * Chip Figma 노드에서 Chip용 props 객체 추출 (단일 소스: ToggleButton 내부 Chip 등에서 재사용)
+ * Chip.ts 수정 시 여기만 맞추면 됨.
+ */
+export async function extractChipPropsFromNode(
+    node: FigmaNode,
+    extractor?: any
+): Promise<Record<string, unknown>> {
+    const result: Record<string, unknown> = {};
+    const defs = ChipMapping.muiProps as Record<string, { extractFromFigma?: (n: FigmaNode) => unknown }>;
+
+    for (const [key, def] of Object.entries(defs)) {
+        if (def?.extractFromFigma) {
+            const v = def.extractFromFigma(node);
+            if (v !== undefined && v !== null) result[key] = v;
+        }
+    }
+
+    if (!result.label && (node as any).children?.length) {
+        const text = findTextRecursively((node as any).children);
+        if (text) result.label = text;
+    }
+
+    if (ChipMapping.extractProperties) {
+        const extra = await ChipMapping.extractProperties(node, extractor);
+        if (extra && typeof extra === 'object') {
+            if ((extra as any).__chipAvatarInitials != null) result.__chipAvatarInitials = (extra as any).__chipAvatarInitials;
+            if ((extra as any).__chipIconName != null) result.__chipIconName = (extra as any).__chipIconName;
+        }
+    }
+
+    return result;
+}
 
 /**
  * MUI Chip 컴포넌트 매핑

@@ -40,10 +40,38 @@ export function findTextInChildByName(
 
 /** componentProperties에서 값 추출 (value 필드 또는 원시값, 키는 대소문자 무시) */
 export function getPropValue(props: Record<string, unknown>, keyLower: string): unknown {
-    const entry = Object.entries(props).find(([k]) => k.toLowerCase() === keyLower);
+    const normalize = (s: string) => s.split('#')[0].trim().toLowerCase();
+    const entry = Object.entries(props).find(([k]) => normalize(k) === normalize(keyLower));
     if (!entry) return undefined;
     const v = entry[1];
     return v != null && typeof v === 'object' && 'value' in v ? (v as { value: unknown }).value : v;
+}
+
+/** Figma 노드 이름에서 꺾쇠/공백 제거 */
+export function normalizeFigmaNodeName(name: unknown): string {
+    return String(name ?? '').replace(/<|>/g, '').trim();
+}
+
+/** MUI 아이콘처럼 보이는 Figma 인스턴스 이름인지 판단 */
+export function isLikelyMuiIconName(name: string): boolean {
+    return (
+        name.includes('Icon') ||
+        name.includes('Sharp') ||
+        name.includes('Filled') ||
+        name.includes('Outlined') ||
+        name.includes('Rounded') ||
+        name.includes('TwoTone') ||
+        /^[A-Z][A-Za-z0-9]+$/.test(name)
+    );
+}
+
+/** visible !== false 인 첫 번째 아이콘형 자식 노드 반환 */
+export function findFirstIconLikeChild(children: any[]): any | undefined {
+    return (children || []).find((child: any) => {
+        if (!child || child.visible === false) return false;
+        const childName = normalizeFigmaNodeName(child.name);
+        return Boolean(child.componentId) || (childName && childName !== 'Value' && childName !== 'Label' && childName !== 'Chip' && isLikelyMuiIconName(childName));
+    });
 }
 
 /** Figma componentProperties에서 boolean 프로퍼티 값 추출 (키는 "Value?#123" 형태 지원) */
@@ -54,7 +82,16 @@ export function getFigmaBooleanProp(node: any, ...keys: string[]): boolean | und
         const keyNorm = normalize(key);
         for (const [k, v] of Object.entries(props)) {
             if (normalize(k) === keyNorm) {
-                const val = (v as any)?.value ?? v;
+                const raw = v as any;
+                const val = raw?.value ?? raw;
+                const isBooleanLike =
+                    raw?.type === 'BOOLEAN' ||
+                    typeof val === 'boolean' ||
+                    val === 'true' ||
+                    val === 'True' ||
+                    val === 'false' ||
+                    val === 'False';
+                if (!isBooleanLike) continue;
                 return val === true || val === 'true' || val === 'True';
             }
         }

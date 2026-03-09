@@ -8,13 +8,20 @@ import {
 } from './types';
 import { PageContentConfig } from './pageTemplateManager';
 import { FIGMA_CONFIG } from './config';
-import { findMappingByType, findMappingByFigmaName } from './component-mappings';
+import { findMappingByType, findMappingByFigmaName, COMPONENT_MAPPINGS } from './component-mappings';
 import { getSpacingTokenFromPx } from './variable-mapping';
 
 /** MUI Table 구조 컴포넌트 (sx 미주입, 테마/기본 구조 사용). TableContainer는 제외(스크롤 등 sx 사용) */
 const TABLE_STRUCTURE_MUI_NAMES = new Set([
     'Table', 'TableHead', 'TableBody', 'TableRow', 'TableCell', 'TableFooter',
 ]);
+
+/** ToggleButtonGroup 생성 시 value/onChange 구분 및 자식 ToggleButton selected 제어용 */
+interface ToggleButtonGroupContext {
+    toggleButtonGroupIndex: number;
+    /** true면 현재 노드는 ToggleButtonGroup 직계 자식 → ToggleButton에 selected 출력하지 않음 (그룹 value가 선택 제어) */
+    insideToggleButtonGroup?: boolean;
+}
 
 /** 피그마 인스턴스 이름이 @/components 와 동일한 커스텀 컴포넌트일 때 해당 컴포넌트를 주입 (MUI 매핑보다 우선) */
 const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
@@ -36,7 +43,7 @@ function getCustomComponentName(figmaName: string): string {
     return trimmed.replace(/^<|>$/g, '') || trimmed;
 }
 
-import { getMuiIconName, hasIcon as hasIconProperty, getRequiredIconNames } from './icon-mapper';
+import { getMuiIconName } from './icon-mapper';
 import { toPascalCase } from './utils/string-utils';
 import * as prettier from 'prettier';
 
@@ -49,16 +56,15 @@ export class FigmaCodeGenerator {
     async generatePageContent(contentConfig: PageContentConfig): Promise<string> {
         const { pageId, components } = contentConfig;
 
-        // pageId에서 컴포넌트 이름 추출 (route-generator.ts와 동일한 로직)
         const componentName = this.getComponentNameFromPageId(pageId);
-        const imports = this.generateImports(components);
         const pageCode = this.generatePageCode(componentName, components, pageId);
+        // 생성된 코드에서 실제 사용된 태그만 추출하여 import (불필요한 TableFooter, ChevronLeft 등 제외)
+        const imports = this.generateImports(pageCode);
 
         const rawCode = `${imports}
 
 ${pageCode}`;
 
-        // Prettier로 포맷팅
         return await this.formatCode(rawCode);
     }
 
@@ -70,10 +76,15 @@ ${pageCode}`;
      * @returns 전체 페이지 컴포넌트 코드
      */
     private generatePageCode(componentName: string, components: ComponentDesignConfig[], pageId: string): string {
-        const componentJSX = this.generateComponentsJSX(components);
+        const toggleGroupInitialValues = this.collectToggleButtonGroupInitialValues(components);
+        const context: ToggleButtonGroupContext = { toggleButtonGroupIndex: 0 };
+        const componentJSX = this.generateComponentsJSX(components, context);
 
         // 페이지별 특수 import 추가
         const pageSpecificImports = this.generatePageSpecificImports(pageId);
+
+        // ToggleButtonGroup이 있으면 value/onChange 훅 블록 생성
+        const hooksBlock = this.generateToggleButtonGroupHooks(toggleGroupInitialValues);
 
         // 기본 padding 사용 (MUI spacing 변수)
         const paddingValue = 3; // spacing(3) = 24px
@@ -81,7 +92,7 @@ ${pageCode}`;
         return `${pageSpecificImports}
 
 export const ${componentName}: React.FC = () => {
-    return (
+${hooksBlock}    return (
         <Box
             sx={{
                 p: ${paddingValue},
@@ -94,6 +105,48 @@ export const ${componentName}: React.FC = () => {
 };`;
     }
 
+    /** 컴포넌트 트리에서 ToggleButtonGroup의 초기 선택 value를 재귀 수집 */
+    private collectToggleButtonGroupInitialValues(components: ComponentDesignConfig[]): Array<string | null> {
+        const values: Array<string | null> = [];
+        function walk(list: ComponentDesignConfig[]) {
+            for (const c of list) {
+                const m = findMappingByFigmaName(c.componentName) || findMappingByType(c.componentType);
+                if (m?.muiName === 'ToggleButtonGroup') {
+                    let selectedValue: string | null = null;
+                    for (const child of c.children || []) {
+                        const childMapping = findMappingByFigmaName(child.componentName) || findMappingByType(child.componentType);
+                        if (childMapping?.muiName !== 'ToggleButton') continue;
+                        const childProps = (child.properties || {}) as Record<string, unknown>;
+                        if (childProps.selected === true) {
+                            const rawValue = childProps.value ?? childProps.label ?? childProps.text;
+                            if (typeof rawValue === 'string' || typeof rawValue === 'number') {
+                                selectedValue = String(rawValue);
+                                break;
+                            }
+                        }
+                    }
+                    values.push(selectedValue);
+                }
+                if (c.children?.length) walk(c.children);
+            }
+        }
+        walk(components);
+        return values;
+    }
+
+    /** ToggleButtonGroup 개수만큼 useState + handleChange 훅 블록 문자열 (줄 앞 들여쓰기 포함) */
+    private generateToggleButtonGroupHooks(initialValues: Array<string | null>): string {
+        if (initialValues.length <= 0) return '';
+        const lines: string[] = [];
+        for (let i = 0; i < initialValues.length; i++) {
+            const suffix = i === 0 ? '' : i + 1;
+            const initialValue = initialValues[i];
+            lines.push(`    const [value${suffix}, setValue${suffix}] = useState<string | null>(${initialValue == null ? 'null' : JSON.stringify(initialValue)});`);
+            lines.push(`    const handleChange${suffix} = (_e: React.MouseEvent<HTMLElement>, newValue: string | null) => { setValue${suffix}(newValue); };`);
+        }
+        return lines.join('\n') + '\n\n';
+    }
+
     /**
      * 페이지 컴포넌트 코드 생성 (레거시 지원)
      * @param pageConfig 페이지 컴포넌트 설정
@@ -103,15 +156,12 @@ export const ${componentName}: React.FC = () => {
         const { pageName, components, layout, styles } = pageConfig;
 
         const componentName = toPascalCase(pageName);
-        const imports = this.generateImports(components);
         const componentCode = this.generateComponentCode(componentName, components, layout);
         const pageStyles = this.generatePageStyles(styles);
+        const fullCode = `${componentCode}\n\n${pageStyles}`;
+        const imports = this.generateImports(fullCode);
 
-        return `${imports}
-
-${componentCode}
-
-${pageStyles}`;
+        return `${imports}\n\n${fullCode}`;
     }
 
     /**
@@ -209,20 +259,21 @@ ${typographyStyles}
      * @param components 컴포넌트 배열
      * @returns JSX 코드
      */
-    private generateComponentsJSX(components: ComponentDesignConfig[]): string {
+    private generateComponentsJSX(components: ComponentDesignConfig[], context?: ToggleButtonGroupContext): string {
         if (components.length === 0) {
             return '            {/* No components defined */}';
         }
 
-        return components.map((component) => this.generateComponentJSX(component)).join('\n\n');
+        return components.map((component) => this.generateComponentJSX(component, context)).join('\n\n');
     }
 
     /**
      * 컴포넌트 JSX 생성
      * @param component 컴포넌트 설정
+     * @param context ToggleButtonGroup 시 value/onChange 구분용 (옵션)
      * @returns JSX 문자열
      */
-    private generateComponentJSX(component: ComponentDesignConfig): string {
+    private generateComponentJSX(component: ComponentDesignConfig, context?: ToggleButtonGroupContext): string {
         const { componentType, componentName, properties, children } = component;
 
         // @/components 에 동일명 컴포넌트가 있으면 해당 컴포넌트 사용 (피그마 <FavoriteButton> 등)
@@ -242,7 +293,9 @@ ${typographyStyles}
             componentName === 'CardMedia';
         const isTableSubComponent = mapping ? TABLE_STRUCTURE_MUI_NAMES.has(mapping.muiName) : false;
         const isTableCellComponent = mapping?.muiName === 'TableCell';
-        const shouldRenderChildren = (componentType === 'layout' || componentType === 'card' || componentType === 'table' || isCardSubComponent || isTableSubComponent) && children && children.length > 0;
+        const isToggleButtonGroup = mapping?.muiName === 'ToggleButtonGroup';
+        const isButtonGroup = mapping?.muiName === 'ButtonGroup';
+        const shouldRenderChildren = (componentType === 'layout' || componentType === 'card' || componentType === 'table' || isCardSubComponent || isTableSubComponent || isToggleButtonGroup || isButtonGroup) && children && children.length > 0;
 
         const isGridContainer =
             mapping?.muiName === 'Grid' &&
@@ -257,11 +310,17 @@ ${typographyStyles}
                 content = children
                     .map(
                         (child) =>
-                            `<Grid size={${itemSize}}>\n            ${this.generateComponentJSX(child)}\n        </Grid>`,
+                            `<Grid size={${itemSize}}>\n            ${this.generateComponentJSX(child, context)}\n        </Grid>`,
                     )
                     .join('\n        ');
             } else {
-                content = children.map((child) => this.generateComponentJSX(child)).join('\n        ');
+                // ToggleButtonGroup 자식은 selected를 출력하지 않도록 컨텍스트 전달 (MUI: 그룹 value가 선택 제어)
+                const childContext =
+                    isToggleButtonGroup && context
+                        ? { ...context, insideToggleButtonGroup: true as const }
+                        : context;
+                // ButtonGroup 자식은 일반 Button으로 렌더 (별도 컨텍스트 없음)
+                content = children.map((child) => this.generateComponentJSX(child, childContext)).join('\n        ');
             }
         } else {
             content = this.generateComponentContent(componentType, componentName, properties);
@@ -275,8 +334,10 @@ ${typographyStyles}
         // ✅ 매핑에 generateJSX가 있으면 사용 (우선)
         if (mapping?.generateJSX) {
             const isStack = mapping.muiName === 'Stack';
-            const sxProps = this.generateSXProps(properties, componentType, componentName, isStack);
-            const componentProps = this.generateComponentProps(componentType, componentName, properties);
+            const sxProps = (mapping.muiName === 'ToggleButtonGroup' || mapping.muiName === 'ButtonGroup')
+                ? null
+                : this.generateSXProps(properties, componentType, componentName, isStack);
+            const componentProps = this.generateComponentProps(componentType, componentName, properties, context);
             return mapping.generateJSX(componentName, componentProps, content, sxProps, properties);
         }
 
@@ -287,7 +348,7 @@ ${typographyStyles}
         const sxProps = isStack
             ? this.generateSXProps(properties, componentType, componentName, true)
             : this.generateSXProps(properties, componentType, componentName);
-        const componentProps = this.generateComponentProps(componentType, componentName, properties);
+        const componentProps = this.generateComponentProps(componentType, componentName, properties, context);
 
         const sxAttribute = sxProps ? `sx={${sxProps}}` : '';
 
@@ -317,6 +378,13 @@ ${typographyStyles}
             if (status) {
                 props.push(`status="${status}"`);
             }
+        }
+        // FilterToggleGroup: 피그마에서 추출한 options(value, label, count) 출력
+        if (componentName === 'FilterToggleGroup' && Array.isArray(p.options) && p.options.length > 0) {
+            const opts = (p.options as Array<{ value?: string; label?: string; count?: number; selected?: boolean }>).map(
+                (o) => `{ value: "${String(o.value ?? '').replace(/"/g, '\\"')}", label: "${String(o.label ?? '').replace(/"/g, '\\"')}", count: ${Number(o.count) || 0}${o.selected === true ? ', selected: true' : ''} }`
+            );
+            props.push(`options={[${opts.join(', ')}]}`);
         }
         if (props.length === 0) return '';
         return ' ' + props.join(' ');
@@ -502,7 +570,7 @@ ${typographyStyles}
      * @param properties 컴포넌트 속성
      * @returns 컴포넌트 속성 문자열
      */
-    private generateComponentProps(componentType: string, componentName: string, properties: ComponentProperties): string {
+    private generateComponentProps(componentType: string, componentName: string, properties: ComponentProperties, context?: ToggleButtonGroupContext): string {
         const props: string[] = [];
 
         // ✅ 매핑 기반으로 props 생성 (componentName 우선, 없으면 componentType 사용)
@@ -521,6 +589,12 @@ ${typographyStyles}
                 if (propName === 'layoutColumns') continue;
 
                 const value = transformedProperties[propName];
+
+                // ToggleButton value: MUI는 임의 string/number 허용. union values ['string','number']는 리터럴이 아니라 타입 의미이므로 여기서 처리
+                if (mapping?.muiName === 'ToggleButton' && propName === 'value' && value !== undefined && (typeof value === 'string' || typeof value === 'number')) {
+                    props.push(typeof value === 'string' ? `value="${String(value).replace(/"/g, '\\"')}"` : `value={${value}}`);
+                    continue;
+                }
 
                 // union 타입인 경우 values에 포함된 값만 추가
                 if (propDef.type === 'union' && value !== undefined) {
@@ -596,6 +670,8 @@ ${typographyStyles}
                 else if (typeof value === 'boolean' && propDef.type === 'boolean') {
                     // Chip deletable → onDelete는 아래 Chip 전용 블록에서 처리
                     if (propName === 'deletable' && mapping?.muiName === 'Chip') continue;
+                    // ToggleButtonGroup 자식 ToggleButton: selected는 그룹 value가 제어하므로 출력하지 않음 (MUI 공식 문서)
+                    if (propName === 'selected' && mapping?.muiName === 'ToggleButton' && context?.insideToggleButtonGroup) continue;
                     // 기본값인 경우 스킵 (MUI 기본값은 false)
                     const defaultValue = propDef.default !== undefined ? propDef.default : false;
                     if (value === defaultValue) {
@@ -714,6 +790,20 @@ ${typographyStyles}
             }
         }
 
+        // ✅ ToggleButtonGroup: MUI 필수 value, onChange 항상 출력 (그룹 순서대로 value / value2…, handleChange / handleChange2…)
+        if (mapping?.muiName === 'ToggleButtonGroup' && context) {
+            const idx = context.toggleButtonGroupIndex;
+            context.toggleButtonGroupIndex = idx + 1;
+            const valueName = idx === 0 ? 'value' : `value${idx + 1}`;
+            const handleName = idx === 0 ? 'handleChange' : `handleChange${idx + 1}`;
+            if (!props.some((p) => p.startsWith('value='))) {
+                props.push(`value={${valueName}}`);
+            }
+            if (!props.some((p) => p.startsWith('onChange='))) {
+                props.push(`onChange={${handleName}}`);
+            }
+        }
+
         return props.length > 0 ? ` ${props.join(' ')}` : '';
     }
 
@@ -808,111 +898,70 @@ ${typographyStyles}
             .replace(/'/g, '&#39;');
     }
 
+    /** 매핑에 등록된 모든 MUI 컴포넌트명 (muiName + subComponents) */
+    private getAllMuiComponentNames(): Set<string> {
+        const set = new Set<string>();
+        Object.values(COMPONENT_MAPPINGS as Record<string, { muiName: string; subComponents?: readonly string[] }>).forEach((m) => {
+            if (m.muiName) set.add(m.muiName);
+            m.subComponents?.forEach((s) => set.add(s));
+        });
+        return set;
+    }
+
+    /** 생성 코드에만 등장하는 @mui/material 컴포넌트 (매핑 없음, 아이콘으로 오인 방지) */
+    private static readonly EXTRA_MUI_MATERIAL_NAMES = new Set<string>(['InputAdornment']);
+
+    /** 전역 타입/기타로 import 하면 안 되는 이름 (아이콘으로 오인 방지) */
+    private static readonly SKIP_IMPORT_TAGS = new Set<string>(['HTMLElement']);
+
+    /** 생성된 코드에서 JSX 태그명 추출 (<Name, <Name , component={Name}) */
+    private extractUsedTagsFromCode(code: string): Set<string> {
+        const set = new Set<string>();
+        let m: RegExpExecArray | null;
+        const tagRe = /<([A-Z][A-Za-z0-9]*)/g;
+        while ((m = tagRe.exec(code)) !== null) set.add(m[1]);
+        const componentPropRe = /component=\{([A-Z][A-Za-z0-9]*)\}/g;
+        while ((m = componentPropRe.exec(code)) !== null) set.add(m[1]);
+        return set;
+    }
+
     /**
-     * Import 문 생성
-     * @param components 컴포넌트 배열
-     * @returns Import 문 문자열
+     * 생성된 코드에서 실제 사용된 컴포넌트만 import (실제 출력 기준, 불필요한 import 제외)
      */
-    private generateImports(components: ComponentDesignConfig[]): string {
-        const imports = new Set<string>();
+    private generateImports(pageCode: string): string {
+        const usedTags = this.extractUsedTagsFromCode(pageCode);
+        const muiNames = this.getAllMuiComponentNames();
+        const customNames = new Set(Array.from(CUSTOM_COMPONENT_FIGMA_NAMES).map((n) => getCustomComponentName(n)));
+
+        const muiImports = new Set<string>();
         const iconImports = new Set<string>();
+
         const customComponentImports = new Set<string>();
+        for (const tag of usedTags) {
+            if (FigmaCodeGenerator.SKIP_IMPORT_TAGS.has(tag)) continue;
+            if (muiNames.has(tag) || FigmaCodeGenerator.EXTRA_MUI_MATERIAL_NAMES.has(tag)) {
+                muiImports.add(tag);
+            } else if (customNames.has(tag)) {
+                customComponentImports.add(tag);
+            } else if (tag !== 'React' && /^[A-Z]/.test(tag)) {
+                iconImports.add(tag);
+            }
+        }
 
-        // 기본 MUI 컴포넌트들
-        imports.add('Box');
-
-        // 컴포넌트별 필요한 임포트 추가 (children 포함)
-        this.collectImportsRecursively(components, imports, iconImports, customComponentImports);
-
-        const importsList = Array.from(imports).join(', ');
+        const importsList = Array.from(muiImports).sort().join(', ');
         let iconImportsList = '';
         if (iconImports.size > 0) {
-            iconImportsList = `\nimport { ${Array.from(iconImports).join(', ')} } from '@mui/icons-material';`;
+            iconImportsList = `\nimport { ${Array.from(iconImports).sort().join(', ')} } from '@mui/icons-material';`;
         }
         let customImportsList = '';
         if (customComponentImports.size > 0) {
             customImportsList = `\nimport { ${Array.from(customComponentImports).sort().join(', ')} } from '@/components';`;
         }
 
-        return `import React from 'react';
+        const needsUseState = pageCode.includes('useState');
+        const reactImport = needsUseState ? 'import React, { useState } from \'react\'' : 'import React from \'react\'';
+        return `${reactImport}
 import { ${importsList} } from '@mui/material';${iconImportsList}${customImportsList}`;
-    }
-
-    /**
-     * 컴포넌트와 그 children을 재귀적으로 순회하며 필요한 import 수집
-     * @param customComponentImports @/components 에서 가져올 커스텀 컴포넌트명 (FavoriteButton, StatusChip 등)
-     */
-    private collectImportsRecursively(
-        components: ComponentDesignConfig[],
-        imports: Set<string>,
-        iconImports: Set<string>,
-        customComponentImports: Set<string>
-    ): void {
-        components.forEach((component) => {
-            // ✅ 피그마 인스턴스가 @/components 와 동일명이면 커스텀 컴포넌트 import만 추가 (MUI 매핑 사용 안 함)
-            if (isCustomComponent(component.componentName)) {
-                customComponentImports.add(getCustomComponentName(component.componentName));
-                if (component.children?.length) {
-                    this.collectImportsRecursively(component.children, imports, iconImports, customComponentImports);
-                }
-                return;
-            }
-
-            // ✅ 컴포넌트 이름으로 직접 매핑 찾기
-            const mapping = findMappingByFigmaName(component.componentName) || findMappingByType(component.componentType);
-            const muiComponent = mapping?.muiName;
-
-            if (muiComponent) {
-                imports.add(muiComponent);
-
-                // Select 등 JSX 내부에서 사용하는 subComponents(MenuItem 등) import
-                if (mapping?.subComponents) {
-                    mapping.subComponents.forEach((name: string) => imports.add(name));
-                }
-
-                // TableContainer가 component={Paper} 같은 프롭으로 다른 MUI 컴포넌트를 참조하는 경우 해당 컴포넌트도 import
-                const referencedComponent = (component.properties as any)?.component;
-                if (typeof referencedComponent === 'string') {
-                    // 현재는 Paper만 필요하지만, 일반화하여 사용자가 지정한 컴포넌트를 그대로 import 셋에 추가
-                    // 유효한 MUI 컴포넌트명이라고 가정 (예: 'Paper')
-                    imports.add(referencedComponent);
-                }
-
-                // ✅ 매핑 기반 아이콘 import 추가 (하드코딩 제거)
-                if (component.properties && hasIconProperty(component.properties)) {
-                    const iconNames = getRequiredIconNames(component.properties);
-                    iconNames.forEach(iconName => iconImports.add(iconName));
-                }
-                // ✅ TextField / Select 어돈먼트 사용 시 InputAdornment import
-                const hasAdorn = component.properties && (component.properties.startIconName || component.properties.endIconName);
-                if ((muiComponent === 'TextField' || muiComponent === 'Select') && hasAdorn) {
-                    imports.add('InputAdornment');
-                }
-                // ✅ Select에 라벨이 있으면 FormControl + InputLabel 래핑 시 사용
-                if (muiComponent === 'Select' && component.properties && (component.properties as any).label) {
-                    imports.add('FormControl');
-                    imports.add('InputLabel');
-                }
-
-                // ✅ Chip adornments (avatar/icon) — https://mui.com/material-ui/react-chip/#chip-adornments
-                if (muiComponent === 'Chip' && component.properties) {
-                    if ((component.properties as any).__chipAvatarInitials) {
-                        imports.add('Avatar');
-                    }
-                    const chipIcon = (component.properties as any).__chipIconName;
-                    if (typeof chipIcon === 'string' && chipIcon) {
-                        const muiIcon = getMuiIconName('', chipIcon);
-                        if (muiIcon) iconImports.add(muiIcon);
-                    }
-                }
-
-                // ✅ layout, card, table 타입이거나 children이 있는 경우 children도 처리
-                // 실제로 사용되는 컴포넌트만 재귀적으로 import하므로 subComponents는 자동으로 처리됨
-                if ((component.componentType === 'layout' || component.componentType === 'card' || component.componentType === 'table' || component.children) && component.children) {
-                    this.collectImportsRecursively(component.children, imports, iconImports, customComponentImports);
-                }
-            }
-        });
     }
 
     /**

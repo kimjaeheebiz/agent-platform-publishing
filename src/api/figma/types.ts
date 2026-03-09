@@ -299,7 +299,7 @@ export interface ComponentDesignConfig {
     componentId: string;
     componentName: string;
     componentType:
-        | 'button'      // Button, IconButton, ToggleButton, Fab, SpeedDial
+        | 'button'      // Button, ButtonGroup, IconButton, ToggleButton, Fab, SpeedDial
         | 'input'       // TextField, Autocomplete, Select, Checkbox, Switch, Radio, Slider
         | 'table'       // Table, TableContainer, TableHead, TableBody, TableRow, TableCell
         | 'card'        // Card, Paper, CardContent, CardActions, CardHeader, CardMedia

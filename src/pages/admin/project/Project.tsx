@@ -1,25 +1,24 @@
 import React from 'react';
 import {
     Box,
-    Stack,
-    Typography,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    TextField,
-    InputAdornment,
     Button,
-    TableContainer,
-    Table,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
     Paper,
-    TableHead,
+    Select,
+    Stack,
+    Table,
     TableBody,
-    TableFooter,
-    TableRow,
     TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { Search, Add, ChevronRight, ChevronLeft } from '@mui/icons-material';
+import { Add, Search } from '@mui/icons-material';
 
 // Import page-specific types
 import { ProjectPageState } from './Project.types';

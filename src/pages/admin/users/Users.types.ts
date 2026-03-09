@@ -8,6 +8,6 @@ export interface UsersPageState {
     // Add page-specific state types here
 }
 
-export type ContentProps = object;
+export type BoxProps = object;
 
 export type UsersProps = object;

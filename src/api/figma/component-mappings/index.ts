@@ -12,6 +12,7 @@ import { PaperMapping } from './Paper';
 import { AvatarMapping } from './Avatar';
 import { TabsMapping } from './Tabs';
 import { ToggleButtonGroupMapping } from './ToggleButtonGroup';
+import { ButtonGroupMapping } from './ButtonGroup';
 import { AlertMapping } from './Alert';
 import { AppBarMapping } from './AppBar';
 import { ToolbarMapping } from './Toolbar';
@@ -91,6 +92,7 @@ export const COMPONENT_MAPPINGS = {
     avatar: AvatarMapping,
     tabs: TabsMapping,
     toggleButtonGroup: ToggleButtonGroupMapping,
+    buttonGroup: ButtonGroupMapping,
     alert: AlertMapping,
     alertTitle: AlertTitleMapping,
     appBar: AppBarMapping,
@@ -209,6 +211,7 @@ export {
     AvatarMapping,
     TabsMapping,
     ToggleButtonGroupMapping,
+    ButtonGroupMapping,
     AlertMapping,
     AlertTitleMapping,
     AppBarMapping,

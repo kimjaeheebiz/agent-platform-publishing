@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ToggleButtonGroup, ToggleButton, Chip } from '@mui/material';
 
 export interface FilterOption {
     value: string;
     label: string;
     count: number;
+    selected?: boolean;
 }
 
 export interface FilterToggleGroupProps {
@@ -23,14 +24,31 @@ export const FilterToggleGroup: React.FC<FilterToggleGroupProps> = ({
     size = 'small',
     ariaLabel = '테이블 필터',
 }) => {
-    const handleChange = (event: React.MouseEvent<HTMLElement>, newValue: string | null) => {
+    const defaultValue = useMemo(
+        () => value || options.find((option) => option.selected)?.value || '',
+        [options, value],
+    );
+    const [internalValue, setInternalValue] = useState(defaultValue);
+    const isControlled = value !== '';
+    const resolvedValue = isControlled ? value : internalValue;
+
+    useEffect(() => {
+        if (!isControlled) {
+            setInternalValue(defaultValue);
+        }
+    }, [defaultValue, isControlled]);
+
+    const handleChange = (_event: React.MouseEvent<HTMLElement>, newValue: string | null) => {
         if (newValue !== null) {
+            if (!isControlled) {
+                setInternalValue(newValue);
+            }
             onChange(newValue);
         }
     };
 
     return (
-        <ToggleButtonGroup exclusive value={value} onChange={handleChange} aria-label={ariaLabel} size={size}>
+        <ToggleButtonGroup exclusive value={resolvedValue} onChange={handleChange} aria-label={ariaLabel} size={size}>
             {(options || []).map((option) => (
                 <ToggleButton key={option.value} value={option.value} sx={{ gap: 1 }}>
                     {option.label}

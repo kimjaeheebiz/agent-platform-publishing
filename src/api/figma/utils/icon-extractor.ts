@@ -5,6 +5,7 @@
  */
 
 import { FigmaNode } from '../types';
+import { findFirstIconLikeChild, isLikelyMuiIconName, normalizeFigmaNodeName } from './figma-node-utils';
 
 export interface IconExtractionResult {
     startIconComponentId?: string;
@@ -430,6 +431,94 @@ export async function extractIconsForCardHeader(
                 }
             }
         }
+    }
+
+    return result;
+}
+
+/**
+ * ToggleButton용 단일 아이콘 추출 (Figma: Icon/StarSharp 등 단일 슬롯 또는 자식 INSTANCE)
+ */
+export async function extractIconsForToggleButton(
+    node: FigmaNode,
+    extractor?: any
+): Promise<IconData> {
+    const result: IconData = {};
+    const props = (node as any).componentProperties || {};
+    let discoveredIconName: string | undefined;
+
+    // 1) componentProperties에서 INSTANCE_SWAP인 속성 (키에 'icon' 포함 또는 아이콘형 이름)
+    for (const [key, propData] of Object.entries(props)) {
+        const prop = propData as any;
+        if (prop && typeof prop === 'object' && prop.type === 'INSTANCE_SWAP') {
+            const iconComponentId = prop.value;
+            const keyLower = key.toLowerCase();
+            if (keyLower.includes('icon') || keyLower.includes('sharp') || keyLower.includes('star')) {
+                result.startIconComponentId = iconComponentId;
+                break;
+            }
+        }
+    }
+
+    const firstIconChild = findFirstIconLikeChild(node.children || []) as any;
+    if (firstIconChild) {
+        const firstName = normalizeFigmaNodeName(firstIconChild.name);
+        const firstComponentId = firstIconChild.componentId as string | undefined;
+        if (firstName && firstName !== 'Icon') {
+            discoveredIconName = firstName;
+        }
+        if (firstComponentId) {
+            result.startIconComponentId = firstComponentId;
+        }
+    }
+
+    const findNestedIconNode = (current: any): any | undefined => {
+        if (!current || current.visible === false) return undefined;
+
+        const name = normalizeFigmaNodeName(current.name);
+        if ((current.componentId && name === 'Icon') || (name && name !== 'Icon' && isLikelyMuiIconName(name))) {
+            return current;
+        }
+
+        const children = current.children || [];
+        for (const child of children) {
+            const found = findNestedIconNode(child);
+            if (found) return found;
+        }
+
+        return undefined;
+    };
+
+    // 2) 없으면 하위 트리를 재귀 탐색해 아이콘 노드 이름/ID 찾기
+    if (node.children && !result.startIconComponentId && !discoveredIconName) {
+        const iconChild = findNestedIconNode(node);
+        if (iconChild) {
+            const rawName = normalizeFigmaNodeName((iconChild as any).name);
+            if (rawName && rawName !== 'Icon') {
+                discoveredIconName = rawName;
+            }
+            if (!result.startIconComponentId && (iconChild as any).componentId) {
+                result.startIconComponentId = (iconChild as any).componentId;
+            }
+        }
+    }
+
+    const iconIds = result.startIconComponentId ? [result.startIconComponentId] : [];
+    if (iconIds.length > 0 && extractor) {
+        const iconNamesMap = await fetchIconNames(iconIds, extractor);
+        if (result.startIconComponentId) {
+            const cachedName = iconNamesMap.get(result.startIconComponentId);
+            const usableCachedName = cachedName && cachedName !== 'Icon' ? cachedName : undefined;
+            result.startIcon = usableCachedName || discoveredIconName || result.startIcon;
+            if (!result.startIcon || result.startIcon === 'Icon') {
+                const fetchedName = await fetchIconName(result.startIconComponentId, extractor);
+                if (fetchedName) {
+                    result.startIcon = fetchedName;
+                }
+            }
+        }
+    } else if (discoveredIconName) {
+        result.startIcon = discoveredIconName;
     }
 
     return result;

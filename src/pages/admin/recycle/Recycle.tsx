@@ -1,22 +1,21 @@
 import React from 'react';
 import {
     Box,
-    Stack,
-    Tabs,
-    TextField,
-    InputAdornment,
-    TableContainer,
-    Table,
-    Paper,
-    TableHead,
-    TableBody,
-    TableFooter,
-    TableRow,
-    TableCell,
-    Typography,
     Button,
+    InputAdornment,
+    Paper,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { Search, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
+import { FilterToggleGroup } from '@/components';
 
 // Import page-specific types
 import { RecyclePageState } from './Recycle.types';
@@ -38,11 +37,15 @@ export const Recycle: React.FC = () => {
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Tabs
-                            sx={{
-                                borderRadius: '4px',
-                            }}
-                        ></Tabs>
+                        <FilterToggleGroup
+                            options={[
+                                { value: 'all', label: '전체', count: 5, selected: true },
+                                { value: 'project', label: '프로젝트', count: 2 },
+                                { value: 'agent', label: '에이전트', count: 1 },
+                                { value: 'knowledgebase', label: '지식베이스', count: 1 },
+                                { value: 'doc', label: '지식베이스 문서', count: 1 },
+                            ]}
+                        />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField

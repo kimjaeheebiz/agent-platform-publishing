@@ -14,6 +14,17 @@ import {
 } from './types';
 import { rgbaToHex, extractColorFromFill } from './utils/figma-paint-utils';
 
+/** @/components 커스텀 컴포넌트 (매핑 폴더에 두지 않음). generator.ts CUSTOM_COMPONENT_FIGMA_NAMES와 동일 유지 */
+const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
+    '<FavoriteButton>', 'FavoriteButton',
+    '<StatusChip>', 'StatusChip',
+    '<FilterToggleGroup>', 'FilterToggleGroup',
+]);
+
+function isCustomComponentFigmaName(name: string): boolean {
+    return CUSTOM_COMPONENT_FIGMA_NAMES.has((name || '').trim());
+}
+
 export class FigmaDesignExtractor {
     private client: FigmaAPIClient;
     private token: string; // 토큰 저장
@@ -624,6 +635,147 @@ export class FigmaDesignExtractor {
     }
 
     /**
+     * 인스턴스 라이브러리 이름을 우선 사용해 매핑을 해석한다.
+     * - componentName 정규화는 "이름 기반 매핑"이 있을 때만 수행
+     * - mapping 자체는 마지막에 componentType fallback 허용
+     */
+    private resolveNodeMapping(
+        node: FigmaNode,
+        componentType?: ComponentDesignConfig['componentType'] | null,
+    ): {
+        mapping: ReturnType<typeof findMappingByFigmaName> | ReturnType<typeof findMappingByType>;
+        normalizedComponentName: string;
+        libraryName?: string;
+    } {
+        let libraryName: string | undefined;
+
+        if (node.type === 'INSTANCE' && (node as any).componentId && this.componentInfo.has((node as any).componentId)) {
+            const info = this.componentInfo.get((node as any).componentId)!;
+            libraryName = (info.name || (info as any).description || (info as any).key || '') as string;
+        }
+
+        let mappingByName =
+            (libraryName ? findMappingByFigmaName(libraryName) : null) ||
+            findMappingByFigmaName(node.name) ||
+            this.inferMappingFromStructure(node);
+
+        if (!mappingByName && (node.name.startsWith('Cell #') || node.name.startsWith('cell #'))) {
+            const props = (node as any).componentProperties || {};
+            const hasSmallProp = Object.keys(props).some((key) => key.toLowerCase() === 'small');
+            if (hasSmallProp) {
+                mappingByName = findMappingByFigmaName('<TableCell>');
+            }
+        }
+
+        const mapping = mappingByName || (componentType ? findMappingByType(componentType) : null);
+
+        return {
+            mapping,
+            normalizedComponentName: mappingByName?.figmaNames?.[0] || node.name,
+            libraryName,
+        };
+    }
+
+    /**
+     * 이름/라이브러리 정보가 없더라도 내부 구조로 대표 컴포넌트를 추론한다.
+     * 현재는 ButtonGroup처럼 피그마에서 "Instance #1" 같은 일반 이름으로 들어오는 케이스를 우선 처리한다.
+     */
+    private inferMappingFromStructure(node: FigmaNode) {
+        const visibleChildren = (node.children || []).filter((child: any) => child?.visible !== false);
+        if (visibleChildren.length === 0) {
+            return null;
+        }
+
+        const hasDescendantName = (current: FigmaNode | undefined, matcher: (name: string) => boolean): boolean => {
+            if (!current) return false;
+            const currentName = String(current.name || '');
+            if (matcher(currentName)) return true;
+            for (const child of current.children || []) {
+                if (hasDescendantName(child, matcher)) return true;
+            }
+            return false;
+        };
+
+        const resolveChildMapping = (child: FigmaNode) => {
+            if (child.type === 'INSTANCE' && (child as any).componentId && this.componentInfo.has((child as any).componentId)) {
+                const info = this.componentInfo.get((child as any).componentId)!;
+                const libraryName = (info.name || (info as any).description || (info as any).key || '') as string;
+                return findMappingByFigmaName(libraryName) || findMappingByFigmaName(child.name);
+            }
+            return findMappingByFigmaName(child.name);
+        };
+
+        const buttonChildren = visibleChildren.filter((child) => resolveChildMapping(child)?.muiName === 'Button');
+        const unsupportedChildren = visibleChildren.filter((child) => {
+            if (child.type === 'LINE') return false;
+            return resolveChildMapping(child)?.muiName !== 'Button';
+        });
+
+        if (buttonChildren.length >= 2 && unsupportedChildren.length === 0) {
+            return findMappingByFigmaName('<ButtonGroup>');
+        }
+
+        const hasInputFrame = visibleChildren.some((child) => String(child.name || '').includes('Input'));
+        const hasFormHelperText = visibleChildren.some((child) => String(child.name || '').includes('FormHelperText'));
+        const hasSelectIndicators = hasDescendantName(node, (name) =>
+            name.includes('ArrowDropDown') ||
+            name.includes('AutocompleteTag') ||
+            name.includes('AutocompleteClose')
+        );
+        const hasBaseFrame = visibleChildren.some((child) => String(child.name || '') === 'Base');
+        const hasButtonLabel = hasDescendantName(node, (name) => name === 'Button');
+
+        if (hasInputFrame && hasFormHelperText && hasSelectIndicators) {
+            return findMappingByFigmaName('<Select>');
+        }
+
+        if (hasInputFrame && hasFormHelperText) {
+            return findMappingByFigmaName('<TextField>');
+        }
+
+        if (hasBaseFrame && hasButtonLabel) {
+            return findMappingByFigmaName('<Button>');
+        }
+
+        return null;
+    }
+
+    private hasDescendantName(node: FigmaNode | undefined, matcher: (name: string) => boolean): boolean {
+        if (!node) return false;
+        const currentName = String(node.name || '');
+        if (matcher(currentName)) return true;
+        for (const child of node.children || []) {
+            if (this.hasDescendantName(child, matcher)) return true;
+        }
+        return false;
+    }
+
+    private looksLikeGenericSelect(node: FigmaNode): boolean {
+        const childNames = (node.children || []).map((child) => String(child.name || ''));
+        return childNames.some((name) => name.includes('Input')) &&
+            childNames.some((name) => name.includes('FormHelperText')) &&
+            this.hasDescendantName(
+                node,
+                (name) =>
+                    name.includes('ArrowDropDown') ||
+                    name.includes('AutocompleteTag') ||
+                    name.includes('AutocompleteClose') ||
+                    name === '<Menu>',
+            );
+    }
+
+    private looksLikeGenericTextField(node: FigmaNode): boolean {
+        const childNames = (node.children || []).map((child) => String(child.name || ''));
+        return childNames.some((name) => name.includes('Input')) &&
+            childNames.some((name) => name.includes('FormHelperText'));
+    }
+
+    private looksLikeGenericButton(node: FigmaNode): boolean {
+        const childNames = (node.children || []).map((child) => String(child.name || ''));
+        return childNames.includes('Base') && this.hasDescendantName(node, (name) => name === 'Button');
+    }
+
+    /**
      * 컴포넌트 노드 파싱
      * @param node 피그마 노드
      * @param context 컨텍스트 (Table의 small 값 등)
@@ -635,8 +787,23 @@ export class FigmaDesignExtractor {
             return null;
         }
         // 컴포넌트 타입 결정
-        const componentType = this.determineComponentType(node);
+        let componentType = this.determineComponentType(node);
         if (!componentType) return null;
+
+        let { normalizedComponentName: componentName } = this.resolveNodeMapping(node, componentType);
+        if (node.name.startsWith('Instance #')) {
+            if (this.looksLikeGenericSelect(node)) {
+                componentName = '<Select>';
+            } else if (this.looksLikeGenericTextField(node)) {
+                componentName = '<TextField>';
+            } else if (this.looksLikeGenericButton(node)) {
+                componentName = '<Button>';
+            }
+        }
+        const normalizedMappingKey = findMappingKeyByFigmaName(componentName);
+        if (normalizedMappingKey) {
+            componentType = this.categorizeComponentType(normalizedMappingKey);
+        }
 
         // ✅ Table인 경우 small 값을 먼저 추출하여 컨텍스트로 사용
         const isTable = componentType === 'table' && (node.name === '<Table>' || node.name === 'Table');
@@ -652,23 +819,64 @@ export class FigmaDesignExtractor {
 
         const component: ComponentDesignConfig = {
             componentId: node.id,
-            componentName: node.name,
+            componentName,
             componentType,
             properties: await this.extractComponentProperties(node, tableSmallContext),
             variants: await this.extractComponentVariants(node),
         };
+
+        // FilterToggleGroup: 피그마 구조 FilterToggleGroup > ToggleButtonGroup > ToggleButton 반영
+        if (isCustomComponentFigmaName(node.name) && (node.name.includes('FilterToggleGroup') || node.name.includes('Filter Toggle'))) {
+            if (node.children && node.children.length > 0) {
+                const options: Array<{ value: string; label: string; count: number; selected?: boolean }> = [];
+                let toggleButtonDesigns: ComponentDesignConfig[] = [];
+
+                for (const child of node.children) {
+                    if ((child as any)?.visible === false) continue;
+                    const childDesign = await this.extractComponentDesign(child, tableSmallContext);
+                    if (!childDesign) continue;
+                    const name = childDesign.componentName || '';
+                    const isToggleButtonGroup = name === '<ToggleButtonGroup>' || name === 'ToggleButtonGroup';
+                    if (isToggleButtonGroup && childDesign.children && childDesign.children.length > 0) {
+                        toggleButtonDesigns = childDesign.children;
+                        break;
+                    }
+                    toggleButtonDesigns.push(childDesign);
+                }
+
+                for (const item of toggleButtonDesigns) {
+                    const p = (item.properties || {}) as Record<string, unknown>;
+                    const label = typeof p.label === 'string' ? p.label : typeof p.text === 'string' ? p.text : '';
+                    const value = typeof p.value === 'string' ? p.value : typeof p.value === 'number' ? String(p.value) : '';
+                    const chipProps = p.__toggleButtonChipProps as { label?: string | number } | undefined;
+                    const count = chipProps?.label != null ? Number(chipProps.label) : 0;
+                    const selected = p.selected === true;
+                    options.push({
+                        value: String(value).trim(),
+                        label: String(label).trim(),
+                        count: Number.isNaN(count) ? 0 : count,
+                        selected: selected || undefined,
+                    });
+                }
+                if (options.length > 0) {
+                    (component.properties as Record<string, unknown>).options = options;
+                }
+            }
+        }
 
         // layout, card, table 타입인 경우 자식 노드 추출
         // Card는 커스텀 추출 로직 사용
         const isCardFamily = componentType === 'card';
         const isLayout = componentType === 'layout';
         const isTableType = componentType === 'table'; // TableContainer도 포함
+        const figmaNameMapping = findMappingByFigmaName(componentName);
+        const isToggleButtonGroup = figmaNameMapping?.muiName === 'ToggleButtonGroup';
+        const isButtonGroup = figmaNameMapping?.muiName === 'ButtonGroup';
 
-        if ((isLayout || isCardFamily || isTableType) && node.children) {
+        if ((isLayout || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup) && node.children) {
 
             // ✅ 매핑에서 extractChildren이 있는지 확인
             const mapping = findMappingByType(componentType);
-            const figmaNameMapping = findMappingByFigmaName(node.name);
             const useCustomExtractChildren = (mapping?.extractChildren || figmaNameMapping?.extractChildren) &&
                 (node.name === '<Card>' || node.name === '<CardHeader>' ||
                     node.name === 'CardHeader' || node.name === 'CardContent' ||
@@ -1046,6 +1254,17 @@ export class FigmaDesignExtractor {
                 component.children = normalizedChildren;
             } else if (children.length > 0) {
                 component.children = children;
+                // ✅ ToggleButtonGroup > ToggleButton: value 필수 (MUI). Figma에 없으면 텍스트 또는 option{N} 보강
+                if (isToggleButtonGroup) {
+                    component.children.forEach((child, index) => {
+                        const name = child.componentName || '';
+                        const props = child.properties as Record<string, unknown>;
+                        if ((name === '<ToggleButton>' || name === 'ToggleButton') && (props.value === undefined || props.value === null)) {
+                            const label = props.label;
+                            props.value = typeof label === 'string' && label.trim() ? label.trim() : `option${index}`;
+                        }
+                    });
+                }
             }
         }
 
@@ -1079,6 +1298,27 @@ export class FigmaDesignExtractor {
             // 68개 매핑을 14개 카테고리로 분류
             return this.categorizeComponentType(mappingKey);
         }
+        // 1-1. @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
+        if (isCustomComponentFigmaName(name)) {
+            return 'tabs';
+        }
+
+        if (this.looksLikeGenericSelect(node) || this.looksLikeGenericTextField(node)) {
+            return 'input';
+        }
+
+        if (this.looksLikeGenericButton(node)) {
+            return 'button';
+        }
+
+        // 1-2. 이름이 일반적인 인스턴스/프레임이어도 내부 구조로 대표 컴포넌트를 추론
+        const inferredMapping = this.inferMappingFromStructure(node);
+        if (inferredMapping?.figmaNames?.[0]) {
+            const inferredKey = findMappingKeyByFigmaName(inferredMapping.figmaNames[0]);
+            if (inferredKey) {
+                return this.categorizeComponentType(inferredKey);
+            }
+        }
 
         // 2. INSTANCE 타입인 경우, componentId를 사용하여 실제 컴포넌트 이름 찾기
         if (node.type === 'INSTANCE' && (node as any).componentId) {
@@ -1093,6 +1333,18 @@ export class FigmaDesignExtractor {
                 const actualMappingKey = findMappingKeyByFigmaName(componentName);
                 if (actualMappingKey) {
                     return this.categorizeComponentType(actualMappingKey);
+                }
+                // @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
+                if (isCustomComponentFigmaName(componentName)) {
+                    return 'tabs';
+                }
+            }
+
+            const inferredMappingFromInstance = this.inferMappingFromStructure(node);
+            if (inferredMappingFromInstance?.figmaNames?.[0]) {
+                const inferredKey = findMappingKeyByFigmaName(inferredMappingFromInstance.figmaNames[0]);
+                if (inferredKey) {
+                    return this.categorizeComponentType(inferredKey);
                 }
             }
 
@@ -1163,6 +1415,9 @@ export class FigmaDesignExtractor {
                     if (actualMappingKey) {
                         return this.categorizeComponentType(actualMappingKey);
                     }
+                    if (isCustomComponentFigmaName(actualComponentName)) {
+                        return 'tabs';
+                    }
 
                     const componentNameLower = actualComponentName.toLowerCase();
                     if (componentNameLower.includes('button')) return 'button';
@@ -1205,6 +1460,11 @@ export class FigmaDesignExtractor {
             if (typeNames.includes(name)) {
                 return this.categorizeComponentType(componentType);
             }
+        }
+
+        // 5. @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
+        if (isCustomComponentFigmaName(name)) {
+            return 'tabs';
         }
 
         return null;
@@ -1303,6 +1563,9 @@ export class FigmaDesignExtractor {
             // Tabs 카테고리
             'toggleButtonGroup': 'tabs',
 
+            // Button 그룹 (ButtonGroup: MUI Button 자식 그룹)
+            'buttonGroup': 'button',
+
             // Typography 카테고리
             'typography': 'typography',
 
@@ -1354,20 +1617,8 @@ export class FigmaDesignExtractor {
         // 1. 먼저 컴포넌트 타입 결정 및 MUI Props 추출 (우선순위)
         const componentType = this.determineComponentType(node);
 
-        // ✅ 매핑 기반으로 props 추출 (name 우선, 없으면 type으로)
-        // "Cell #" 패턴은 TableCell로 처리 (피그마에서 TableCell 인스턴스가 "Cell #1", "Cell #2" 등으로 명명됨)
-        let mapping = findMappingByFigmaName(node.name);
-        if (!mapping && (node.name.startsWith('Cell #') || node.name.startsWith('cell #'))) {
-            // Cell # 패턴이고 componentProperties에 Small prop이 있으면 TableCell 매핑 사용
-            const props = (node as any).componentProperties || {};
-            const hasSmallProp = Object.keys(props).some(key => key.toLowerCase() === 'small');
-            if (hasSmallProp) {
-                mapping = findMappingByFigmaName('<TableCell>');
-            }
-        }
-        if (!mapping && componentType) {
-            mapping = findMappingByType(componentType);
-        }
+        // ✅ 매핑 기반으로 props 추출 (인스턴스 라이브러리명 우선, 없으면 type fallback)
+        const { mapping } = this.resolveNodeMapping(node, componentType);
         const isAvatarComponent = (mapping && (mapping as any).muiName === 'Avatar') || (((node as any).name || '').toLowerCase().includes('avatar'));
 
         // ✅ 커스텀 속성 추출 로직이 있으면 사용 (Card의 Paper 속성 추출 등)
@@ -1500,17 +1751,17 @@ export class FigmaDesignExtractor {
                 // extractor를 두 번째 인자로 전달
                 const iconData = await mapping.extractIcons.call(mapping.extractIcons, node, this);
 
+                if (iconData.startIcon) {
+                    properties['startIconName'] = iconData.startIcon;
+                }
                 if (iconData.startIconComponentId) {
                     properties['startIconComponentId'] = iconData.startIconComponentId;
-                    if (iconData.startIcon) {
-                        properties['startIconName'] = iconData.startIcon;
-                    }
+                }
+                if (iconData.endIcon) {
+                    properties['endIconName'] = iconData.endIcon;
                 }
                 if (iconData.endIconComponentId) {
                     properties['endIconComponentId'] = iconData.endIconComponentId;
-                    if (iconData.endIcon) {
-                        properties['endIconName'] = iconData.endIcon;
-                    }
                 }
             } else {
                 // ✅ 기본 아이콘 추출 로직 (하드코딩 유지)
