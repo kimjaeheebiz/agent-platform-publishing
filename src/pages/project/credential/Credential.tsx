@@ -6,12 +6,19 @@ import {
     InputAdornment,
     InputLabel,
     MenuItem,
+    Paper,
     Select,
     Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
     TextField,
     Typography,
 } from '@mui/material';
-import { Add, Close, Search } from '@mui/icons-material';
+import { Add, Search } from '@mui/icons-material';
 import { FilterToggleGroup } from '@/components';
 
 // Import page-specific types
@@ -32,16 +39,8 @@ export const Credential: React.FC = () => {
                     gap: 1,
                 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        height: '30px',
-                    }}
-                >
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography variant="body1">총 5건</Typography>
                         <FilterToggleGroup
                             options={[
                                 { value: 'all', label: '전체', count: 5, selected: true },
@@ -50,47 +49,11 @@ export const Credential: React.FC = () => {
                             ]}
                         />
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <FormControl
-                                size="small"
+                            <Select
                                 sx={{
                                     width: '160px',
                                 }}
-                            >
-                                <InputLabel id="select-Credential-유형-label">
-                                    Credential 유형
-                                </InputLabel>
-                                <Select
-                                    labelId="select-Credential-유형-label"
-                                    value="anthropic"
-                                    size="small"
-                                    label="Credential 유형"
-                                >
-                                    <MenuItem value={`anthropic`}>anthropic</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <FormControl
-                                size="small"
-                                sx={{
-                                    width: '160px',
-                                }}
-                            >
-                                <InputLabel id="select-Credential-유형-label">
-                                    Credential 유형
-                                </InputLabel>
-                                <Select
-                                    labelId="select-Credential-유형-label"
-                                    value="anthropic, openai, upstage"
-                                    size="small"
-                                    label="Credential 유형"
-                                >
-                                    <MenuItem value={`anthropic, openai, upstage`}>
-                                        anthropic, openai, upstage
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Button size="small" color="error" startIcon={<Close />}>
-                                필터 초기화
-                            </Button>
+                            ></Select>
                         </Stack>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
@@ -131,6 +94,261 @@ export const Credential: React.FC = () => {
                         </Button>
                     </Stack>
                 </Stack>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Credential 이름</TableCell>
+                                <TableCell>등록자</TableCell>
+                                <TableCell>등록일</TableCell>
+                                <TableCell>관리</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction="row" spacing={1}>
+                                        <Stack
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '20px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
+                                        <Typography variant="body2">Anthropic account</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction="row" spacing={1}>
+                                        <Stack
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '20px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
+                                        <Typography variant="body2">OpenAI account</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction="row" spacing={1}>
+                                        <Stack
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '20px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
+                                        <Typography variant="body2">Upstage account</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction="row" spacing={1}>
+                                        <Stack
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '20px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
+                                        <Typography variant="body2">MySQL account</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Stack direction="row" spacing={1}>
+                                        <Stack
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '20px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
+                                        <Typography variant="body2">MySQL account</Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack>
+                                        <Typography variant="body2">홍길동</Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: 'text.disabled',
+                                            }}
+                                        >
+                                            honggildong@hecto.co.kr
+                                        </Typography>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                        <Button variant="outlined" size="xsmall" color="secondary">
+                                            수정
+                                        </Button>
+                                        <Button variant="outlined" size="xsmall" color="error">
+                                            삭제
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
         </Box>
     );

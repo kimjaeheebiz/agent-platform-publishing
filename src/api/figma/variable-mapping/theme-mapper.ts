@@ -43,6 +43,9 @@ export function determineVariableType(variableName: string): VariableMappingInfo
     if (lower.includes('typography') || lower.includes('font')) {
         return 'typography';
     }
+    if (lower.includes('borderradius')) {
+        return 'shape';
+    }
     
     return 'other';
 }
@@ -69,6 +72,10 @@ export function formatMuiPath(variableName: string, type: VariableMappingInfo['t
         case 'typography':
             // typography는 theme.typography 하위
             return `typography.${basePath}`;
+            
+        case 'shape':
+            // shape는 theme.shape 하위 (borderRadius 등)
+            return `shape.${basePath}`;
             
         default:
             return basePath;

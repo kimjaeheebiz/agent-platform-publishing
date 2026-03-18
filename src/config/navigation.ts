@@ -172,6 +172,12 @@ function extractPageIdsFromMenu(menu: MenuItem): string[] {
 
     if (menu.type === 'item' && menu.pageId) {
         pageIds.push(menu.pageId);
+        // 4뎁스: item의 children(메뉴 미노출)도 라우트 등록을 위해 pageId 수집
+        if (menu.children?.length) {
+            menu.children.forEach((child) => {
+                pageIds.push(...extractPageIdsFromMenu(child));
+            });
+        }
     }
 
     if (menu.type === 'group' && menu.children) {
@@ -195,7 +201,6 @@ function extractRoutesFromMenu(menu: MenuItem): RouteInfo[] {
         if (pageConfig) {
             // path 우선순위: menu.path > pages.ts의 path
             const routePath = menu.path || pageConfig.path;
-            
             routes.push({
                 url: routePath,
                 title: getMainMenuTitle(menu),
@@ -203,6 +208,12 @@ function extractRoutesFromMenu(menu: MenuItem): RouteInfo[] {
                 pageId: menu.pageId,
                 showPageHeader: pageConfig.showPageHeader ?? true,
                 layout: pageConfig.layout || 'default',
+            });
+        }
+        // 4뎁스: item의 children(메뉴 미노출)도 라우트 등록
+        if (menu.children?.length) {
+            menu.children.forEach((child) => {
+                routes.push(...extractRoutesFromMenu(child));
             });
         }
     }
@@ -275,8 +286,14 @@ export const findMenuByUrl = (url: string, menus: MenuItem[] = MAIN_MENUS): Menu
         // path 우선순위: menu.path > pages.ts의 path
         const pageConfig = menu.pageId ? findPageById(menu.pageId) : null;
         const menuPath = menu.path || (pageConfig && 'path' in pageConfig ? pageConfig.path : undefined);
-        
+
         if (menuPath === url) return menu;
+
+        // 4뎁스: item의 children(메뉴 미노출)에서도 URL 검색
+        if (menu.type === 'item' && menu.children?.length) {
+            const found = findMenuByUrl(url, menu.children);
+            if (found) return found;
+        }
 
         if (menu.type === 'group' && menu.children) {
             const found = findMenuByUrl(url, menu.children);
@@ -300,6 +317,10 @@ export const findMenuById = (id: string, menus: MenuItem[] = MAIN_MENUS): MenuIt
     for (const menu of menus) {
         if (menu.id === id) return menu;
 
+        if (menu.type === 'item' && menu.children?.length) {
+            const found = findMenuById(id, menu.children);
+            if (found) return found;
+        }
         if (menu.type === 'group' && menu.children) {
             const found = findMenuById(id, menu.children);
             if (found) return found;
@@ -344,6 +365,11 @@ export const getBreadcrumbPath = (url: string): Array<{ title: string; path?: st
                         }),
                     );
                     return menu; // 찾은 메뉴 반환
+                }
+                // 4뎁스: item의 children(메뉴 미노출)에서도 URL 검색
+                if (menu.children?.length) {
+                    const found = findMenuByUrl(targetUrl, menu.children, currentAncestors);
+                    if (found) return found;
                 }
             }
 

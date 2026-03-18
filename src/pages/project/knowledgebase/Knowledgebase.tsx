@@ -1,22 +1,21 @@
 import React from 'react';
 import {
     Box,
-    Stack,
-    Typography,
-    TextField,
-    InputAdornment,
     Button,
-    TableContainer,
-    Table,
+    InputAdornment,
     Paper,
-    TableHead,
+    Select,
+    Stack,
+    Table,
     TableBody,
-    TableFooter,
-    TableRow,
     TableCell,
-    Checkbox,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { MailOutline, Search, ChevronLeft, ChevronRight, Add } from '@mui/icons-material';
+import { Add, MailOutline, Search } from '@mui/icons-material';
 
 // Import page-specific types
 import { KnowledgebasePageState } from './Knowledgebase.types';
@@ -34,75 +33,64 @@ export const Knowledgebase: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    p: '0px',
                 }}
             >
-                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Stack direction="row" spacing={1} alignItems="center">
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{
+                        p: '0px',
+                    }}
+                >
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{
+                            p: '0px',
+                        }}
+                    >
                         <Typography variant="body1">총 5건</Typography>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Stack
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                            sx={{
+                                p: '0px',
+                            }}
+                        >
+                            <Select
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <MailOutline />
+                                    </InputAdornment>
+                                }
                                 sx={{
-                                    backgroundColor: '#ffffff',
+                                    width: '160px',
                                 }}
-                            >
-                                <Stack
-                                    sx={{
-                                        p: [0, 6, 0, 1.5],
-                                        borderColor: '#000000',
-                                        borderWidth: '1px',
-                                        borderRadius: '4px',
-                                    }}
-                                >
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        sx={{
-                                            p: [3, 0, 3, 0],
-                                            backgroundColor: 'text.secondary',
-                                        }}
-                                    >
-                                        <Stack
-                                            sx={{
-                                                height: '24px',
-                                            }}
-                                        ></Stack>
-                                        <Stack></Stack>
-                                    </Stack>
-                                </Stack>
-                            </Stack>
-                            <Stack
+                            ></Select>
+                            <Select
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <MailOutline />
+                                    </InputAdornment>
+                                }
                                 sx={{
-                                    backgroundColor: '#ffffff',
+                                    width: '160px',
                                 }}
-                            >
-                                <Stack
-                                    sx={{
-                                        p: [0, 6, 0, 1.5],
-                                        borderColor: '#000000',
-                                        borderWidth: '1px',
-                                        borderRadius: '4px',
-                                    }}
-                                >
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        sx={{
-                                            p: [3, 0, 3, 0],
-                                            backgroundColor: 'text.secondary',
-                                        }}
-                                    >
-                                        <Stack
-                                            sx={{
-                                                height: '24px',
-                                            }}
-                                        ></Stack>
-                                        <Stack></Stack>
-                                    </Stack>
-                                </Stack>
-                            </Stack>
+                            ></Select>
                         </Stack>
                     </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{
+                            p: '0px',
+                        }}
+                    >
                         <TextField
                             size="small"
                             placeholder="지식베이스 이름, 문서 이름, 등록자 이름"
@@ -127,30 +115,27 @@ export const Knowledgebase: React.FC = () => {
                         </Button>
                     </Stack>
                 </Stack>
-                <TableContainer>
-                    <Table>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell>등록일</TableCell>
+                                <TableCell>지식베이스 이름</TableCell>
                                 <TableCell>등록자</TableCell>
+                                <TableCell>등록일</TableCell>
                                 <TableCell>관리</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
-                                        <Typography variant="body2">지식베이스 이름</Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
+                                <TableCell>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -162,8 +147,18 @@ export const Knowledgebase: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -174,18 +169,15 @@ export const Knowledgebase: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
-                                        <Typography variant="body2">지식베이스 이름</Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
+                                <TableCell>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -197,8 +189,18 @@ export const Knowledgebase: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -209,18 +211,15 @@ export const Knowledgebase: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
-                                        <Typography variant="body2">지식베이스 이름</Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
+                                <TableCell>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -232,8 +231,18 @@ export const Knowledgebase: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -244,18 +253,15 @@ export const Knowledgebase: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
-                                        <Typography variant="body2">지식베이스 이름</Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
+                                <TableCell>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -267,8 +273,18 @@ export const Knowledgebase: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -279,18 +295,15 @@ export const Knowledgebase: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
-                                    <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
-                                        <Typography variant="body2">지식베이스 이름</Typography>
-                                    </Stack>
+                                <TableCell>
+                                    <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
-                                    <Stack>
+                                <TableCell>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -302,8 +315,18 @@ export const Knowledgebase: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>

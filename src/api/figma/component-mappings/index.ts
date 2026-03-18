@@ -23,6 +23,7 @@ import { SwitchMapping } from './Switch';
 import { RadioMapping } from './Radio';
 import { MenuItemMapping } from './MenuItem';
 import { MenuMapping } from './Menu';
+import { MenuListMapping } from './MenuList';
 import { DialogMapping } from './Dialog';
 import { DialogTitleMapping } from './DialogTitle';
 import { DialogContentMapping } from './DialogContent';
@@ -104,6 +105,7 @@ export const COMPONENT_MAPPINGS = {
     radio: RadioMapping,
     menuItem: MenuItemMapping,
     menu: MenuMapping,
+    menuList: MenuListMapping,
     dialog: DialogMapping,
     dialogTitle: DialogTitleMapping,
     dialogContent: DialogContentMapping,
@@ -223,6 +225,7 @@ export {
     RadioMapping,
     MenuItemMapping,
     MenuMapping,
+    MenuListMapping,
     DialogMapping,
     DialogTitleMapping,
     DialogContentMapping,

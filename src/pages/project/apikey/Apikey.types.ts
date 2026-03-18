@@ -8,6 +8,6 @@ export interface ApikeyPageState {
     // Add page-specific state types here
 }
 
-export type ContentProps = object;
+export type BoxProps = object;
 
 export type ApikeyProps = object;

@@ -36,13 +36,35 @@ export const Project: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    p: '0px',
                 }}
             >
-                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Stack direction="row" spacing={1} alignItems="center">
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{
+                        p: '0px',
+                    }}
+                >
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{
+                            p: '0px',
+                        }}
+                    >
                         <Typography variant="body1">총 500건</Typography>
                     </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{
+                            p: '0px',
+                        }}
+                    >
                         <FormControl
                             size="small"
                             sx={{
@@ -96,7 +118,11 @@ export const Project: React.FC = () => {
                         <TableBody>
                             <TableRow>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -115,7 +141,11 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">1</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -134,7 +164,14 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             소유자 변경
                                         </Button>
@@ -146,7 +183,11 @@ export const Project: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -165,7 +206,11 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">1</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -184,7 +229,14 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             소유자 변경
                                         </Button>
@@ -196,7 +248,11 @@ export const Project: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -215,7 +271,11 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">1</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -234,7 +294,14 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             소유자 변경
                                         </Button>
@@ -246,7 +313,11 @@ export const Project: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -265,7 +336,11 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">1</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -284,7 +359,14 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             소유자 변경
                                         </Button>
@@ -296,7 +378,11 @@ export const Project: React.FC = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">프로젝트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -315,7 +401,11 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">1</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack>
+                                    <Stack
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -334,7 +424,14 @@ export const Project: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Stack
+                                        direction="row"
+                                        spacing={0.5}
+                                        alignItems="center"
+                                        sx={{
+                                            p: '0px',
+                                        }}
+                                    >
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             소유자 변경
                                         </Button>

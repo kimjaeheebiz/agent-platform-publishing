@@ -48,7 +48,7 @@ export interface ComponentMapping {
     generateJSX?: (componentName: string, props: string, content: string, sx?: string | null, properties?: any) => string;
     
     /** ✅ 추가: 아이콘 추출 로직 */
-    extractIcons?: (node: FigmaNode, extractor?: any) => Promise<{ startIcon?: string, endIcon?: string, startIconComponentId?: string, endIconComponentId?: string }>;
+    extractIcons?: (node: FigmaNode, extractor?: any) => Promise<{ startIcon?: string, endIcon?: string, startIconComponentId?: string, endIconComponentId?: string, startIconSize?: string, endIconSize?: string }>;
     
     /** ✅ 추가: 자식 노드 추출 로직 (Card, Table 등 복잡한 구조) */
     extractChildren?: (node: FigmaNode) => Promise<FigmaNode[]>;

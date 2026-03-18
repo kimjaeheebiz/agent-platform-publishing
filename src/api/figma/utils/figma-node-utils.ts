@@ -38,6 +38,31 @@ export function findTextInChildByName(
     return search(node as any);
 }
 
+/** Figma 자식/하위 노드 이름(또는 패턴)으로 첫 번째 노드 반환 */
+export function findDescendantByName(
+    node: FigmaNode | undefined,
+    childNamePattern: string | RegExp
+): FigmaNode | null {
+    const nameMatch = (name: string) =>
+        typeof childNamePattern === 'string'
+            ? name === childNamePattern || name.includes(childNamePattern)
+            : childNamePattern.test(name);
+
+    function search(current: any): FigmaNode | null {
+        const children = current?.children || [];
+        for (const child of children) {
+            if (nameMatch(String((child as any).name ?? ''))) {
+                return child as FigmaNode;
+            }
+            const found = search(child);
+            if (found) return found;
+        }
+        return null;
+    }
+
+    return search(node as any);
+}
+
 /** componentProperties에서 값 추출 (value 필드 또는 원시값, 키는 대소문자 무시) */
 export function getPropValue(props: Record<string, unknown>, keyLower: string): unknown {
     const normalize = (s: string) => s.split('#')[0].trim().toLowerCase();
@@ -72,6 +97,19 @@ export function findFirstIconLikeChild(children: any[]): any | undefined {
         const childName = normalizeFigmaNodeName(child.name);
         return Boolean(child.componentId) || (childName && childName !== 'Value' && childName !== 'Label' && childName !== 'Chip' && isLikelyMuiIconName(childName));
     });
+}
+
+/** 현재 노드 이하에서 첫 번째 아이콘형 노드를 재귀적으로 탐색 */
+export function findFirstIconLikeDescendant(node: any): any | undefined {
+    if (!node) return undefined;
+    const direct = findFirstIconLikeChild(node.children || []);
+    if (direct) return direct;
+    for (const child of node.children || []) {
+        if (!child || child.visible === false) continue;
+        const found = findFirstIconLikeDescendant(child);
+        if (found) return found;
+    }
+    return undefined;
 }
 
 /** Figma componentProperties에서 boolean 프로퍼티 값 추출 (키는 "Value?#123" 형태 지원) */

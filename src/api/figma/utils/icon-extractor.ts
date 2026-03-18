@@ -5,7 +5,15 @@
  */
 
 import { FigmaNode } from '../types';
-import { findFirstIconLikeChild, isLikelyMuiIconName, normalizeFigmaNodeName } from './figma-node-utils';
+import {
+    findDescendantByName,
+    findFirstIconLikeChild,
+    findFirstIconLikeDescendant,
+    getFigmaBooleanProp,
+    getPropValue,
+    isLikelyMuiIconName,
+    normalizeFigmaNodeName,
+} from './figma-node-utils';
 
 export interface IconExtractionResult {
     startIconComponentId?: string;
@@ -24,6 +32,9 @@ export interface IconData {
     endIcon?: string;
     startIconComponentId?: string;
     endIconComponentId?: string;
+    /** Figma Icon Size 프로퍼티: Small | Medium | Large | Inherit → MUI fontSize */
+    startIconSize?: string;
+    endIconSize?: string;
 }
 
 /**
@@ -100,15 +111,18 @@ export async function fetchIconName(
     }
 
     try {
+        const isUsableIconName = (name: string | undefined) =>
+            Boolean(name) && !String(name).includes('=') && normalizeFigmaNodeName(name) !== 'Icon';
+
         // 1. 페이지 파싱 시 채워둔 아이콘 캐시 사용 (API 호출 감소)
         const cached = (extractor as any).iconNodeNameCache?.get(iconComponentId);
-        if (cached) return cached;
+        if (isUsableIconName(cached)) return cached;
 
         // 2. extractor의 componentInfo에서 먼저 조회
         if ((extractor as any).componentInfo && (extractor as any).componentInfo.has(iconComponentId)) {
             const componentInfo = (extractor as any).componentInfo.get(iconComponentId);
             const iconName = componentInfo?.name || componentInfo?.description || componentInfo?.key;
-            if (iconName) {
+            if (isUsableIconName(iconName)) {
                 return iconName;
             }
         }
@@ -276,22 +290,18 @@ export async function extractAdornIconsFromNode(
     // - 해당 토글이 false인 경우에는 해당 위치의 아이콘을 추출하지 않음
     const componentProps = (node as any).componentProperties || {};
     const isAdornEnabled = (position: 'start' | 'end'): boolean => {
-        let enabled: boolean | undefined;
-        for (const [rawKey, rawProp] of Object.entries(componentProps)) {
-            const key = rawKey.toLowerCase();
-            const prop = rawProp as any;
-            if (
-                (key.includes('adorn') || key.includes('action')) &&
-                key.includes(position) &&
-                prop &&
-                typeof prop === 'object' &&
-                prop.type === 'BOOLEAN'
-            ) {
-                enabled = Boolean(prop.value);
-            }
-        }
-        // 명시적으로 false인 경우에만 비활성 처리, 그 외(없음/true)는 활성으로 간주
-        return enabled !== false;
+        // Select/TextField에서 startAdornment/endAdornment는 "Adorn Start/End" 토글이 켜진 경우에만 생성.
+        // "Action" 계열 토글(예: clear 버튼 등)은 start/end adornment로 취급하지 않는다.
+        const enabled = getFigmaBooleanProp(
+            node as any,
+            `Adorn ${position}`,
+            `Adorn ${position}?`,
+            `Adorn. ${position}`,
+            `Adorn. ${position}?`,
+            `Adorn_${position}`,
+            `Adorn_${position}?`,
+        );
+        return enabled === true;
     };
 
     const findAdornContainer = (root: any, namePart: string): any | undefined => {
@@ -315,11 +325,14 @@ export async function extractAdornIconsFromNode(
 
     const findIconInNode = (n: any): string | undefined => {
         if (!n) return undefined;
+        // Figma에서 숨김(visible=false) 처리된 슬롯은 아이콘으로 간주하지 않음
+        if ((n as any).visible === false) return undefined;
         if (n.type === 'INSTANCE' && (n.componentId || (n.name && (n.name.includes('Icon') || n.name.includes('Filled'))))) {
             return n.componentId;
         }
         const children = n?.children || [];
         for (const ch of children) {
+            if ((ch as any)?.visible === false) continue;
             const id = findIconInNode(ch);
             if (id) return id;
         }
@@ -520,6 +533,128 @@ export async function extractIconsForToggleButton(
     } else if (discoveredIconName) {
         result.startIcon = discoveredIconName;
     }
+
+    return result;
+}
+
+export async function extractIconsForMenuItem(
+    node: FigmaNode,
+    extractor?: any
+): Promise<IconData> {
+    const result: IconData = {};
+    const props = ((node as any).componentProperties || {}) as Record<string, any>;
+    const isValidMenuIconName = (name?: string) => {
+        const normalized = normalizeFigmaNodeName(name);
+        if (!normalized) return false;
+        if (['Icon', 'Container', 'Value', 'Label', 'Typography', 'Divider', 'Paper', 'Menu', 'MenuList', 'MenuItem', 'List', 'ListItem', 'Left Content', 'Right Content'].includes(normalized)) {
+            return false;
+        }
+        return isLikelyMuiIconName(normalized);
+    };
+
+    const resolveIcon = async (slotNode: FigmaNode | null) => {
+        if (!slotNode) return undefined;
+        const iconNode = findFirstIconLikeDescendant(slotNode as any);
+        if (!iconNode) return undefined;
+
+        const iconComponentId = (iconNode as any).componentId as string | undefined;
+        const discoveredName = normalizeFigmaNodeName((iconNode as any).name);
+
+        // Figma <Icon> 래퍼: "Icon Instance" (INSTANCE_SWAP)에 실제 아이콘(StarSharp 등) ID가 있음. ListItem > Left Content > <Icon> 구조.
+        const iconProps = (iconNode as any).componentProperties || {};
+        let swappedId: string | undefined;
+        for (const [key, raw] of Object.entries(iconProps)) {
+            const prop = raw as any;
+            if (prop?.type === 'INSTANCE_SWAP' && (key.toLowerCase().includes('instance') || key.toLowerCase().includes('icon'))) {
+                swappedId = prop.value as string | undefined;
+                if (swappedId) break;
+            }
+        }
+        const effectiveId = swappedId || iconComponentId;
+        const fetchedName =
+            effectiveId ? await fetchIconName(effectiveId, extractor) : undefined;
+        const resolvedName = normalizeFigmaNodeName(fetchedName || discoveredName);
+        if (!isValidMenuIconName(resolvedName)) {
+            return undefined;
+        }
+        const sizeRaw = getPropValue(iconProps as Record<string, unknown>, 'Size');
+        const iconSize = typeof sizeRaw === 'string' && sizeRaw.trim() ? sizeRaw.trim() : undefined;
+
+        return {
+            componentId: effectiveId || iconComponentId,
+            iconName: resolvedName,
+            iconSize: iconSize && /^(Small|Medium|Large|Inherit)$/i.test(iconSize) ? iconSize : undefined,
+        };
+    };
+
+    const resolveIconFromProps = async (position: 'left' | 'right') => {
+        const wantLeft = position === 'left';
+        for (const [key, raw] of Object.entries(props)) {
+            const keyNorm = key.toLowerCase().replace(/\s+/g, '');
+            const hasLeft = keyNorm.includes('left');
+            const hasRight = keyNorm.includes('right');
+            const hasInstanceOrIcon = keyNorm.includes('instance') || keyNorm.includes('icon');
+            if (!hasInstanceOrIcon) continue;
+            if (wantLeft && !hasLeft) continue;
+            if (!wantLeft && !hasRight) continue;
+
+            const prop = raw as any;
+            if (prop?.type !== 'INSTANCE_SWAP') continue;
+            const componentId = prop.value as string | undefined;
+            if (!componentId) continue;
+            const iconName = await fetchIconName(componentId, extractor);
+            if (!isValidMenuIconName(iconName)) continue;
+            return {
+                componentId,
+                iconName: iconName ? normalizeFigmaNodeName(iconName) : undefined,
+                iconSize: undefined,
+            };
+        }
+        return undefined;
+    };
+
+    // Left/Right Slot 토글: Figma componentProperties의 "Left Slot", "Right Slot" boolean이 false면 해당 위치 아이콘 완전히 비활성화
+    const leftSlotEnabled = getFigmaBooleanProp(node as any, 'Left Slot', 'LeftSlot');
+    const rightSlotEnabled = getFigmaBooleanProp(node as any, 'Right Slot', 'RightSlot');
+
+    // Left/Right: MenuItem은 "Left Slot", ListItem은 "Left Content" 사용 (Figma 레이어 이름)
+    const leftSlot =
+        leftSlotEnabled === false
+            ? null
+            : findDescendantByName(node, /left\s*slot/i) ||
+              findDescendantByName(node, /leftslot/i) ||
+              findDescendantByName(node, /left\s*content/i) ||
+              findDescendantByName(node, /leftcontent/i);
+    const rightSlot =
+        rightSlotEnabled === false
+            ? null
+            : findDescendantByName(node, /right\s*slot/i) ||
+              findDescendantByName(node, /rightslot/i) ||
+              findDescendantByName(node, /right\s*content/i) ||
+              findDescendantByName(node, /rightcontent/i);
+
+    const leftIcon =
+        leftSlotEnabled === false ? undefined : (await resolveIcon(leftSlot)) || (await resolveIconFromProps('left'));
+    const rightIcon =
+        rightSlotEnabled === false ? undefined : (await resolveIcon(rightSlot)) || (await resolveIconFromProps('right'));
+
+    // Slot 없을 때: 직계·하위에서 첫 번째 유효한 아이콘형 노드 (findFirstIconLikeDescendant가 직계 자식 우선)
+    // 단, Left Slot이 명시적으로 false인 경우에는 fallback 검색도 수행하지 않는다. → 아이콘 없는 plain MenuItem 유지.
+    const fallbackIconNode =
+        leftSlotEnabled === false ? undefined : findFirstIconLikeDescendant(node as any);
+    const fallbackIconName = fallbackIconNode ? normalizeFigmaNodeName((fallbackIconNode as any).name) : undefined;
+    const fallbackIconComponentId = fallbackIconNode ? (fallbackIconNode as any).componentId as string | undefined : undefined;
+
+    if (leftIcon?.componentId || (fallbackIconComponentId && !rightIcon?.componentId)) {
+        result.startIconComponentId = leftIcon?.componentId || fallbackIconComponentId;
+    }
+    if ((leftIcon?.iconName && leftIcon.iconName !== 'Icon') || (fallbackIconName && isValidMenuIconName(fallbackIconName) && !rightIcon?.iconName)) {
+        result.startIcon = leftIcon?.iconName && leftIcon.iconName !== 'Icon' ? leftIcon.iconName : fallbackIconName;
+    }
+    if (leftIcon?.iconSize) result.startIconSize = leftIcon.iconSize;
+    if (rightIcon?.componentId) result.endIconComponentId = rightIcon.componentId;
+    if (rightIcon?.iconName && rightIcon.iconName !== 'Icon') result.endIcon = rightIcon.iconName;
+    if (rightIcon?.iconSize) result.endIconSize = rightIcon.iconSize;
 
     return result;
 }

@@ -131,10 +131,11 @@ export class FigmaIntegrationService {
             const { id: pageId, title } = pageConfig;
             console.log(`📝 ${pageId} 페이지 레이아웃 통합 콘텐츠 생성 중...`);
 
-            // Figma 디자인을 페이지 콘텐츠로 변환 (pageId 사용)
+            // Figma 디자인을 페이지 콘텐츠로 변환 (pageId, Main Content layout 포함)
             const figmaContent: PageContentConfig = {
                 pageId: pageId,
                 components: pageDesign.components,
+                layout: pageDesign.layout,
             };
 
             // 페이지 설정과 통합

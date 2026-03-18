@@ -7,7 +7,7 @@ import { VariableMappingInfo } from './types';
 import { FigmaVariableFetcher } from './variable-fetcher';
 import { formatMuiPath, determineVariableType } from './theme-mapper';
 import { loadLibraryVariableMappings } from './library-loader';
-export { getSpacingTokenFromPx } from './spacing-resolver';
+export { getSpacingTokenFromPx, getSpacingPxFromTokenName } from './spacing-resolver';
 
 /**
  * 변수 매핑 매니저
@@ -67,15 +67,24 @@ export class VariableMappingManager {
     }
 
     /**
-     * 파일의 모든 변수 매핑 로드 (초기화용)
-     * File Variables API는 404이므로 사용하지 않음
+     * 파일의 모든 변수 매핑 로드 (borderRadius 등 dimension 토큰 조회용)
+     * GET /v1/files/:file_key/variables 로 파일 변수 로드 후 캐시에 병합
      */
     async loadFileMappings(fileKey: string, fileType: 'library' | 'platform'): Promise<void> {
         console.log(`📥 ${fileType} 파일 변수 매핑 로드: ${fileKey}`);
-        
-        // File Variables API가 404를 반환하므로
-        // 라이브러리 매핑은 이미 로드됨 (loadLibraryMappings)
-        console.log(`✅ ${fileType} 파일 변수 매핑 완료: 라이브러리 매핑 사용`);
+        try {
+            const fileVars = await this.fetcher.fetchFileVariables(fileKey);
+            for (const [id, info] of fileVars.entries()) {
+                const hash = this.normalizeVariableId(id);
+                this.cache.set(hash, info);
+                this.cache.set(id, info);
+            }
+            if (fileVars.size > 0) {
+                console.log(`✅ 파일 변수 ${fileVars.size}개 캐시 병합`);
+            }
+        } catch (e) {
+            console.warn(`⚠️ 파일 변수 로드 실패: ${fileKey}`, e);
+        }
     }
 
     /**

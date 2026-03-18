@@ -8,6 +8,7 @@
 export interface FigmaVariable {
     id: string;
     name: string;
+    key?: string;
     type: 'FLOAT' | 'STRING' | 'COLOR' | 'BOOLEAN';
     valuesByMode: Record<string, any>;
     resolvedType: string;
@@ -38,7 +39,7 @@ export interface VariableMappingInfo {
     variableId: string;
     variableName: string;        // 피그마 변수명 (예: "Primary/Light")
     muiThemePath: string;         // MUI 테마 경로 (예: "primary.light")
-    type: 'color' | 'size' | 'variant' | 'typography' | 'other';
+    type: 'color' | 'size' | 'variant' | 'typography' | 'shape' | 'other';
     defaultValue?: any;
 }
 

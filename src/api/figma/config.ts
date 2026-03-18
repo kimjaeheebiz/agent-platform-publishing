@@ -35,6 +35,7 @@ export const FIGMA_CONFIG = {
         // Pages (Frame)
         pages: {
             'project.agent': '80:10329',
+            'project.agent.agentbuilder': '340:18545',
             'project.credential': '80:10987',
             'project.knowledgebase': '80:10988',
             'project.knowledgebase.document': '80:11840',

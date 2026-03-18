@@ -1,4 +1,4 @@
-import { ComponentDesignConfig } from './types';
+import type { ComponentDesignConfig, LayoutConfig } from './types';
 
 /**
  * 레이아웃 타입 정의
@@ -11,6 +11,8 @@ export type LayoutType = 'default' | 'auth' | 'error';
 export interface PageContentConfig {
     pageId: string; // pages.ts의 id
     components: ComponentDesignConfig[];
+    /** Main Content 프레임에서 추출한 레이아웃(패딩 등). 패딩 스타일 있는 경우 Box sx에 반영 */
+    layout?: LayoutConfig;
 }
 
 /**

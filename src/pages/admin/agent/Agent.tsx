@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Box,
     Button,
-    ButtonGroup,
-    Chip,
     FormControl,
     InputAdornment,
     InputLabel,
@@ -18,26 +16,15 @@ import {
     TableHead,
     TableRow,
     TextField,
-    ToggleButton,
-    ToggleButtonGroup,
     Typography,
 } from '@mui/material';
-import { FolderOutlined, FormatAlignLeft, Search, StarSharp } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { FavoriteButton, FilterToggleGroup, StatusChip } from '@/components';
 
 // Import page-specific types
 import { AgentPageState } from './Agent.types';
 
 export const Agent: React.FC = () => {
-    const [value, setValue] = useState<string | null>('value2');
-    const handleChange = (_e: React.MouseEvent<HTMLElement>, newValue: string | null) => {
-        setValue(newValue);
-    };
-    const [value2, setValue2] = useState<string | null>('test2');
-    const handleChange2 = (_e: React.MouseEvent<HTMLElement>, newValue: string | null) => {
-        setValue2(newValue);
-    };
-
     return (
         <Box
             sx={{
@@ -445,74 +432,6 @@ export const Agent: React.FC = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <ToggleButtonGroup exclusive value={value} onChange={handleChange}>
-                    <ToggleButton value="value1">
-                        <FolderOutlined />
-                    </ToggleButton>
-                    <ToggleButton value="value2">
-                        <FolderOutlined />
-                    </ToggleButton>
-                    <ToggleButton value="value3">
-                        <FolderOutlined />
-                    </ToggleButton>
-                    <ToggleButton value="value4" disabled>
-                        <FolderOutlined />
-                    </ToggleButton>
-                    <ToggleButton value="value5" disabled>
-                        <FolderOutlined />
-                    </ToggleButton>
-                    <ToggleButton value="value6">
-                        <FormatAlignLeft />
-                    </ToggleButton>
-                </ToggleButtonGroup>
-                <ToggleButtonGroup exclusive size="small" value={value2} onChange={handleChange2}>
-                    <ToggleButton value="test1" size="small">
-                        Value 1
-                        <Chip label="Chip" size="small" />
-                    </ToggleButton>
-                    <ToggleButton value="test2" size="small">
-                        <StarSharp />
-                        Value 2
-                        <Chip label="2" size="small" />
-                    </ToggleButton>
-                    <ToggleButton value="test3" size="small">
-                        <StarSharp />
-                        Value 3
-                        <Chip label="33" size="small" />
-                    </ToggleButton>
-                    <ToggleButton value="test4" size="small" disabled>
-                        Value 4
-                        <Chip label="44" size="small" />
-                    </ToggleButton>
-                    <ToggleButton value="test5" size="small" disabled>
-                        <StarSharp />
-                        Value 5
-                        <Chip label="55" size="small" />
-                    </ToggleButton>
-                    <ToggleButton value="test6" size="small">
-                        <StarSharp />
-                        Value 6
-                        <Chip label="66" size="small" />
-                    </ToggleButton>
-                </ToggleButtonGroup>
-                <Stack direction="row" spacing={1}>
-                    <ButtonGroup variant="contained">
-                        <Button variant="contained">111</Button>
-                        <Button variant="contained">222</Button>
-                        <Button variant="contained">333</Button>
-                    </ButtonGroup>
-                    <ButtonGroup color="secondary">
-                        <Button variant="outlined" size="small" color="secondary">
-                            444
-                        </Button>
-                        <Button variant="outlined" size="small" color="secondary">
-                            555
-                        </Button>
-                        <Button variant="outlined" size="small" color="secondary">
-                            666
-                        </Button>
-                    </ButtonGroup>
-                </Stack>
             </Box>
         </Box>
     );

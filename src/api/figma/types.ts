@@ -26,6 +26,17 @@ export interface FigmaNode {
     };
     fills?: FigmaFill[];
     strokes?: FigmaStroke[];
+    /** REST/플러그인 API: 전면 stroke 두께. 개별 면은 strokeTopWeight 등 (REST는 미제공 가능) */
+    strokeWeight?: number;
+    stroke_weight?: number;
+    strokeTopWeight?: number;
+    strokeRightWeight?: number;
+    strokeBottomWeight?: number;
+    strokeLeftWeight?: number;
+    stroke_top_weight?: number;
+    stroke_right_weight?: number;
+    stroke_bottom_weight?: number;
+    stroke_left_weight?: number;
     effects?: FigmaEffect[];
     characters?: string;
     style?: FigmaTextStyle;
@@ -63,6 +74,8 @@ export interface FigmaNode {
     componentId?: string;
     variantProperties?: Record<string, unknown>;
     componentProperties?: Record<string, unknown>;
+    /** REST API: 변수 바인딩 (cornerRadius, topLeftRadius 등) */
+    boundVariables?: Record<string, { id: string }>;
 }
 
 export interface FigmaComponent {
@@ -110,6 +123,10 @@ export interface FigmaStroke {
         g: number;
         b: number;
         a: number;
+    };
+    /** REST API: 변수 바인딩 시 variableId 포함 */
+    boundVariables?: {
+        color?: { type: string; id: string };
     };
     blendMode?: string;
     gradientStops?: FigmaColorStop[];
@@ -322,11 +339,19 @@ export interface ComponentDesignConfig {
 export interface ComponentProperties {
     width?: number | string;
     height?: number | string;
+    /** MUI overlay 계열 공통: Dialog, Drawer, Menu, Snackbar, Backdrop, SpeedDial 등에서 사용하는 open 상태 */
+    open?: boolean;
     backgroundColor?: string;
     colorStyle?: string; // 피그마 스타일 이름
     borderColor?: string;
     borderWidth?: number;
+    /** CSS border-style (Figma strokeDashes 유무로 추출: 있으면 dashed, 없으면 solid) */
+    borderStyle?: 'solid' | 'dashed' | 'dotted';
+    /** 적용된 stroke 면 (Figma strokeTopWeight 등 변별 적용). 복수면 가능: ['top','bottom'] */
+    borderSides?: Array<'left' | 'right' | 'top' | 'bottom'> | 'all';
     borderRadius?: number;
+    /** 테마 토큰 경로 (Figma 변수 바인딩 시, 예: 'shape.borderRadius') */
+    borderRadiusStyle?: string;
     opacity?: number;
     gap?: number;
     justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';

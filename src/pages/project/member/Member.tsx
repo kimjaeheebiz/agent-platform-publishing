@@ -1,22 +1,21 @@
 import React from 'react';
 import {
     Box,
-    Stack,
-    Tabs,
-    TextField,
-    InputAdornment,
     Button,
-    TableContainer,
-    Table,
+    InputAdornment,
     Paper,
-    TableHead,
+    Stack,
+    Table,
     TableBody,
-    TableFooter,
-    TableRow,
     TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
     Typography,
 } from '@mui/material';
-import { Search, ChevronLeft, ChevronRight, Add } from '@mui/icons-material';
+import { Add, Search } from '@mui/icons-material';
+import { FilterToggleGroup } from '@/components';
 
 // Import page-specific types
 import { MemberPageState } from './Member.types';
@@ -38,11 +37,14 @@ export const Member: React.FC = () => {
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Tabs
-                            sx={{
-                                borderRadius: '4px',
-                            }}
-                        ></Tabs>
+                        <FilterToggleGroup
+                            options={[
+                                { value: 'all', label: '전체', count: 5, selected: true },
+                                { value: 'project_member', label: '일반', count: 3 },
+                                { value: 'option2', label: '관리자', count: 1 },
+                                { value: 'project_owner', label: '소유자', count: 1 },
+                            ]}
+                        />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
@@ -69,8 +71,8 @@ export const Member: React.FC = () => {
                         </Button>
                     </Stack>
                 </Stack>
-                <TableContainer>
-                    <Table>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>구성원 이름</TableCell>
@@ -82,7 +84,7 @@ export const Member: React.FC = () => {
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -91,11 +93,11 @@ export const Member: React.FC = () => {
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography
                                         variant="body2"
                                         sx={{
@@ -105,13 +107,13 @@ export const Member: React.FC = () => {
                                         소유자
                                     </Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">(주)헥토</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
@@ -123,7 +125,7 @@ export const Member: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -132,20 +134,20 @@ export const Member: React.FC = () => {
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">관리자</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">(주)헥토이노베이션</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
@@ -157,7 +159,7 @@ export const Member: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -166,20 +168,20 @@ export const Member: React.FC = () => {
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">일반</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">(주)헥토이노베이션</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
@@ -191,7 +193,7 @@ export const Member: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -200,20 +202,20 @@ export const Member: React.FC = () => {
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">일반</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">(주)헥토이노베이션</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
@@ -225,7 +227,7 @@ export const Member: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -234,20 +236,20 @@ export const Member: React.FC = () => {
                                                 color: 'text.disabled',
                                             }}
                                         >
-                                            honggildong@hecto.co.kr
+                                            2eb8fa4703f4482a93f281e07232bdcb
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">일반</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">(주)헥토이노베이션</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정

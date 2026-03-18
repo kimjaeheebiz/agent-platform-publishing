@@ -71,7 +71,8 @@ export class FigmaVariableFetcher {
             }
             
             const data = await response.json();
-            const variables: FigmaVariable[] = data.meta.variables || [];
+            const raw = data.meta?.variables ?? {};
+            const variables: FigmaVariable[] = Array.isArray(raw) ? raw : Object.values(raw);
             
             const mapping = new Map<string, VariableMappingInfo>();
             
@@ -79,13 +80,15 @@ export class FigmaVariableFetcher {
                 const type = determineVariableType(variable.name);
                 const muiThemePath = formatMuiPath(variable.name, type);
                 
-                mapping.set(variable.id, {
+                const info: VariableMappingInfo = {
                     variableId: variable.id,
                     variableName: variable.name,
                     muiThemePath,
                     type,
-                    defaultValue: Object.values(variable.valuesByMode)[0],
-                });
+                    defaultValue: Object.values(variable.valuesByMode || {})[0],
+                };
+                mapping.set(variable.id, info);
+                if (variable.key) mapping.set(variable.key, info);
             }
             
             return mapping;

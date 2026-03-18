@@ -1,6 +1,6 @@
 import { ComponentMapping } from './types/PropertyMapper';
 import type { FigmaNode } from '../types';
-import { findTextInChildByName, findTextRecursively } from '../utils/figma-node-utils';
+import { findTextInChildByName, findTextRecursively, getFigmaBooleanProp, getPropValue } from '../utils/figma-node-utils';
 
 /**
  * MUI Select 컴포넌트 매핑
@@ -22,7 +22,9 @@ export const SelectMapping: ComponentMapping = {
             extractFromFigma: (node) => {
                 const fromValue = findTextInChildByName(node, 'Value');
                 if (fromValue) return fromValue;
-                return (node as any).componentProperties?.value?.value ?? (node as any).componentProperties?.Value?.value;
+                const props = ((node as any).componentProperties || {}) as Record<string, unknown>;
+                const v = getPropValue(props, 'value') ?? getPropValue(props, 'Value');
+                return typeof v === 'string' ? v : v != null ? String(v) : undefined;
             },
         },
 
@@ -78,7 +80,29 @@ export const SelectMapping: ComponentMapping = {
             extractFromFigma: (node) => {
                 const fromLabel = findTextInChildByName(node, 'Label');
                 if (fromLabel) return fromLabel;
-                return (node as any).componentProperties?.Label?.value ?? (node as any).componentProperties?.label?.value;
+                const props = ((node as any).componentProperties || {}) as Record<string, unknown>;
+                const v = getPropValue(props, 'label') ?? getPropValue(props, 'Label');
+                if (typeof v === 'string') return v;
+                if (v != null) return String(v);
+
+                // Has Value=false 변형 등에서 Label 키가 없을 때: TEXT 타입 componentProperties 중 label/placeholder 계열을 fallback
+                const hasValue = getFigmaBooleanProp(node as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?');
+                if (hasValue === false) {
+                    for (const [k, raw] of Object.entries(props)) {
+                        const key = String(k).toLowerCase();
+                        const p = raw as any;
+                        if (!p || typeof p !== 'object') continue;
+                        const text = p.type === 'TEXT' ? (p.value ?? '') : '';
+                        if (typeof text !== 'string') continue;
+                        const t = text.trim();
+                        if (!t) continue;
+                        if (key.includes('label') || key.includes('placeholder') || key.includes('name')) {
+                            return t;
+                        }
+                    }
+                }
+
+                return undefined;
             },
         },
     },
@@ -95,8 +119,9 @@ export const SelectMapping: ComponentMapping = {
 
     // 표시값(Value) 또는 라벨 텍스트 추출 — 자식이 MenuItem이 없을 때 content로 사용
     extractContent: (node) => {
+        const hasValue = getFigmaBooleanProp(node as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?');
         const valueText = findTextInChildByName(node, 'Value');
-        if (valueText) return valueText;
+        if (hasValue !== false && valueText) return valueText;
         const labelText = findTextInChildByName(node, 'Label');
         if (labelText) return labelText;
         return findTextRecursively((node as any).children || []);

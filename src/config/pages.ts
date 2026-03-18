@@ -63,6 +63,13 @@ export const PAGES: Record<string, PageConfig> = {
         title: '에이전트',
         path: '/project/agent',
     },
+    // 4뎁스 페이지: 에이전트 빌더 (메뉴 미노출). project.agent / admin.agent 테이블 행 클릭(수정 등) 시 이동
+    'project.agent.agentbuilder': {
+        id: 'project.agent.agentbuilder',
+        title: '에이전트 이름 1',
+        path: '/project/agent/agentbuilder',
+        showBackButton: true,
+    },
     'project.credential': {
         id: 'project.credential',
         title: 'CREDENTIAL',
@@ -72,6 +79,13 @@ export const PAGES: Record<string, PageConfig> = {
         id: 'project.knowledgebase',
         title: '지식베이스',
         path: '/project/knowledgebase',
+    },
+    // 4뎁스 페이지: 지식베이스 문서 (메뉴에 표시하지 않음, 페이지 제목에 뒤로가기 버튼만 노출)
+    'project.knowledgebase.document': {
+        id: 'project.knowledgebase.document',
+        title: '문서',
+        path: '/project/knowledgebase/:documentId',
+        showBackButton: true,
     },
     'project.apikey': {
         id: 'project.apikey',
@@ -83,15 +97,6 @@ export const PAGES: Record<string, PageConfig> = {
         title: '구성원',
         path: '/project/member',
     },
-    
-    // 4뎁스 페이지: 지식베이스 문서 (메뉴에 표시하지 않음, 페이지 제목에 뒤로가기 버튼만 노출)
-    'project.knowledgebase.document': {
-        id: 'project.knowledgebase.document',
-        title: '문서',
-        path: '/project/knowledgebase/:documentId',
-        showBackButton: true,
-    },
-
     'admin.project': {
         id: 'admin.project',
         title: '프로젝트',
@@ -121,11 +126,6 @@ export const PAGES: Record<string, PageConfig> = {
         id: 'guide',
         title: '컴포넌트 안내',
         path: '/guide',
-    },
-    'test': {
-        id: 'test',
-        title: 'Test',
-        path: '/test',
     },
     'account': {
         id: 'account',

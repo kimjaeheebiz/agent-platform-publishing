@@ -1,24 +1,27 @@
 import React from 'react';
 import {
     Box,
-    Stack,
-    Typography,
-    TextField,
-    InputAdornment,
     Button,
-    TableContainer,
-    Table,
-    Paper,
-    TableHead,
-    TableBody,
-    TableFooter,
-    TableRow,
-    TableCell,
     Checkbox,
     Chip,
+    FormControl,
     IconButton,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { MailOutline, Search, ChevronLeft, ChevronRight, Add, MoreVert } from '@mui/icons-material';
+import { Add, MoreVert, Search } from '@mui/icons-material';
 
 // Import page-specific types
 import { DocumentPageState } from './Document.types';
@@ -42,66 +45,28 @@ export const Document: React.FC = () => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Typography variant="body1">총 6건</Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Stack
+                            <FormControl
+                                size="small"
                                 sx={{
-                                    backgroundColor: '#ffffff',
+                                    width: '160px',
                                 }}
                             >
-                                <Stack
-                                    sx={{
-                                        p: [0, 6, 0, 1.5],
-                                        borderColor: '#000000',
-                                        borderWidth: '1px',
-                                        borderRadius: '4px',
-                                    }}
-                                >
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        sx={{
-                                            p: [3, 0, 3, 0],
-                                            backgroundColor: 'text.secondary',
-                                        }}
-                                    >
-                                        <Stack
-                                            sx={{
-                                                height: '24px',
-                                            }}
-                                        ></Stack>
-                                        <Stack></Stack>
-                                    </Stack>
-                                </Stack>
-                            </Stack>
-                            <Stack
+                                <InputLabel id="select-확장자-label">확장자</InputLabel>
+                                <Select labelId="select-확장자-label" size="small" label="확장자">
+                                    <MenuItem value={`확장자`}>확장자</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl
+                                size="small"
                                 sx={{
-                                    backgroundColor: '#ffffff',
+                                    width: '160px',
                                 }}
                             >
-                                <Stack
-                                    sx={{
-                                        p: [0, 6, 0, 1.5],
-                                        borderColor: '#000000',
-                                        borderWidth: '1px',
-                                        borderRadius: '4px',
-                                    }}
-                                >
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        sx={{
-                                            p: [3, 0, 3, 0],
-                                            backgroundColor: 'text.secondary',
-                                        }}
-                                    >
-                                        <Stack
-                                            sx={{
-                                                height: '24px',
-                                            }}
-                                        ></Stack>
-                                        <Stack></Stack>
-                                    </Stack>
-                                </Stack>
-                            </Stack>
+                                <InputLabel id="select-등록일-label">등록일</InputLabel>
+                                <Select labelId="select-등록일-label" size="small" label="등록일">
+                                    <MenuItem value={`등록일`}>등록일</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Stack>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
@@ -129,31 +94,47 @@ export const Document: React.FC = () => {
                         </Button>
                     </Stack>
                 </Stack>
-                <TableContainer>
-                    <Table>
+                <TableContainer component={Paper} elevation={0} variant="outlined">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell></TableCell>
                                 <TableCell>용량</TableCell>
                                 <TableCell>청킹 상태</TableCell>
-                                <TableCell>등록일</TableCell>
                                 <TableCell>등록자</TableCell>
+                                <TableCell>등록일</TableCell>
                                 <TableCell>관리</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '30px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
                                         <Typography variant="body2">문서 이름.pdf</Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">999.99Bit</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Chip label="완료" color="success" size="small" />
                                         <Typography
@@ -166,10 +147,7 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -182,7 +160,10 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             다운로드
@@ -203,17 +184,33 @@ export const Document: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '30px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
                                         <Typography variant="body2">문서 이름.pptx</Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">999.99Byte</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Chip label="완료" color="success" size="small" />
                                         <Typography
@@ -226,10 +223,7 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -242,7 +236,10 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             다운로드
@@ -263,23 +260,36 @@ export const Document: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '30px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
                                         <Typography variant="body2">문서 이름.docx</Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">999.99KB</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Chip label="오류" color="error" size="small" />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -292,7 +302,10 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             다운로드
@@ -313,23 +326,36 @@ export const Document: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '30px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
                                         <Typography variant="body2">문서 이름.hwp</Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">999.99MB</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Chip label="오류" color="error" size="small" />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -342,7 +368,10 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             다운로드
@@ -363,23 +392,36 @@ export const Document: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
+                                    <Stack direction="row" spacing={1}>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '30px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
                                         <Typography variant="body2">문서 이름.txt</Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">999.99GB</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Chip label="오류" color="error" size="small" />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -392,7 +434,10 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             다운로드
@@ -413,23 +458,36 @@ export const Document: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
-                                        <Button></Button>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            sx={{
+                                                backgroundColor: '#ffffff',
+                                            }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                sx={{
+                                                    height: '30px',
+                                                }}
+                                            ></Stack>
+                                        </Stack>
                                         <Typography variant="body2">문서 이름.xlsx</Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Typography variant="body2">999.99GB</Typography>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Chip label="오류" color="error" size="small" />
                                 </TableCell>
-                                <TableCell size="small">
-                                    <Typography variant="body2">2025.01.01</Typography>
-                                </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
                                     <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
@@ -442,7 +500,10 @@ export const Document: React.FC = () => {
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell size="small">
+                                <TableCell>
+                                    <Typography variant="body2">2025.01.01</Typography>
+                                </TableCell>
+                                <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             다운로드

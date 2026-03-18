@@ -4,7 +4,7 @@
  * 메뉴 구조:
  * - 1뎁스, 2뎁스: Sidebar에 메뉴 표시
  * - 3뎁스: 상단 서브 메뉴 표시
- * - 4뎁스: 메뉴에 표시하지 않음 (페이지 제목에 뒤로가기 버튼만 추가)
+ * - 4뎁스: 메뉴에 표시하지 않음. item의 children으로 등록하면 라우트만 등록되고 메뉴에는 노출되지 않음.
  * 
  * 페이지 정보:
  * - 모든 페이지 정보는 `pages.ts`에서 관리 (단일 소스)
@@ -57,6 +57,11 @@ export interface MenuItemLeaf extends BaseMenuItem {
     type: 'item';
     pageId: string;
     path?: string; // 기본값: pages.ts의 path 사용, 변경 필요 시에만 명시
+    /**
+     * 4뎁스 등 메뉴에는 노출하지 않지만 라우트는 등록할 하위 페이지.
+     * 메뉴 트리에는 표시되지 않고, URL로 직접 접근해 화면 확인 가능.
+     */
+    children?: MenuItemLeaf[];
 }
 
 export type MenuItem = MenuGroup | MenuItemLeaf;
@@ -96,6 +101,15 @@ export const MAIN_MENUS: MenuItem[] = [
                         type: 'item',
                         pageId: 'project.agent',
                         path: '/project/project1/agent',
+                        children: [
+                            {
+                                id: 'project1.agent.agentbuilder',
+                                title: '에이전트 이름 빌더',
+                                type: 'item',
+                                pageId: 'project.agent.agentbuilder',
+                                path: '/project/project1/agent/agentbuilder',
+                            },
+                        ],
                     },
                     {
                         id: 'project1.credential',
@@ -138,6 +152,15 @@ export const MAIN_MENUS: MenuItem[] = [
                         type: 'item',
                         pageId: 'project.agent',
                         path: '/project/project2/agent',
+                        children: [
+                            {
+                                id: 'project2.agent.agentbuilder',
+                                title: '에이전트 이름 빌더',
+                                type: 'item',
+                                pageId: 'project.agent.agentbuilder',
+                                path: '/project/project2/agent/agentbuilder',
+                            },
+                        ],
                     },
                     {
                         id: 'project2.credential',
@@ -209,13 +232,6 @@ export const MAIN_MENUS: MenuItem[] = [
         type: 'item',
         icon: 'WidgetsOutlined',
         pageId: 'guide',
-    },
-    {
-        id: 'test',
-        title: 'Test',
-        type: 'item',
-        icon: 'StarBorder',
-        pageId: 'test',
     },
 ];
 

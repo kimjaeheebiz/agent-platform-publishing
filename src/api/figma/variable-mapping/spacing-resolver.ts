@@ -50,3 +50,28 @@ export function getSpacingTokenFromPx(px: number): string | null {
     const token = map[px];
     return token ?? null;
 }
+
+let tokenNameToPxCache: Record<string, number> | null = null;
+
+/** spacing 토큰 이름("2", "0,5" 등) → px. 없으면 null */
+export function getSpacingPxFromTokenName(tokenName: string): number | null {
+    if (tokenNameToPxCache) {
+        const hit = tokenNameToPxCache[tokenName.trim()] ?? tokenNameToPxCache[tokenName.trim().replace('.', ',')];
+        return hit ?? null;
+    }
+    const filePath = path.resolve(process.cwd(), SPACING_TOKEN_PATH);
+    tokenNameToPxCache = {};
+    try {
+        if (!fs.existsSync(filePath)) return null;
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, { $value?: number }>;
+        for (const [key, entry] of Object.entries(data)) {
+            if (entry?.$value != null && typeof entry.$value === 'number') {
+                tokenNameToPxCache[key] = entry.$value;
+                tokenNameToPxCache[key.replace(',', '.')] = entry.$value;
+            }
+        }
+    } catch {
+        tokenNameToPxCache = {};
+    }
+    return tokenNameToPxCache[tokenName.trim()] ?? tokenNameToPxCache[tokenName.trim().replace('.', ',')] ?? null;
+}

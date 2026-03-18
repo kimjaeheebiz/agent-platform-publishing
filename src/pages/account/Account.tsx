@@ -1,21 +1,20 @@
 import React from 'react';
 import {
-    Box,
-    Stack,
-    Paper,
     Avatar,
-    Typography,
-    Chip,
-    Card,
-    CardHeader,
-    CardContent,
-    CardActions,
-    CardMedia,
-    FormControl,
-    TextField,
+    Box,
     Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    Chip,
+    FormControl,
+    Paper,
+    Stack,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { Person, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Person } from '@mui/icons-material';
 
 // Import page-specific types
 import { AccountPageState } from './Account.types';
@@ -31,7 +30,7 @@ export const Account: React.FC = () => {
             <Stack direction="row" spacing={3}>
                 <Paper
                     sx={{
-                        backgroundColor: 'primary.dark',
+                        width: '300px',
                         borderRadius: '4px',
                     }}
                 >

@@ -1,6 +1,7 @@
 import { FigmaAPIClient } from './client';
 import { FIGMA_CONFIG } from './config';
 import { findMappingByFigmaName, findMappingByType, findMappingKeyByFigmaName, COMPONENT_MAPPINGS } from './component-mappings';
+import type { IconData } from './utils/icon-extractor';
 import { VariableMappingManager, getSpacingTokenFromPx } from './variable-mapping';
 import {
     FigmaNode,
@@ -13,6 +14,7 @@ import {
     TypographyConfig,
 } from './types';
 import { rgbaToHex, extractColorFromFill } from './utils/figma-paint-utils';
+import { findDescendantByName, getFigmaBooleanProp } from './utils/figma-node-utils';
 
 /** @/components 커스텀 컴포넌트 (매핑 폴더에 두지 않음). generator.ts CUSTOM_COMPONENT_FIGMA_NAMES와 동일 유지 */
 const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
@@ -388,6 +390,7 @@ export class FigmaDesignExtractor {
             // 변수 정보는 선택적으로 로드 (실패해도 계속 진행)
             try {
                 console.log('🔍 변수 정보 로드 시작');
+                await this.variableMappingManager.loadFileMappings(fileKey, 'platform');
                 await this.loadVariableInfo(fileKey);
                 console.log('✅ 변수 정보 로드 완료');
             } catch (error) {
@@ -438,11 +441,13 @@ export class FigmaDesignExtractor {
 
         const components = mainContentFrame ? await this.extractComponentsFromFrame(mainContentFrame) : [];
 
+        // 페이지 최상위 Box padding은 Main Content 프레임 기준으로 추출 (피그마에 적용한 padding 반영)
+        const layoutSource = mainContentFrame ?? node;
         const pageDesign: PageDesignConfig = {
             pageId: node.id,
             pageName: node.name,
             components,
-            layout: await this.extractLayoutConfig(node),
+            layout: await this.extractLayoutConfig(layoutSource),
             theme: this.extractThemeConfig(node),
         };
 
@@ -654,17 +659,25 @@ export class FigmaDesignExtractor {
             libraryName = (info.name || (info as any).description || (info as any).key || '') as string;
         }
 
-        let mappingByName =
-            (libraryName ? findMappingByFigmaName(libraryName) : null) ||
-            findMappingByFigmaName(node.name) ||
-            this.inferMappingFromStructure(node);
+        // 1) 인스턴스 이름(node.name)으로 먼저 시도 → List/Table 등은 "Item #1", "Cell #1" 같은 이름 사용
+        let mappingByName = findMappingByFigmaName(node.name);
 
+        if (!mappingByName && /^Item #\d+$/i.test(String(node.name || '').trim())) {
+            mappingByName = findMappingByFigmaName('<ListItem>');
+        }
         if (!mappingByName && (node.name.startsWith('Cell #') || node.name.startsWith('cell #'))) {
             const props = (node as any).componentProperties || {};
             const hasSmallProp = Object.keys(props).some((key) => key.toLowerCase() === 'small');
             if (hasSmallProp) {
                 mappingByName = findMappingByFigmaName('<TableCell>');
             }
+        }
+
+        // 2) 매칭 안 되면 라이브러리 이름, 3) 그다음 구조 추론
+        if (!mappingByName) {
+            mappingByName =
+                (libraryName ? findMappingByFigmaName(libraryName) : null) ||
+                this.inferMappingFromStructure(node);
         }
 
         const mapping = mappingByName || (componentType ? findMappingByType(componentType) : null);
@@ -677,9 +690,92 @@ export class FigmaDesignExtractor {
     }
 
     /**
-     * 이름/라이브러리 정보가 없더라도 내부 구조로 대표 컴포넌트를 추론한다.
-     * 현재는 ButtonGroup처럼 피그마에서 "Instance #1" 같은 일반 이름으로 들어오는 케이스를 우선 처리한다.
+     * 구조 추론은 MUI·피그마 매핑이 다른 최소 예외만. 레이아웃은 피그마 그대로(Stack 인스턴스·오토레이아웃 등).
+     * 자식이 버튼 N개인지로 Stack으로 바꾸는 식의 추론은 하지 않음.
      */
+
+    /** Instance #N 래퍼 안의 첫 Button 계열 INSTANCE (워크플로우 관리 버튼 등) */
+    private findFirstButtonLikeInstanceDescendant(node: FigmaNode): FigmaNode | null {
+        const isButtonLike = (n: FigmaNode): boolean => {
+            if ((n as any).type !== 'INSTANCE' || !(n as any).componentId) return false;
+            if (!this.componentInfo.has((n as any).componentId)) return false;
+            const nm = String(this.componentInfo.get((n as any).componentId)!.name || '');
+            const nl = nm.toLowerCase();
+            if (nm.startsWith('<Button>')) return true;
+            return (
+                nl.startsWith('button') &&
+                !nl.includes('iconbutton') &&
+                !nl.includes('icon button') &&
+                !nl.includes('toggle') &&
+                !nl.includes('group') &&
+                !nl.includes('fab')
+            );
+        };
+        const walk = (n: FigmaNode): FigmaNode | null => {
+            if ((n as any).type === 'INSTANCE') {
+                if (isButtonLike(n)) return n;
+                if (this.looksLikeGenericButton(n)) return n;
+            }
+            for (const c of (n as any).children || []) {
+                if ((c as any)?.visible === false) continue;
+                const r = walk(c as FigmaNode);
+                if (r) return r;
+            }
+            return null;
+        };
+        for (const c of (node as any).children || []) {
+            if ((c as any)?.visible === false) continue;
+            const r = walk(c as FigmaNode);
+            if (r) return r;
+        }
+        return null;
+    }
+
+    /** 가로 Stack + 직계 자식이 전부 Instance #N (워크플로우 툴바 등) */
+    private isHorizontalStackOfInstanceSlots(parent: FigmaNode): boolean {
+        if ((parent as any).layoutMode !== 'HORIZONTAL') return false;
+        const vis = ((parent as any).children || []).filter((c: any) => c?.visible !== false);
+        if (vis.length < 2) return false;
+        return vis.every((c: any) => /^Instance #\d+$/i.test(String(c.name || '').trim()));
+    }
+
+    /** Input/폼 분기 제외 후 첫 TEXT (Instance # 래퍼 → 버튼 라벨 fallback) */
+    private extractToolbarLabelFromFigmaNode(node: FigmaNode): string | null {
+        const skipBranch = (n: FigmaNode): boolean => {
+            const nm = String((n as any).name || '');
+            return (
+                nm.includes('Input') ||
+                nm.includes('FormHelperText') ||
+                nm.includes('Autocomplete') ||
+                nm.includes('_Native Browser Scroll')
+            );
+        };
+        const walk = (n: FigmaNode): string | null => {
+            if (skipBranch(n)) return null;
+            if ((n as any).type === 'TEXT' && String((n as any).characters || '').trim()) {
+                return String((n as any).characters).trim();
+            }
+            for (const c of (n as any).children || []) {
+                if ((c as any)?.visible === false) continue;
+                const t = walk(c as FigmaNode);
+                if (t) return t;
+            }
+            return null;
+        };
+        return walk(node);
+    }
+
+    private async promoteLayoutWrapperToInnerButton(
+        child: FigmaNode,
+        extracted: ComponentDesignConfig | null,
+        ctx?: { tableSmall?: boolean },
+        parent?: FigmaNode,
+    ): Promise<ComponentDesignConfig | null> {
+        // 레이아웃(Instance #N 래퍼 등)을 버튼으로 승격하는 모든 추론은 비활성화.
+        // 피그마 구조 상 layout 으로 잡힌 것은 그대로 유지한다.
+        return extracted;
+    }
+
     private inferMappingFromStructure(node: FigmaNode) {
         const visibleChildren = (node.children || []).filter((child: any) => child?.visible !== false);
         if (visibleChildren.length === 0) {
@@ -705,16 +801,6 @@ export class FigmaDesignExtractor {
             return findMappingByFigmaName(child.name);
         };
 
-        const buttonChildren = visibleChildren.filter((child) => resolveChildMapping(child)?.muiName === 'Button');
-        const unsupportedChildren = visibleChildren.filter((child) => {
-            if (child.type === 'LINE') return false;
-            return resolveChildMapping(child)?.muiName !== 'Button';
-        });
-
-        if (buttonChildren.length >= 2 && unsupportedChildren.length === 0) {
-            return findMappingByFigmaName('<ButtonGroup>');
-        }
-
         const hasInputFrame = visibleChildren.some((child) => String(child.name || '').includes('Input'));
         const hasFormHelperText = visibleChildren.some((child) => String(child.name || '').includes('FormHelperText'));
         const hasSelectIndicators = hasDescendantName(node, (name) =>
@@ -735,6 +821,21 @@ export class FigmaDesignExtractor {
 
         if (hasBaseFrame && hasButtonLabel) {
             return findMappingByFigmaName('<Button>');
+        }
+
+        // List 자식: "Item #1", "Item #2" 등 + ListItem Text / Left Content / Container 구조 → ListItem
+        const hasListItemStructure = hasDescendantName(node, (name) =>
+            String(name || '').includes('ListItem Text') ||
+            String(name || '').includes('Left Content') ||
+            String(name || '').trim() === 'ListItem Text' ||
+            String(name || '').trim() === 'Left Content'
+        );
+        const nameLikeListItem = /^Item #\d+$/i.test(String(node.name || '').trim());
+        if (nameLikeListItem && hasListItemStructure) {
+            return findMappingByFigmaName('<ListItem>');
+        }
+        if (visibleChildren.length >= 1 && hasListItemStructure) {
+            return findMappingByFigmaName('<ListItem>');
         }
 
         return null;
@@ -771,8 +872,19 @@ export class FigmaDesignExtractor {
     }
 
     private looksLikeGenericButton(node: FigmaNode): boolean {
-        const childNames = (node.children || []).map((child) => String(child.name || ''));
-        return childNames.includes('Base') && this.hasDescendantName(node, (name) => name === 'Button');
+        if (
+            this.hasDescendantName(node, (name) => name.includes('Input')) ||
+            this.hasDescendantName(node, (name) => name.includes('FormHelperText')) ||
+            this.hasDescendantName(node, (name) => name.includes('Autocomplete'))
+        ) {
+            return false;
+        }
+        const labelLayer = (name: string) =>
+            name === 'Button' || name === 'T Button' || /T\s*Button/i.test(name) || name.includes('T Button');
+        return (
+            this.hasDescendantName(node, (name) => name === 'Base') &&
+            this.hasDescendantName(node, labelLayer)
+        );
     }
 
     /**
@@ -864,7 +976,7 @@ export class FigmaDesignExtractor {
             }
         }
 
-        // layout, card, table 타입인 경우 자식 노드 추출
+        // layout, card, table, Drawer/navigation 타입인 경우 자식 노드 추출
         // Card는 커스텀 추출 로직 사용
         const isCardFamily = componentType === 'card';
         const isLayout = componentType === 'layout';
@@ -872,15 +984,16 @@ export class FigmaDesignExtractor {
         const figmaNameMapping = findMappingByFigmaName(componentName);
         const isToggleButtonGroup = figmaNameMapping?.muiName === 'ToggleButtonGroup';
         const isButtonGroup = figmaNameMapping?.muiName === 'ButtonGroup';
+        const isMenu = figmaNameMapping?.muiName === 'Menu';
+        const isMenuList = figmaNameMapping?.muiName === 'MenuList';
+        const isList = figmaNameMapping?.muiName === 'List';
+        const isDrawer = figmaNameMapping?.muiName === 'Drawer';
 
-        if ((isLayout || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup) && node.children) {
+        if ((isLayout || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isList || isDrawer) && node.children) {
 
             // ✅ 매핑에서 extractChildren이 있는지 확인
             const mapping = findMappingByType(componentType);
-            const useCustomExtractChildren = (mapping?.extractChildren || figmaNameMapping?.extractChildren) &&
-                (node.name === '<Card>' || node.name === '<CardHeader>' ||
-                    node.name === 'CardHeader' || node.name === 'CardContent' ||
-                    node.name === 'CardActions' || node.name === 'CardMedia');
+            const useCustomExtractChildren = Boolean(mapping?.extractChildren || figmaNameMapping?.extractChildren);
 
             if (useCustomExtractChildren && (mapping?.extractChildren || figmaNameMapping?.extractChildren)) {
                 // Card, CardHeader 등은 커스텀 추출 로직 사용
@@ -910,6 +1023,9 @@ export class FigmaDesignExtractor {
 
             // 피그마 인스턴스명 기반으로 자식 처리
             const children: ComponentDesignConfig[] = [];
+            // Has Value=false Select의 라벨 텍스트가 Select 내부에서 안 잡히는 경우가 있어,
+            // 같은 컨테이너(한 줄 툴바)에서 직전 Typography 텍스트를 label로 주입한다.
+            let lastTypographyText: string | null = null;
             for (const child of node.children) {
                 // 숨김 레이어는 제외
                 if ((child as any)?.visible === false) {
@@ -1158,7 +1274,27 @@ export class FigmaDesignExtractor {
                 }
                 
                 // 모든 자식 노드 처리
-                const childComponent = await this.extractComponentDesign(child, tableSmallContext);
+                let childComponent = await this.extractComponentDesign(child, tableSmallContext);
+                childComponent = await this.promoteLayoutWrapperToInnerButton(child, childComponent, tableSmallContext, node);
+
+                // 직전 Typography 텍스트 기억
+                if (childComponent?.componentType === 'typography') {
+                    const t = (childComponent.properties as any)?.text;
+                    if (typeof t === 'string' && t.trim()) lastTypographyText = t.trim();
+                }
+
+                // Has Value=false Select인데 label이 비면, 직전 Typography 텍스트를 label로 승격
+                if (childComponent) {
+                    const mappingForChild = findMappingByFigmaName(childComponent.componentName) || findMappingByType(childComponent.componentType);
+                    if (mappingForChild?.muiName === 'Select') {
+                        const props = ((child as any).componentProperties || {}) as Record<string, unknown>;
+                        const hasValue = getFigmaBooleanProp(child as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?');
+                        const hasLabel = typeof (childComponent.properties as any)?.label === 'string' && String((childComponent.properties as any)?.label).trim();
+                        if (hasValue === false && !hasLabel && lastTypographyText) {
+                            (childComponent.properties as any).label = lastTypographyText;
+                        }
+                    }
+                }
                 if (childComponent) {
                     children.push(childComponent);
                 }
@@ -1303,24 +1439,9 @@ export class FigmaDesignExtractor {
             return 'tabs';
         }
 
-        if (this.looksLikeGenericSelect(node) || this.looksLikeGenericTextField(node)) {
-            return 'input';
-        }
-
-        if (this.looksLikeGenericButton(node)) {
-            return 'button';
-        }
-
-        // 1-2. 이름이 일반적인 인스턴스/프레임이어도 내부 구조로 대표 컴포넌트를 추론
-        const inferredMapping = this.inferMappingFromStructure(node);
-        if (inferredMapping?.figmaNames?.[0]) {
-            const inferredKey = findMappingKeyByFigmaName(inferredMapping.figmaNames[0]);
-            if (inferredKey) {
-                return this.categorizeComponentType(inferredKey);
-            }
-        }
-
-        // 2. INSTANCE 타입인 경우, componentId를 사용하여 실제 컴포넌트 이름 찾기
+        // 1-1-1. INSTANCE는 먼저 라이브러리(componentInfo) 기반으로 판정
+        // - 라이브러리에서 <Stack>, <Button> 등 실제 컴포넌트 이름을 가져와 매핑
+        // - generic button/select 추론보다 먼저 실행해, Stack 인스턴스가 Button으로 오인되지 않도록 함
         if (node.type === 'INSTANCE' && (node as any).componentId) {
             const componentId = (node as any).componentId;
 
@@ -1334,9 +1455,44 @@ export class FigmaDesignExtractor {
                 if (actualMappingKey) {
                     return this.categorizeComponentType(actualMappingKey);
                 }
+                // 라이브러리 표기가 "Stack / …", "Horizontal Stack" 등으로 달라도 컨테이너는 layout 유지
+                const libLc = String(componentName || '')
+                    .trim()
+                    .toLowerCase();
+                if (
+                    (/\bstack\b/.test(libLc) || libLc.includes('stack/')) &&
+                    !libLc.includes('button') &&
+                    !libLc.includes('iconbutton')
+                ) {
+                    return 'layout';
+                }
+                if (
+                    (/\bbox\b/.test(libLc) || libLc.includes('box/')) &&
+                    !libLc.includes('button') &&
+                    !libLc.includes('textfield') &&
+                    !libLc.includes('text field')
+                ) {
+                    return 'layout';
+                }
                 // @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
                 if (isCustomComponentFigmaName(componentName)) {
                     return 'tabs';
+                }
+                // 라이브러리명이 "Button / …" 처럼 FIGMA_NAME_TO_TYPE에 없어도 Button 계열이면 button
+                // (직계 자식 Frame 때문에 아래에서 layout으로 오인되는 것 방지)
+                const libNm = String(componentName || '').trim();
+                const libL = libNm.toLowerCase();
+                if (
+                    libNm.startsWith('<Button>') ||
+                    (libL.startsWith('button') &&
+                        !libL.includes('iconbutton') &&
+                        !libL.includes('icon button') &&
+                        !libL.includes('toggle') &&
+                        !libL.includes('group') &&
+                        !libL.includes('fab') &&
+                        !libL.includes('speed dial'))
+                ) {
+                    return 'button';
                 }
             }
 
@@ -1358,12 +1514,16 @@ export class FigmaDesignExtractor {
 
                 // 각 child의 매핑을 먼저 확인
                 const layoutLikeKeys = ['stack', 'box', 'layout', 'content', 'submenu', 'controlArea', 'grid', 'container'];
+                const visibleDirect = (node.children || []).filter((c: any) => c?.visible !== false);
                 for (const child of node.children) {
                     const childMappingKey = findMappingKeyByFigmaName(child.name);
                     if (childMappingKey) {
                         const childType = this.categorizeComponentType(childMappingKey);
                         if (childType && childType !== 'layout') {
-                            return childType;
+                            // 직계 자식이 여럿인데 첫 Button만 보고 부모 전체를 button으로 잡으면 Stack 인스턴스가 소실됨
+                            if (!(childType === 'button' && visibleDirect.length > 1)) {
+                                return childType;
+                            }
                         }
                         if (layoutLikeKeys.includes(childMappingKey)) {
                             return 'layout';
@@ -1380,6 +1540,15 @@ export class FigmaDesignExtractor {
                     if (child.type === 'TEXT' && child.name.toLowerCase().includes('button')) {
                         return 'button';
                     }
+                }
+
+                // 자식 이름이 Instance # 등이라 매핑이 없어도, 오토레이아웃+다중 직계 자식이면 컨테이너(Stack)로 유지
+                if (
+                    visibleDirect.length > 1 &&
+                    (node as any).layoutMode &&
+                    (node as any).layoutMode !== 'NONE'
+                ) {
+                    return 'layout';
                 }
 
                 // 노드 이름으로 판단
@@ -1432,7 +1601,31 @@ export class FigmaDesignExtractor {
             }
         }
 
-        // 3. FRAME 노드는 오토레이아웃 여부에 따라 Stack/Box로 처리
+        // 1-2. FRAME은 항상 layout(Stack/Box)으로 처리하여 중첩 Stack 구조 보존
+        // (looksLikeGenericButton 등보다 먼저 처리해, 버튼을 담은 좌/우 그룹 Frame이 Button으로 흡수되지 않도록 함)
+        if (node.type === 'FRAME') {
+            return 'layout';
+        }
+
+        // 1-3. 그 외 노드: generic Select/TextField/Button 패턴 감지
+        if (this.looksLikeGenericSelect(node) || this.looksLikeGenericTextField(node)) {
+            return 'input';
+        }
+
+        if (this.looksLikeGenericButton(node)) {
+            return 'button';
+        }
+
+        // 1-4. 이름이 일반적인 노드일 때, 내부 구조로 대표 컴포넌트를 추론
+        const inferredMapping = this.inferMappingFromStructure(node);
+        if (inferredMapping?.figmaNames?.[0]) {
+            const inferredKey = findMappingKeyByFigmaName(inferredMapping.figmaNames[0]);
+            if (inferredKey) {
+                return this.categorizeComponentType(inferredKey);
+            }
+        }
+
+        // 2. FRAME 노드는 오토레이아웃 여부에 따라 Stack/Box로 처리 (백업)
         // (매핑되지 않은 경우에만)
         if (node.type === 'FRAME' && node.layoutMode) {
             // 오토레이아웃이 있는 경우 Stack 컴포넌트로 처리
@@ -1516,6 +1709,7 @@ export class FigmaDesignExtractor {
             'appBar': 'navigation',
             'toolbar': 'navigation',
             'menu': 'navigation',
+            'menuList': 'navigation',
             'menuItem': 'navigation',
             'drawer': 'navigation',
             'breadcrumbs': 'navigation',
@@ -1749,7 +1943,7 @@ export class FigmaDesignExtractor {
             // ✅ 매핑에 커스텀 아이콘 추출 로직이 있으면 사용
             if (mapping.extractIcons) {
                 // extractor를 두 번째 인자로 전달
-                const iconData = await mapping.extractIcons.call(mapping.extractIcons, node, this);
+                const iconData: IconData = await mapping.extractIcons!.call(mapping.extractIcons, node, this);
 
                 if (iconData.startIcon) {
                     properties['startIconName'] = iconData.startIcon;
@@ -1762,6 +1956,12 @@ export class FigmaDesignExtractor {
                 }
                 if (iconData.endIconComponentId) {
                     properties['endIconComponentId'] = iconData.endIconComponentId;
+                }
+                if (iconData.startIconSize) {
+                    properties['startIconSize'] = iconData.startIconSize;
+                }
+                if (iconData.endIconSize) {
+                    properties['endIconSize'] = iconData.endIconSize;
                 }
             } else {
                 // ✅ 기본 아이콘 추출 로직 (하드코딩 유지)
@@ -1846,17 +2046,17 @@ export class FigmaDesignExtractor {
                     properties.colorStyle = colorInfo.styleName;
                 }
             } else {
-                // GPT-5 권장: boundVariables에서 Variable ID 추출
+                // boundVariables에서 Variable ID 추출
                 const fillObj = node.fills[0] as { boundVariables?: { color?: { id: string } } };
                 if (fillObj.boundVariables?.color?.id) {
                     const variableId = fillObj.boundVariables.color.id;
-                    // GPT-5 권장: Variable ID → 변수명 → MUI 경로 변환
+                    // Variable ID → 변수명 → MUI 경로 변환
                     const muiColorPath = await this.extractThemeTokenFromVariableId(variableId);
                     if (muiColorPath) {
                         if (!isAvatarComponent) {
                             properties.colorStyle = muiColorPath;
                         }
-                        console.log(`🎨 GPT-5 방식: Variable ID ${variableId} → ${muiColorPath}`);
+                        console.log(`🎨 Variable ID ${variableId} → ${muiColorPath}`);
                     } else {
                         // 진실 소스가 없으면 HEX 색상 사용 (추측 금지)
                         if (!isAvatarComponent) {
@@ -1873,14 +2073,167 @@ export class FigmaDesignExtractor {
             }
         }
 
-        // 테두리 정보
-        if (node.strokes && node.strokes.length > 0) {
-            properties.borderColor = extractColorFromFill(node.strokes[0]);
-            properties.borderWidth = 1; // 기본값
+        // 테두리 정보: "현재 노드 자신의 stroke"만 사용 (자식(Container 등) 스타일을 부모에 적용하지 않음)
+        const strokeNode = node.strokes && node.strokes.length > 0 ? node : null;
+        if (strokeNode && strokeNode.strokes && strokeNode.strokes.length > 0) {
+            // stroke가 실제로 존재하는 노드에서 추출한 border임을 표시 (1px도 유효하게 출력)
+            (properties as Record<string, unknown>).__borderFromStrokes = true;
+            const stroke0 = strokeNode.strokes[0] as { boundVariables?: { color?: { id: string } }; type: string; color?: { r: number; g: number; b: number; a?: number } };
+            if (stroke0.boundVariables?.color?.id) {
+                const variableId = stroke0.boundVariables.color.id;
+                const muiColorPath = await this.extractThemeTokenFromVariableId(variableId);
+                if (muiColorPath) {
+                    properties.borderColor = muiColorPath;
+                } else {
+                    properties.borderColor = extractColorFromFill(stroke0);
+                    console.warn(`⚠️ 변수 ID 매핑 없음(테두리): ${variableId} → HEX fallback`);
+                }
+            } else {
+                properties.borderColor = extractColorFromFill(stroke0);
+            }
+            const raw = strokeNode as unknown as Record<string, unknown>;
+            const r = raw as any;
+            // 공식 문서: rectangle/frame-like node는 strokeTopWeight, strokeRightWeight 등 개별 변 두께 지원. 면이 다르면 strokeWeight는 figma.mixed.
+            const strokeWeightNum = typeof raw.strokeWeight === 'number' ? raw.strokeWeight : (typeof r.stroke_weight === 'number' ? r.stroke_weight : undefined);
+            const strokeWeight = strokeWeightNum; // figma.mixed(비숫자)일 때는 fallback으로 쓰지 않음
+            const individual = (r && typeof r.individualStrokeWeights === 'object' && r.individualStrokeWeights)
+                ? r.individualStrokeWeights
+                : undefined;
+            const readSide = (camel: string, snake: string) => {
+                // REST API: individualStrokeWeights.{top,right,bottom,left} 우선
+                if (individual && typeof individual === 'object') {
+                    const key = camel.replace(/^stroke/i, '').replace(/Weight$/, '').toLowerCase(); // top/right/bottom/left
+                    const vv = (individual as any)[key];
+                    if (typeof vv === 'number') return vv;
+                }
+                const v = r[camel];
+                const s = r[snake];
+                if (typeof v === 'number') return v;
+                if (typeof s === 'number') return s;
+                return undefined;
+            };
+            // 개별 면 우선. strokeWeight는 면이 모두 같을 때만 숫자이고, 다르면 mixed이므로 숫자일 때만 fallback 사용
+            const top = readSide('strokeTopWeight', 'stroke_top_weight') ?? (typeof strokeWeight === 'number' ? strokeWeight : 0);
+            const right = readSide('strokeRightWeight', 'stroke_right_weight') ?? (typeof strokeWeight === 'number' ? strokeWeight : 0);
+            const bottom = readSide('strokeBottomWeight', 'stroke_bottom_weight') ?? (typeof strokeWeight === 'number' ? strokeWeight : 0);
+            const left = readSide('strokeLeftWeight', 'stroke_left_weight') ?? (typeof strokeWeight === 'number' ? strokeWeight : 0);
+            const hasTop = typeof top === 'number' && top > 0;
+            const hasRight = typeof right === 'number' && right > 0;
+            const hasBottom = typeof bottom === 'number' && bottom > 0;
+            const hasLeft = typeof left === 'number' && left > 0;
+            const sides: Array<'top' | 'right' | 'bottom' | 'left'> = [];
+            if (hasTop) sides.push('top');
+            if (hasRight) sides.push('right');
+            if (hasBottom) sides.push('bottom');
+            if (hasLeft) sides.push('left');
+            const count = sides.length;
+            if (count >= 1) {
+                // Figma에서 적용된 stroke 면만 정확히 반영 (단일: top/bottom 등, 복수: top+bottom 등)
+                (properties as Record<string, unknown>).borderSides = sides;
+                const w = (hasTop ? top : hasRight ? right : hasBottom ? bottom : left) as number;
+                if (typeof w === 'number' && w > 0) properties.borderWidth = w;
+            } else {
+                // 개별 면 정보 없음: 노드에 명시된 strokeWeight 사용 (REST API가 개별 면을 주지 않으면 strokeWeight만 옴)
+                let w = typeof strokeWeight === 'number' ? strokeWeight : (right || left || top || bottom);
+                if (typeof w !== 'number' || w <= 0) {
+                    const rootWeight = (node as unknown as Record<string, unknown>).strokeWeight ?? (node as any).stroke_weight;
+                    w = typeof rootWeight === 'number' && rootWeight > 0 ? rootWeight : 0;
+                }
+                if (typeof w === 'number' && w > 0) properties.borderWidth = w;
+            }
+            const strokeDashes = (strokeNode as { strokeDashes?: number[] }).strokeDashes;
+            properties.borderStyle = Array.isArray(strokeDashes) && strokeDashes.length > 0 ? 'dashed' : 'solid';
         }
 
-        // 모서리 둥글기
-        if (node.cornerRadius !== undefined) {
+        // ListItem: 자식 아이콘/텍스트의 fill → 테마 토큰 (ListItemIcon/ListItemText sx color, MenuItem 등 공통 사용 가능)
+        if (mapping?.muiName === 'ListItem') {
+            const children = (node as any).children as any[] | undefined;
+            if (Array.isArray(children)) {
+                const findFirstWithFills = (nodes: any[]): any => {
+                    for (const n of nodes) {
+                        if (n?.fills?.length > 0) return n;
+                        if (n?.children?.length) {
+                            const found = findFirstWithFills(n.children);
+                            if (found) return found;
+                        }
+                    }
+                    return null;
+                };
+                const iconLike = children.find((c: any) => /icon/i.test(String(c?.name ?? '')));
+                const iconNode = iconLike ? (iconLike.children && findFirstWithFills(iconLike.children)) || (iconLike.fills?.length > 0 ? iconLike : null) : null;
+                const textNode = findDescendantByName(node as FigmaNode, /ListItem Text|T List item|ListItemText/i);
+                const resolveFillToToken = async (target: any): Promise<string | undefined> => {
+                    if (!target?.fills?.length) return undefined;
+                    const fill0 = target.fills[0] as { boundVariables?: { color?: { id: string } } };
+                    if (fill0.boundVariables?.color?.id) {
+                        const token = await this.extractThemeTokenFromVariableId(fill0.boundVariables.color.id);
+                        return token ?? undefined;
+                    }
+                    const colorInfo = await this.extractColorWithStyle(target.fills[0]);
+                    return colorInfo.styleName ?? colorInfo.color;
+                };
+                const iconColor = iconNode ? await resolveFillToToken(iconNode) : undefined;
+                const textColor = textNode ? await resolveFillToToken(textNode as any) : undefined;
+                if (iconColor) (properties as Record<string, unknown>).__listItemIconColor = iconColor;
+                if (textColor) (properties as Record<string, unknown>).__listItemTextColor = textColor;
+            }
+        }
+
+        // MenuItem: 자식 아이콘/텍스트 fill → 테마 토큰 (ListItemIcon/ListItemText sx로 공통 사용, ListItem과 동일 패턴)
+        if (mapping?.muiName === 'MenuItem') {
+            const children = (node as any).children as any[] | undefined;
+            if (Array.isArray(children)) {
+                const findFirstWithFills = (nodes: any[]): any => {
+                    for (const n of nodes) {
+                        if (n?.fills?.length > 0) return n;
+                        if (n?.children?.length) {
+                            const found = findFirstWithFills(n.children);
+                            if (found) return found;
+                        }
+                    }
+                    return null;
+                };
+                const iconLike = children.find((c: any) => /icon/i.test(String(c?.name ?? '')));
+                const iconNode = iconLike ? (iconLike.children && findFirstWithFills(iconLike.children)) || (iconLike.fills?.length > 0 ? iconLike : null) : null;
+                const textNode = findDescendantByName(node as FigmaNode, /ListItem Text|T List item|Value|MenuItem/i);
+                const resolveFillToToken = async (target: any): Promise<string | undefined> => {
+                    if (!target?.fills?.length) return undefined;
+                    const fill0 = target.fills[0] as { boundVariables?: { color?: { id: string } } };
+                    if (fill0.boundVariables?.color?.id) {
+                        const token = await this.extractThemeTokenFromVariableId(fill0.boundVariables.color.id);
+                        return token ?? undefined;
+                    }
+                    const colorInfo = await this.extractColorWithStyle(target.fills[0]);
+                    return colorInfo.styleName ?? colorInfo.color;
+                };
+                const iconColor = iconNode ? await resolveFillToToken(iconNode) : undefined;
+                const textColor = textNode ? await resolveFillToToken(textNode as any) : undefined;
+                if (iconColor) (properties as Record<string, unknown>).__menuItemIconColor = iconColor;
+                if (textColor) (properties as Record<string, unknown>).__menuItemTextColor = textColor;
+            }
+        }
+
+        // 모서리 둥글기: boundVariables(변수) 있으면 테마 토큰으로, 없으면 숫자(px)
+        const bv = (node as { boundVariables?: Record<string, { id?: string }> }).boundVariables;
+        let cornerVarId: string | undefined = bv?.cornerRadius?.id ?? bv?.topLeftRadius?.id ?? bv?.topRightRadius?.id
+            ?? bv?.bottomLeftRadius?.id ?? bv?.bottomRightRadius?.id;
+        if (!cornerVarId && bv) {
+            for (const [key, ref] of Object.entries(bv)) {
+                if (ref && typeof ref === 'object' && ref.id && /corner|radius|topleft|topright|bottomleft|bottomright|rectangle/i.test(String(key))) {
+                    cornerVarId = ref.id;
+                    break;
+                }
+            }
+        }
+        if (cornerVarId) {
+            const shapePath = await this.extractShapeTokenFromVariableId(cornerVarId);
+            if (shapePath) {
+                properties.borderRadiusStyle = shapePath;
+            } else {
+                if (node.cornerRadius !== undefined) properties.borderRadius = node.cornerRadius;
+                console.warn(`⚠️ 변수 ID 매핑 없음(모서리): ${cornerVarId} → px fallback`);
+            }
+        } else if (node.cornerRadius !== undefined) {
             properties.borderRadius = node.cornerRadius;
         }
 
@@ -1952,6 +2305,22 @@ export class FigmaDesignExtractor {
                 }
             }
 
+            // ✅ Select(Has Value=false) 변형: 내부 VALUE가 없으면 Label 텍스트를 label prop으로 승격
+            // - Figma에서 Has Value=false인 Select는 valueText가 비어 props.value가 추출되지 않을 수 있음
+            // - 이 경우에도 MUI 권장 패턴(FormControl+InputLabel, Select label/labelId)을 생성하려면 label이 필요
+            if (componentType === 'input') {
+                const mappingForNode = this.resolveNodeMapping(node, componentType).mapping;
+                if (mappingForNode?.muiName === 'Select') {
+                    const hasValue = getFigmaBooleanProp(node as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?');
+                    if (hasValue === false && properties.label === undefined) {
+                        const t = typeof properties.text === 'string' ? properties.text.trim() : '';
+                        if (t) {
+                            properties.label = t;
+                        }
+                    }
+                }
+            }
+
             for (const child of node.children) {
                 if (child.characters) {
                     // ✅ 매핑을 사용하지 않은 경우에만 기본 처리
@@ -1977,17 +2346,17 @@ export class FigmaDesignExtractor {
                             }
                             console.log(`🎨 텍스트 "${child.characters}" 스타일 컬러 발견: ${colorInfo.styleName}`);
                         } else {
-                            // GPT-5 권장: boundVariables에서 Variable ID 추출
+                            // boundVariables에서 Variable ID 추출
                             const fillObj = child.fills[0] as { boundVariables?: { color?: { id: string } } };
                             if (fillObj.boundVariables?.color?.id) {
                                 const variableId = fillObj.boundVariables.color.id;
-                                // GPT-5 권장: Variable ID → 변수명 → MUI 경로 변환
+                                // Variable ID → 변수명 → MUI 경로 변환
                                 const muiColorPath = await this.extractThemeTokenFromVariableId(variableId);
                                 if (muiColorPath) {
                                     if (!isAvatarComponent) {
                                         properties.colorStyle = muiColorPath;
                                     }
-                                    console.log(`🎨 GPT-5 방식: Variable ID ${variableId} → ${muiColorPath}`);
+                                    console.log(`🎨 Variable ID ${variableId} → ${muiColorPath}`);
                                 } else {
                                     if (!isAvatarComponent) {
                                         properties.backgroundColor = colorInfo.color;
@@ -2037,14 +2406,12 @@ export class FigmaDesignExtractor {
                 properties.alignItems = this.mapAlignment(node.counterAxisAlignItems);
             }
 
-            // 패딩: boundVariables 있으면 변수 ID → 테마 토큰, 없으면 숫자(나중에 generator에서 theme.spacing으로 변환)
+            // 패딩: 공통 getPaddingFromNode 사용. boundVariables 있으면 테마 토큰(paddingStyle), 없으면 숫자(properties.padding).
             const layoutBound = (node as { boundVariables?: Record<string, { id: string }> }).boundVariables;
-            if (
-                node.paddingLeft !== undefined ||
-                node.paddingRight !== undefined ||
-                node.paddingTop !== undefined ||
-                node.paddingBottom !== undefined
-            ) {
+            const paddingObj = this.getPaddingFromNode(node);
+            if (paddingObj) {
+                // Figma 실제 px는 항상 보관 → generator에서 MUI spacing 오해 없이 'Npx'로 출력
+                properties.padding = paddingObj;
                 if (layoutBound?.paddingLeft?.id || layoutBound?.paddingRight?.id || layoutBound?.paddingTop?.id || layoutBound?.paddingBottom?.id) {
                     const paddingStyle: { left?: string; right?: string; top?: string; bottom?: string } = {};
                     for (const key of ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'] as const) {
@@ -2058,14 +2425,6 @@ export class FigmaDesignExtractor {
                         }
                     }
                     if (Object.keys(paddingStyle).length) (properties as any).paddingStyle = paddingStyle;
-                }
-                if (!(properties as any).paddingStyle) {
-                    properties.padding = {
-                        left: node.paddingLeft || 0,
-                        right: node.paddingRight || 0,
-                        top: node.paddingTop || 0,
-                        bottom: node.paddingBottom || 0,
-                    };
                 }
             }
 
@@ -2084,6 +2443,29 @@ export class FigmaDesignExtractor {
             const gridColumnGap = (node as { gridColumnGap?: number }).gridColumnGap;
             if (gridRowGap !== undefined) (properties as { rowSpacing?: number }).rowSpacing = gridRowGap;
             if (gridColumnGap !== undefined) (properties as { columnSpacing?: number }).columnSpacing = gridColumnGap;
+        }
+
+        // FRAME 이름에 '버튼'이 있으면 componentType이 button으로 잡혀 layout 패딩 블록이 스킵됨 → 오토레이아웃 패딩만이라도 반영
+        if (componentType !== 'layout' && node.type === 'FRAME') {
+            const paddingObj = this.getPaddingFromNode(node);
+            if (paddingObj) {
+                const layoutBound = (node as { boundVariables?: Record<string, { id: string }> }).boundVariables;
+                properties.padding = paddingObj;
+                if (layoutBound?.paddingLeft?.id || layoutBound?.paddingRight?.id || layoutBound?.paddingTop?.id || layoutBound?.paddingBottom?.id) {
+                    const paddingStyle: { left?: string; right?: string; top?: string; bottom?: string } = {};
+                    for (const key of ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'] as const) {
+                        const id = layoutBound?.[key]?.id;
+                        if (id) {
+                            const token = await this.extractThemeTokenFromVariableId(id);
+                            if (token) {
+                                const k = key.replace('padding', '').toLowerCase() as 'left' | 'right' | 'top' | 'bottom';
+                                paddingStyle[k] = token;
+                            }
+                        }
+                    }
+                    if (Object.keys(paddingStyle).length) (properties as any).paddingStyle = paddingStyle;
+                }
+            }
         }
 
         // FavoriteButton: Figma Selected → selected(boolean)
@@ -2187,6 +2569,26 @@ export class FigmaDesignExtractor {
     }
 
     /**
+     * 노드에서 padding 수치 객체 추출 (공통). 오토레이아웃 또는 padding* 필드가 있을 때만 반환.
+     */
+    private getPaddingFromNode(node: FigmaNode): { left: number; right: number; top: number; bottom: number } | undefined {
+        const hasExplicit =
+            node.paddingLeft !== undefined ||
+            node.paddingRight !== undefined ||
+            node.paddingTop !== undefined ||
+            node.paddingBottom !== undefined;
+        if ((node.layoutMode && node.layoutMode !== 'NONE') || hasExplicit) {
+            return {
+                left: node.paddingLeft ?? 0,
+                right: node.paddingRight ?? 0,
+                top: node.paddingTop ?? 0,
+                bottom: node.paddingBottom ?? 0,
+            };
+        }
+        return undefined;
+    }
+
+    /**
      * 레이아웃 설정 추출
      * @param node 피그마 노드
      * @returns 레이아웃 설정
@@ -2207,19 +2609,8 @@ export class FigmaDesignExtractor {
             layout.spacing = node.itemSpacing;
         }
 
-        if (
-            node.paddingLeft !== undefined ||
-            node.paddingRight !== undefined ||
-            node.paddingTop !== undefined ||
-            node.paddingBottom !== undefined
-        ) {
-            layout.padding = {
-                left: node.paddingLeft || 0,
-                right: node.paddingRight || 0,
-                top: node.paddingTop || 0,
-                bottom: node.paddingBottom || 0,
-            };
-        }
+        const paddingObj = this.getPaddingFromNode(node);
+        if (paddingObj) layout.padding = paddingObj;
 
         return layout;
     }
@@ -2515,7 +2906,7 @@ export class FigmaDesignExtractor {
      * @returns MUI 테마 토큰 이름
      */
     /**
-     * Variable ID에서 MUI 테마 토큰 추출 (GPT-5 방식)
+     * Variable ID에서 MUI 테마 토큰 추출
      * @param variableId Variable ID
      * @returns MUI 색상 경로
      */
@@ -2557,6 +2948,61 @@ export class FigmaDesignExtractor {
     }
 
     /**
+     * Variable ID에서 shape 테마 토큰 추출 (borderRadius 등)
+     * @param variableId Figma Variable ID
+     * @returns MUI theme.shape 경로 (예: 'shape.borderRadius') 또는 null
+     */
+    private async extractShapeTokenFromVariableId(variableId: string): Promise<string | null> {
+        const mapping = await this.variableMappingManager.getMapping(variableId);
+        if (mapping) {
+            const fromName = this.toMuiShapePath(mapping.variableName);
+            if (fromName) return fromName;
+            const p = mapping.muiThemePath;
+            if (p && (p.startsWith('shape.') || /borderradius|radius/i.test(p))) return p.startsWith('shape.') ? p : `shape.${p}`;
+        }
+        const fromCache = this.variableInfo.get(variableId) as { name?: string } | undefined;
+        if (fromCache?.name) {
+            const path = this.toMuiShapePath(fromCache.name);
+            if (path) return path;
+        }
+        const normalizedId = variableId.replace(/^VariableID:/i, '').split('/')[0]?.trim() || variableId;
+        const fromCacheNorm = this.variableInfo.get(normalizedId) as { name?: string } | undefined;
+        if (fromCacheNorm?.name) {
+            const path = this.toMuiShapePath(fromCacheNorm.name);
+            if (path) return path;
+        }
+        const varId = variableId.split('/').pop()!;
+        try {
+            const response = await fetch(`https://api.figma.com/v1/variables/${encodeURIComponent(varId)}`, {
+                headers: { 'X-Figma-Token': this.token }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const name = data.name as string;
+                const path = this.toMuiShapePath(name);
+                if (path) return path;
+            }
+        } catch (e) {
+            console.warn(`⚠️ Variables API 실패(shape): ${variableId}`, e);
+        }
+        return null;
+    }
+
+    /**
+     * Figma 변수명 → theme.shape 경로 (borderRadius, borderRadiusMd 등)
+     */
+    private toMuiShapePath(variableName: string): string | null {
+        const n = String(variableName || '').trim().replace(/\//g, '.').replace(/\s+/g, '');
+        if (!n) return null;
+        const lower = n.toLowerCase();
+        if (lower === 'borderradius' || n === '4') return 'shape.borderRadius';
+        if (lower === 'borderradiusmd' || n === '8') return 'shape.borderRadiusMd';
+        if (lower === 'borderradiuslg' || lower === 'borderradiuslg' || n === '16') return 'shape.borderRadiusLg';
+        if (n.includes('.')) return n.startsWith('shape.') ? n : `shape.${n}`;
+        return `shape.${n}`;
+    }
+
+    /**
      * Variable ID에 해당하는 토큰 스튜디오 색상 반환
      * @param variableId Variable ID
      * @returns 토큰 스튜디오 색상 경로
@@ -2580,7 +3026,7 @@ export class FigmaDesignExtractor {
     }
 
     /**
-     * GPT-5 권장: 변수명을 MUI 색상 경로로 변환
+     * 변수명을 MUI 색상 경로로 변환
      * @param variableName 피그마 변수명 (예: "primary/light", "primary.light")
      * @returns MUI 색상 경로 (예: "primary.light")
      */

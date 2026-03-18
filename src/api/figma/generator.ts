@@ -9,18 +9,20 @@ import {
 import { PageContentConfig } from './pageTemplateManager';
 import { FIGMA_CONFIG } from './config';
 import { findMappingByType, findMappingByFigmaName, COMPONENT_MAPPINGS } from './component-mappings';
-import { getSpacingTokenFromPx } from './variable-mapping';
+import { getSpacingTokenFromPx, getSpacingPxFromTokenName } from './variable-mapping';
 
 /** MUI Table 구조 컴포넌트 (sx 미주입, 테마/기본 구조 사용). TableContainer는 제외(스크롤 등 sx 사용) */
 const TABLE_STRUCTURE_MUI_NAMES = new Set([
     'Table', 'TableHead', 'TableBody', 'TableRow', 'TableCell', 'TableFooter',
 ]);
 
-/** ToggleButtonGroup 생성 시 value/onChange 구분 및 자식 ToggleButton selected 제어용 */
+/** ToggleButtonGroup 생성 시 value/onChange 구분 및 자식 ToggleButton selected 제어용. MenuItem value는 Select 직계 자식일 때만 출력 */
 interface ToggleButtonGroupContext {
     toggleButtonGroupIndex: number;
     /** true면 현재 노드는 ToggleButtonGroup 직계 자식 → ToggleButton에 selected 출력하지 않음 (그룹 value가 선택 제어) */
     insideToggleButtonGroup?: boolean;
+    /** 직계 부모 MUI 컴포넌트명. MenuItem은 parentMuiName === 'Select'일 때만 value prop 출력 (MUI MenuItem API에는 value 없음, Select 옵션용으로만 사용) */
+    parentMuiName?: 'Menu' | 'MenuList' | 'Select';
 }
 
 /** 피그마 인스턴스 이름이 @/components 와 동일한 커스텀 컴포넌트일 때 해당 컴포넌트를 주입 (MUI 매핑보다 우선) */
@@ -57,7 +59,7 @@ export class FigmaCodeGenerator {
         const { pageId, components } = contentConfig;
 
         const componentName = this.getComponentNameFromPageId(pageId);
-        const pageCode = this.generatePageCode(componentName, components, pageId);
+        const pageCode = this.generatePageCode(componentName, contentConfig);
         // 생성된 코드에서 실제 사용된 태그만 추출하여 import (불필요한 TableFooter, ChevronLeft 등 제외)
         const imports = this.generateImports(pageCode);
 
@@ -75,7 +77,8 @@ ${pageCode}`;
      * @param pageId pages.ts의 id
      * @returns 전체 페이지 컴포넌트 코드
      */
-    private generatePageCode(componentName: string, components: ComponentDesignConfig[], pageId: string): string {
+    private generatePageCode(componentName: string, contentConfig: PageContentConfig): string {
+        const { components, pageId } = contentConfig;
         const toggleGroupInitialValues = this.collectToggleButtonGroupInitialValues(components);
         const context: ToggleButtonGroupContext = { toggleButtonGroupIndex: 0 };
         const componentJSX = this.generateComponentsJSX(components, context);
@@ -86,8 +89,8 @@ ${pageCode}`;
         // ToggleButtonGroup이 있으면 value/onChange 훅 블록 생성
         const hooksBlock = this.generateToggleButtonGroupHooks(toggleGroupInitialValues);
 
-        // 기본 padding 사용 (MUI spacing 변수)
-        const paddingValue = 3; // spacing(3) = 24px
+        // 페이지 최상위 Box padding: Main Content에서 추출한 값이 있을 때만 출력. 없거나 전부 0이면 생략.
+        const paddingSxLine = this.buildPaddingSxLine(contentConfig.layout);
 
         return `${pageSpecificImports}
 
@@ -95,14 +98,110 @@ export const ${componentName}: React.FC = () => {
 ${hooksBlock}    return (
         <Box
             sx={{
-                p: ${paddingValue},
-                minHeight: '100%',
+                ${paddingSxLine}minHeight: '100%',
             }}
         >
             ${componentJSX}
         </Box>
     );
 };`;
+    }
+
+    /**
+     * padding t,r,b,l → 최소 개수로 조합. pt=pb → py, pl=pr → px.
+     * 반환: 'p: n' 또는 'py: 1, px: 3' 등 sx에 넣을 문자열 (공통 사용).
+     */
+    private buildPaddingSxString(t: string, r: string, b: string, l: string): string {
+        if (t === r && r === b && b === l) return `p: ${t}`;
+        const topEqBottom = t === b;
+        const leftEqRight = l === r;
+        if (topEqBottom && leftEqRight) return `py: ${t}, px: ${l}`;
+        if (topEqBottom) return `py: ${t}, pl: ${l}, pr: ${r}`;
+        if (leftEqRight) return `px: ${l}, pt: ${t}, pb: ${b}`;
+        return `pt: ${t}, pr: ${r}, pb: ${b}, pl: ${l}`;
+    }
+
+    /**
+     * layout.padding → sx 문자열. 없거나 전부 0이면 null. (페이지 Box / 레거시 Box 공통)
+     */
+    private getPaddingSxFromLayout(layout?: LayoutConfig): string | null {
+        if (!layout?.padding) return null;
+        const { top, right, bottom, left } = layout.padding;
+        if (top === 0 && right === 0 && bottom === 0 && left === 0) return null;
+        const t = this.mapSpacingToVariable(top);
+        const r = this.mapSpacingToVariable(right);
+        const b = this.mapSpacingToVariable(bottom);
+        const l = this.mapSpacingToVariable(left);
+        return this.buildPaddingSxString(t, r, b, l);
+    }
+
+    /** 페이지 최상위 Box용: padding sx 한 줄 (뒤에 줄바꿈 포함). 없으면 빈 문자열. */
+    private buildPaddingSxLine(layout?: LayoutConfig): string {
+        const v = this.getPaddingSxFromLayout(layout);
+        return v != null ? `${v},\n                ` : '';
+    }
+
+    /**
+     * properties.paddingStyle / properties.padding → sx 문자열. 없으면 null. (컴포넌트 sx 공통)
+     */
+    private getPaddingSxFromProperties(properties: ComponentProperties): string | null {
+        // Figma Auto Layout 실제 px 우선 (변수 바인딩 시에도 extractor가 padding 객체를 채움)
+        if (properties.padding != null && typeof properties.padding === 'object') {
+            const pad = properties.padding as { left?: number; right?: number; top?: number; bottom?: number };
+            const { left = 0, right = 0, top = 0, bottom = 0 } = pad;
+            if (top !== 0 || right !== 0 || bottom !== 0 || left !== 0) {
+                const q = (v: number) => `'${v}px'`;
+                return this.buildPaddingSxString(q(top), q(right), q(bottom), q(left));
+            }
+        }
+        const paddingStyle = properties.paddingStyle;
+        if (paddingStyle && (paddingStyle.top !== undefined || paddingStyle.right !== undefined || paddingStyle.bottom !== undefined || paddingStyle.left !== undefined)) {
+            const padTok = (tok: string) => {
+                const raw = String(tok ?? '0').trim();
+                if (raw === '0' || raw === '') return '0';
+                const px = getSpacingPxFromTokenName(raw);
+                if (px != null) return `'${px}px'`;
+                const n = parseFloat(raw.replace(',', '.'));
+                if (!Number.isNaN(n) && n >= 0) return `'${Math.round(n)}px'`;
+                return String(this.spacingTokenToNumber(raw));
+            };
+            const t = padTok(paddingStyle.top ?? '0');
+            const r = padTok(paddingStyle.right ?? '0');
+            const b = padTok(paddingStyle.bottom ?? '0');
+            const l = padTok(paddingStyle.left ?? '0');
+            return this.buildPaddingSxString(t, r, b, l);
+        }
+        if (properties.padding != null) {
+            if (typeof properties.padding === 'object') {
+                const pad = properties.padding as { left?: number; right?: number; top?: number; bottom?: number };
+                const { left = 0, right = 0, top = 0, bottom = 0 } = pad;
+                const q = (v: number) => `'${v}px'`;
+                return this.buildPaddingSxString(q(top), q(right), q(bottom), q(left));
+            }
+            const v = this.mapSpacingToVariable(properties.padding as number);
+            return `p: ${v}`;
+        }
+        return null;
+    }
+
+    /** padding sx 문자열이 "전부 0"인지 판별 (예: `p: 0`, `py: 0, px: 0`, `pt: '0px'` 등) */
+    private isZeroPaddingSxString(padSx: string): boolean {
+        const parts = padSx.split(',').map((s) => s.trim()).filter(Boolean);
+        if (parts.length === 0) return true;
+        for (const part of parts) {
+            const idx = part.indexOf(':');
+            if (idx < 0) return false;
+            let v = part.slice(idx + 1).trim();
+            // strip quotes
+            if ((v.startsWith("'") && v.endsWith("'")) || (v.startsWith('"') && v.endsWith('"'))) {
+                v = v.slice(1, -1).trim();
+            }
+            // normalize px
+            if (v.toLowerCase().endsWith('px')) v = v.slice(0, -2).trim();
+            // only accept literal zero
+            if (v !== '0' && v !== '0.0') return false;
+        }
+        return true;
     }
 
     /** 컴포넌트 트리에서 ToggleButtonGroup의 초기 선택 value를 재귀 수집 */
@@ -231,15 +330,7 @@ ${typographyStyles}
         const jsxElements = components.map((component) => this.generateComponentJSX(component)).join('\n        ');
 
         const gapVal = layout.spacing != null ? this.mapSpacingToVariable(layout.spacing) : '0';
-        const padVal = layout.padding
-            ? (() => {
-                const t = this.mapSpacingToVariable(layout.padding!.top);
-                const r = this.mapSpacingToVariable(layout.padding!.right);
-                const b = this.mapSpacingToVariable(layout.padding!.bottom);
-                const l = this.mapSpacingToVariable(layout.padding!.left);
-                return t === r && r === b && b === l ? `p: ${t}` : `p: [${t}, ${r}, ${b}, ${l}]`;
-            })()
-            : 'p: 0';
+        const padVal = this.getPaddingSxFromLayout({ padding: layout.padding } as LayoutConfig) ?? 'p: 0';
         return `export const ${componentName} = () => {
     return (
         <Box sx={{
@@ -295,7 +386,12 @@ ${typographyStyles}
         const isTableCellComponent = mapping?.muiName === 'TableCell';
         const isToggleButtonGroup = mapping?.muiName === 'ToggleButtonGroup';
         const isButtonGroup = mapping?.muiName === 'ButtonGroup';
-        const shouldRenderChildren = (componentType === 'layout' || componentType === 'card' || componentType === 'table' || isCardSubComponent || isTableSubComponent || isToggleButtonGroup || isButtonGroup) && children && children.length > 0;
+        const isMenu = mapping?.muiName === 'Menu';
+        const isMenuList = mapping?.muiName === 'MenuList';
+        const isSelect = mapping?.muiName === 'Select';
+        const isList = mapping?.muiName === 'List';
+        const isDrawer = mapping?.muiName === 'Drawer';
+        const shouldRenderChildren = (componentType === 'layout' || componentType === 'card' || componentType === 'table' || isCardSubComponent || isTableSubComponent || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isSelect || isList || isDrawer) && children && children.length > 0;
 
         const isGridContainer =
             mapping?.muiName === 'Grid' &&
@@ -315,11 +411,14 @@ ${typographyStyles}
                     .join('\n        ');
             } else {
                 // ToggleButtonGroup 자식은 selected를 출력하지 않도록 컨텍스트 전달 (MUI: 그룹 value가 선택 제어)
-                const childContext =
-                    isToggleButtonGroup && context
-                        ? { ...context, insideToggleButtonGroup: true as const }
-                        : context;
-                // ButtonGroup 자식은 일반 Button으로 렌더 (별도 컨텍스트 없음)
+                // Menu/MenuList/Select 자식은 parentMuiName 전달 → MenuItem은 Select 직계 자식일 때만 value prop 출력
+                let childContext = context;
+                if (context) {
+                    if (isToggleButtonGroup) childContext = { ...context, insideToggleButtonGroup: true as const };
+                    else if (isMenu) childContext = { ...context, parentMuiName: 'Menu' as const };
+                    else if (isMenuList) childContext = { ...context, parentMuiName: 'MenuList' as const };
+                    else if (isSelect) childContext = { ...context, parentMuiName: 'Select' as const };
+                }
                 content = children.map((child) => this.generateComponentJSX(child, childContext)).join('\n        ');
             }
         } else {
@@ -404,6 +503,7 @@ ${typographyStyles}
             : findMappingByType(componentType);
 
         const isGrid = mapping?.muiName === 'Grid';
+        const isBox = mapping?.muiName === 'Box';
         const isTableStructure = mapping ? TABLE_STRUCTURE_MUI_NAMES.has(mapping.muiName) : false;
         if (isTableStructure) {
             return null;
@@ -442,34 +542,20 @@ ${typographyStyles}
                 sxProps.push(`gap: ${this.mapSpacingToVariable(properties.gap)}`);
             }
 
-            // padding - 테마 토큰(paddingStyle) 우선, 없으면 숫자를 theme.spacing으로 변환. px 하드코딩 없음.
-            const paddingStyle = (properties as { paddingStyle?: { left?: string; right?: string; top?: string; bottom?: string } }).paddingStyle;
-            if (paddingStyle && (paddingStyle.top !== undefined || paddingStyle.right !== undefined || paddingStyle.bottom !== undefined || paddingStyle.left !== undefined)) {
-                const t = this.spacingTokenToNumber(paddingStyle.top ?? '0');
-                const r = this.spacingTokenToNumber(paddingStyle.right ?? '0');
-                const b = this.spacingTokenToNumber(paddingStyle.bottom ?? '0');
-                const l = this.spacingTokenToNumber(paddingStyle.left ?? '0');
-                if (t === r && r === b && b === l) {
-                    sxProps.push(`p: ${t}`);
-                } else {
-                    sxProps.push(`p: [${t}, ${r}, ${b}, ${l}]`);
-                }
-            } else if (properties.padding) {
-                if (typeof properties.padding === 'object') {
-                    const { left, right, top, bottom } = properties.padding;
-                    const t = this.mapSpacingToVariable(top);
-                    const r = this.mapSpacingToVariable(right);
-                    const b = this.mapSpacingToVariable(bottom);
-                    const l = this.mapSpacingToVariable(left);
-                    if (t === r && r === b && b === l) {
-                        sxProps.push(`p: ${t}`);
+            // padding - Figma px는 문자열로. spacing 토큰(1~12)과 구분: 13+ 정수는 리터럴 px로 보정(MUI py:20 → spacing 오해)
+            const padSx = this.getPaddingSxFromProperties(properties);
+            const omitZeroPaddingSx = padSx != null && (isStack || isBox) && this.isZeroPaddingSxString(padSx);
+            if (padSx && !omitZeroPaddingSx) {
+                padSx.split(', ').forEach((prop) => {
+                    const m = /^(py|px|pt|pb|pl|pr|p):\s*(\d+)$/.exec(prop.trim());
+                    if (m) {
+                        const num = parseInt(m[2], 10);
+                        if (num >= 13) sxProps.push(`${m[1]}: '${num}px'`);
+                        else sxProps.push(prop.trim());
                     } else {
-                        sxProps.push(`p: [${t}, ${r}, ${b}, ${l}]`);
+                        sxProps.push(prop.trim());
                     }
-                } else {
-                    const v = this.mapSpacingToVariable(properties.padding);
-                    sxProps.push(`p: ${v}`);
-                }
+                });
             }
         }
 
@@ -531,12 +617,49 @@ ${typographyStyles}
             (mapping?.muiName === 'TableContainer' && properties.component === 'Paper' && properties.variant === 'outlined') ||
             excludeList.includes('borderColor') || excludeList.includes('borderWidth');
 
+        // border: extractor에서 추출한 stroke(borderSides, borderWidth, borderColor) → sx. Figma 적용 면만 정확히 반영.
         if (!shouldExcludeBorders && !excludeList.includes('borderRadius')) {
-            if (properties.borderColor) sxProps.push(`borderColor: '${properties.borderColor}'`);
-            if (properties.borderWidth) sxProps.push(`borderWidth: '${properties.borderWidth}px'`);
+            const borderWidthVal = properties.borderWidth != null ? properties.borderWidth : undefined;
+            const borderSidesRaw = (properties as { borderSides?: Array<'left'|'right'|'top'|'bottom'> | 'all' }).borderSides;
+            const style = (properties as { borderStyle?: 'solid' | 'dashed' | 'dotted' }).borderStyle || 'solid';
+            const color = properties.borderColor ? String(properties.borderColor).trim() : '';
+            const borderFromStrokes = Boolean((properties as any).__borderFromStrokes);
+            const widthNum =
+                borderWidthVal != null
+                    ? typeof borderWidthVal === 'number'
+                        ? borderWidthVal
+                        : parseInt(String(borderWidthVal).replace(/px/g, ''), 10)
+                    : NaN;
+            const hasValidWidth = !isNaN(widthNum) && widthNum > 0;
+            const sidesArray = Array.isArray(borderSidesRaw) ? borderSidesRaw : borderSidesRaw ? [borderSidesRaw] : [];
+            const isAllSides = borderSidesRaw === 'all' || (sidesArray.length === 4);
+            if (hasValidWidth) {
+                const borderValue = `'${widthNum}px ${style}'`;
+                if (sidesArray.length >= 1 && !isAllSides) {
+                    for (const side of sidesArray) {
+                        const sideCap = side.charAt(0).toUpperCase() + side.slice(1);
+                        sxProps.push(`border${sideCap}: ${borderValue}`);
+                        if (color) sxProps.push(`border${sideCap}Color: '${color}'`);
+                    }
+                } else if (isAllSides || (sidesArray.length === 0 && (widthNum !== 1 || borderFromStrokes))) {
+                    sxProps.push(`border: ${borderValue}`);
+                    if (color) sxProps.push(`borderColor: '${color}'`);
+                }
+            } else if (properties.borderWidth != null && sidesArray.length === 0) {
+                const w =
+                    typeof properties.borderWidth === 'number'
+                        ? properties.borderWidth
+                        : parseInt(String(properties.borderWidth).replace(/px/g, ''), 10);
+                if (!isNaN(w) && w > 0 && (w !== 1 || borderFromStrokes)) sxProps.push(`borderWidth: ${w}`);
+            }
         }
         if (!excludeList.includes('borderRadius')) {
-            if (properties.borderRadius) sxProps.push(`borderRadius: '${properties.borderRadius}px'`);
+            const borderRadiusStyle = (properties as { borderRadiusStyle?: string }).borderRadiusStyle;
+            if (borderRadiusStyle) {
+                sxProps.push(`borderRadius: (theme) => theme.${borderRadiusStyle}`);
+            } else if (properties.borderRadius != null) {
+                sxProps.push(`borderRadius: '${properties.borderRadius}px'`);
+            }
         }
         if (properties.opacity) sxProps.push(`opacity: ${properties.opacity}`);
 
@@ -559,8 +682,15 @@ ${typographyStyles}
             return null;
         }
 
+        let sxJoined = sxProps.join(',\n            ');
+        // MUI: py: 20 → theme.spacing(20). Figma에서 온 10~96 정도의 정수 패딩은 픽셀 의도가 대부분
+        sxJoined = sxJoined.replace(
+            /\b(py|px|pt|pb|pl|pr):\s*(\d{2,})\b/g,
+            (_m, key: string, num: string) => `${key}: '${num}px'`,
+        );
+
         return `{
-            ${sxProps.join(',\n            ')}
+            ${sxJoined}
         }`;
     }
 
@@ -736,7 +866,7 @@ ${typographyStyles}
             }
         }
 
-        // ✅ TextField: slotProps.input / Select: InputBase 상속으로 startAdornment·endAdornment 직접 prop
+        // ✅ TextField: slotProps.input (MUI 권장 패턴)
         const hasAdorn = properties.startIconName || properties.endIconName;
         if (hasAdorn) {
             if (mapping?.muiName === 'TextField') {
@@ -755,19 +885,6 @@ ${typographyStyles}
                 }
                 if (adornParts.length > 0) {
                     props.push(`slotProps={{ input: { ${adornParts.join(', ')} } }}`);
-                }
-            } else if (mapping?.muiName === 'Select') {
-                if (properties.startIconName) {
-                    const muiIcon = getMuiIconName(properties.startIconComponentId || '', properties.startIconName);
-                    if (muiIcon) {
-                        props.push(`startAdornment={<InputAdornment position="start"><${muiIcon} /></InputAdornment>}`);
-                    }
-                }
-                if (properties.endIconName) {
-                    const muiIcon = getMuiIconName(properties.endIconComponentId || '', properties.endIconName);
-                    if (muiIcon) {
-                        props.push(`endAdornment={<InputAdornment position="end"><${muiIcon} /></InputAdornment>}`);
-                    }
                 }
             }
         }
@@ -890,12 +1007,15 @@ ${typographyStyles}
      * @returns 이스케이프된 텍스트
      */
     private escapeHtml(text: string): string {
+        // JSX에서는 `{` `}` 가 표현식 시작/끝으로 인식되므로, 순수 텍스트일 때는 HTML 엔티티로 이스케이프한다.
         return text
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+            .replace(/'/g, '&#39;')
+            .replace(/{/g, '&#123;')
+            .replace(/}/g, '&#125;');
     }
 
     /** 매핑에 등록된 모든 MUI 컴포넌트명 (muiName + subComponents) */

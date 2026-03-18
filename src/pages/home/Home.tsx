@@ -12,15 +12,49 @@ const HomeContent = () => {
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h5" component="h3" gutterBottom>
-                                에이전트
+                                프로젝트 / 에이전트
                             </Typography>
-                            <Typography sx={{ mb: 2 }}>프로젝트별 워크플로우 관리 및 실행</Typography>
+                            <Typography sx={{ mb: 2 }}>프로젝트별 에이전트 관리 및 실행</Typography>
                             <Button
                                 variant="contained"
                                 endIcon={<ArrowForward />}
                                 onClick={() => navigate('/project/project1/agent')}
                             >
                                 에이전트
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid size={6}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography variant="h5" component="h3" gutterBottom>
+                                어드민 / 프로젝트
+                            </Typography>
+                            <Typography sx={{ mb: 2 }}>어드민 프로젝트 관리</Typography>
+                            <Button
+                                variant="contained"
+                                endIcon={<ArrowForward />}
+                                onClick={() => navigate('/admin/project')}
+                            >
+                                프로젝트
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid size={6}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography variant="h5" component="h3" gutterBottom>
+                                프로젝트 / 에이전트 / 에이전트 빌더
+                            </Typography>
+                            <Typography sx={{ mb: 2 }}>프로젝트별 에이전트의 워크플로우 관리</Typography>
+                            <Button
+                                variant="contained"
+                                endIcon={<ArrowForward />}
+                                onClick={() => navigate('/project/project1/agent/agentbuilder')}
+                            >
+                                에이전트 빌더
                             </Button>
                         </CardContent>
                     </Card>
@@ -52,24 +86,6 @@ const HomeContent = () => {
                                 onClick={() => navigate('/guide')}
                             >
                                 컴포넌트 안내
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid size={6}>
-                    <Card variant="outlined">
-                        <CardContent>
-                            <Typography variant="h5" component="h3" gutterBottom>
-                                Test
-                            </Typography>
-                            <Typography color="error.main" sx={{ mb: 2 }}>페이지 자동 생성 (컴포넌트 매핑 개발 중)</Typography>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                endIcon={<ArrowForward />}
-                                onClick={() => navigate('/test')}
-                            >
-                                Test
                             </Button>
                         </CardContent>
                     </Card>
