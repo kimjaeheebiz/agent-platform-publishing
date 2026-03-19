@@ -145,10 +145,13 @@ export const TextFieldMapping: ComponentMapping = {
         return extractAdornIconsFromNode(node, extractor);
     },
 
-    // ✅ JSX 생성 템플릿 정의
+    // ✅ JSX 생성 템플릿 정의 (MUI TextField: 피그마 Small = size="small" 반영, 없으면 기본 출력)
     generateJSX: (componentName, props, content, sx) => {
         const sxAttribute = sx ? `\n            sx={${sx}}` : '';
-        return `<TextField${props}${sxAttribute}>
+        const propsTrim = (props || '').replace(/^\s+/, '').trim();
+        const hasSize = /\bsize=/.test(propsTrim);
+        const sizeAttr = hasSize ? '' : ' size="small"';
+        return `<TextField${sizeAttr}${propsTrim ? ` ${propsTrim}` : ''}${sxAttribute}>
             ${content}
         </TextField>`;
     },

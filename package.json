@@ -16,7 +16,8 @@
         "figma:pages": "npx tsx scripts/figma-sync-cli.ts generate-content",
         "figma:validate": "npx tsx scripts/figma-sync-cli.ts validate",
         "figma:status": "npx tsx scripts/figma-sync-cli.ts status",
-        "figma:clean": "npx tsx scripts/figma-sync-cli.ts clean"
+        "figma:clean": "npx tsx scripts/figma-sync-cli.ts clean",
+        "figma:inspect-nodes": "npx tsx scripts/figma-inspect-nodes.ts"
     },
     "dependencies": {
         "@emotion/react": "11.14.0",

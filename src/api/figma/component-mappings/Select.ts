@@ -1,6 +1,59 @@
 import { ComponentMapping } from './types/PropertyMapper';
 import type { FigmaNode } from '../types';
-import { findTextInChildByName, findTextRecursively, getFigmaBooleanProp, getPropValue } from '../utils/figma-node-utils';
+import {
+    findDescendantByName,
+    findTextInChildByName,
+    findTextRecursively,
+    getFigmaBooleanProp,
+    getPropValue,
+} from '../utils/figma-node-utils';
+
+/** Input > Container 직계 자식 중 이름이 Label/T Label 인 노드 텍스트 (인스턴스에서도 마스터와 동일하게 라벨로 취급) */
+function getSelectContainerLabelLayerText(node: FigmaNode): string | undefined {
+    const input = findDescendantByName(node, 'Input');
+    const container = input
+        ? findDescendantByName(input as FigmaNode, 'Container')
+        : findDescendantByName(node, 'Container');
+    if (!container) return undefined;
+    for (const c of (container as any).children || []) {
+        if (!c || c.visible === false) continue;
+        const nm = String(c.name || '').trim();
+        if (/^label$/i.test(nm) || /^t\s*label$/i.test(nm) || nm.toLowerCase() === 'label') {
+            const t = findTextRecursively([c]);
+            if (t?.trim()) return t.trim();
+        }
+    }
+    return undefined;
+}
+
+/** Label 레이어 없을 때만 Container 안 첫 표시 텍스트 (Has Value 등과 조합해 보조) */
+function firstDisplayTextInSelectContainer(node: FigmaNode): string | undefined {
+    const fromNamed = getSelectContainerLabelLayerText(node);
+    if (fromNamed) return fromNamed;
+    const input = findDescendantByName(node, 'Input');
+    const container = input
+        ? findDescendantByName(input as FigmaNode, 'Container')
+        : findDescendantByName(node, 'Container');
+    if (!container) return undefined;
+    const cont = container as any;
+    const skipName = (name: string) =>
+        /arrow|dropdown|icon|close|autocomplete|min-height|min-width|helper/i.test(name);
+    const walk = (x: any): string | undefined => {
+        if (!x || x.visible === false) return undefined;
+        if (x.type === 'TEXT' && typeof x.characters === 'string') {
+            const t = x.characters.trim();
+            if (!t) return undefined;
+            if (skipName(String(x.name || ''))) return undefined;
+            return t;
+        }
+        for (const c of x.children || []) {
+            const w = walk(c);
+            if (w) return w;
+        }
+        return undefined;
+    };
+    return walk(cont);
+}
 
 /**
  * MUI Select 컴포넌트 매핑
@@ -13,6 +66,56 @@ export const SelectMapping: ComponentMapping = {
 
     // MUI 컴포넌트 이름
     muiName: 'Select',
+
+    /**
+     * Has Value=false: componentProperties.Label 이 비어 있어도 Container 안 Label/T Label 레이어에
+     * 실제 문구가 있으면 여기서 먼저 주입 (muiProps label 이 "" 로 덮어쓰는 것 방지)
+     */
+    extractProperties: async (node: FigmaNode) => {
+        const props = ((node as any).componentProperties || {}) as Record<string, unknown>;
+        const raw = getPropValue(props, 'label') ?? getPropValue(props, 'Label');
+        const fromProp = typeof raw === 'string' ? raw.trim() : raw != null ? String(raw).trim() : '';
+        if (fromProp) return {};
+        const valueRaw = getPropValue(props, 'value') ?? getPropValue(props, 'Value');
+        const hasValueText =
+            typeof valueRaw === 'string'
+                ? valueRaw.trim().length > 0
+                : valueRaw != null && String(valueRaw).trim().length > 0;
+        /** Figma는 Has Value=false여도 Value TEXT prop에 문구가 남는 경우가 많음 → 그때만 보면 라벨 주입이 막힘 */
+        const hasValueOff = getFigmaBooleanProp(node as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?') === false;
+        const labelLayer = getSelectContainerLabelLayerText(node);
+        const t = firstDisplayTextInSelectContainer(node);
+        if (process.env.FIGMA_DEBUG_SELECT === '1') {
+            // eslint-disable-next-line no-console
+            console.warn(
+                '[figma Select extractProperties]',
+                (node as any)?.name,
+                (node as any)?.id,
+                'fromPropLabel=',
+                fromProp || '(empty)',
+                'HasValue=',
+                getFigmaBooleanProp(node as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?'),
+                'valuePropNonEmpty=',
+                hasValueText,
+                'labelLayer=',
+                labelLayer || '(none)',
+                'containerFallback=',
+                t || '(none)',
+            );
+        }
+        /** Label 레이어 문구는 Value/Has Value prop과 무관하게 항상 MUI label (인스턴스에서 Has Value 미노출·Value만 채워진 경우 대응) */
+        if (labelLayer?.trim()) {
+            return { label: labelLayer.trim() };
+        }
+        if (!t?.trim()) return {};
+        if (hasValueOff) {
+            return { label: t.trim() };
+        }
+        if (!hasValueText) {
+            return { label: t.trim() };
+        }
+        return {};
+    },
 
     // MUI 공식 속성 (API 문서 기반)
     muiProps: {
@@ -78,15 +181,23 @@ export const SelectMapping: ComponentMapping = {
         label: {
             type: 'string',
             extractFromFigma: (node) => {
-                const fromLabel = findTextInChildByName(node, 'Label');
-                if (fromLabel) return fromLabel;
                 const props = ((node as any).componentProperties || {}) as Record<string, unknown>;
-                const v = getPropValue(props, 'label') ?? getPropValue(props, 'Label');
-                if (typeof v === 'string') return v;
-                if (v != null) return String(v);
+                const rawProp = getPropValue(props, 'label') ?? getPropValue(props, 'Label');
+                const fromProp =
+                    typeof rawProp === 'string'
+                        ? rawProp.trim()
+                        : rawProp != null
+                          ? String(rawProp).trim()
+                          : '';
 
-                // Has Value=false 변형 등에서 Label 키가 없을 때: TEXT 타입 componentProperties 중 label/placeholder 계열을 fallback
+                const fromNamedLabel = findTextInChildByName(node, 'Label')?.trim();
+                if (fromNamedLabel) return fromNamedLabel;
+                if (fromProp) return fromProp;
+
                 const hasValue = getFigmaBooleanProp(node as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?');
+                const fromContainer = firstDisplayTextInSelectContainer(node);
+                if (fromContainer && (hasValue === false || !fromProp)) return fromContainer;
+
                 if (hasValue === false) {
                     for (const [k, raw] of Object.entries(props)) {
                         const key = String(k).toLowerCase();
@@ -102,7 +213,7 @@ export const SelectMapping: ComponentMapping = {
                     }
                 }
 
-                return undefined;
+                return fromContainer;
             },
         },
     },
@@ -143,18 +254,28 @@ export const SelectMapping: ComponentMapping = {
         if (labelText.trim()) {
             const safeId = labelText.trim().replace(/\s+/g, '-').replace(/[^\w\uac00-\ud7af-]/gi, '') || 'label';
             const labelId = `select-${safeId}-label`;
+            const labEsc = labelText.trim().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            const propsTrim = props.replace(/^\s+/, '').trim();
+            const hasSize = /\bsize=/.test(propsTrim);
+            const hasLabelProp = /\blabel=/.test(propsTrim);
+            const sizeAttr = hasSize ? '' : 'size="small" ';
+            const labelAttr = hasLabelProp ? '' : `label="${labEsc}" `;
             return `<FormControl size="small"${sx ? ` sx={${sx}}` : ''}>
             <InputLabel id="${labelId}">${labelText.trim()}</InputLabel>
             <Select
             labelId="${labelId}"
-            ${props.replace(/^\s+/, '').trim()}
+            ${labelAttr}${sizeAttr}${propsTrim}
             >
             ${safeContent}
             </Select>
         </FormControl>`;
         }
 
-        return `<Select${props}${sxAttribute}>
+        // 라벨 없을 때도 피그마 Small = MUI size="small" 반영 (props에 size 없으면 기본 출력)
+        const propsTrim = props.replace(/^\s+/, '').trim();
+        const hasSize = /\bsize=/.test(propsTrim);
+        const sizeAttr = hasSize ? '' : ' size="small"';
+        return `<Select${sizeAttr}${props ? ` ${propsTrim}` : ''}${sxAttribute}>
             ${safeContent}
         </Select>`;
     },

@@ -2,7 +2,10 @@ import React from 'react';
 import {
     Box,
     Button,
+    FormControl,
     InputAdornment,
+    InputLabel,
+    MenuItem,
     Paper,
     Select,
     Stack,
@@ -15,7 +18,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { Add, MailOutline, Search } from '@mui/icons-material';
+import { Add, Search } from '@mui/icons-material';
 
 // Import page-specific types
 import { KnowledgebasePageState } from './Knowledgebase.types';
@@ -33,64 +36,37 @@ export const Knowledgebase: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
-                    p: '0px',
                 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        p: '0px',
-                    }}
-                >
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{
-                            p: '0px',
-                        }}
-                    >
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack direction="row" spacing={1} alignItems="center">
                         <Typography variant="body1">총 5건</Typography>
-                        <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
-                            sx={{
-                                p: '0px',
-                            }}
-                        >
-                            <Select
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <MailOutline />
-                                    </InputAdornment>
-                                }
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <FormControl
+                                size="small"
                                 sx={{
-                                    width: '160px',
+                                    width: '200px',
                                 }}
-                            ></Select>
-                            <Select
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <MailOutline />
-                                    </InputAdornment>
-                                }
+                            >
+                                <InputLabel id="select-확장자-label">확장자</InputLabel>
+                                <Select labelId="select-확장자-label" size="small" label="확장자">
+                                    <MenuItem value={`확장자`}>확장자</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl
+                                size="small"
                                 sx={{
-                                    width: '160px',
+                                    width: '200px',
                                 }}
-                            ></Select>
+                            >
+                                <InputLabel id="select-등록일-label">등록일</InputLabel>
+                                <Select labelId="select-등록일-label" size="small" label="등록일">
+                                    <MenuItem value={`등록일`}>등록일</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Stack>
                     </Stack>
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{
-                            p: '0px',
-                        }}
-                    >
+                    <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
                             size="small"
                             placeholder="지식베이스 이름, 문서 이름, 등록자 이름"
@@ -106,12 +82,14 @@ export const Knowledgebase: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
+                        >
+                            Value
+                        </TextField>
                         <Button variant="outlined" size="small">
                             설정
                         </Button>
                         <Button variant="contained" size="small" startIcon={<Add />}>
-                            지식베이스 추가
+                            &#123;name&#125; 추가
                         </Button>
                     </Stack>
                 </Stack>
@@ -131,11 +109,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -151,14 +125,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -173,11 +140,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -193,14 +156,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -215,11 +171,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -235,14 +187,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -257,11 +202,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -277,14 +218,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -299,11 +233,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">지식베이스 이름</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -319,14 +249,7 @@ export const Knowledgebase: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>

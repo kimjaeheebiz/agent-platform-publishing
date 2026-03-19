@@ -14,7 +14,7 @@ import {
     TypographyConfig,
 } from './types';
 import { rgbaToHex, extractColorFromFill } from './utils/figma-paint-utils';
-import { findDescendantByName, getFigmaBooleanProp } from './utils/figma-node-utils';
+import { findDescendantByName, findTextRecursively, getFigmaBooleanProp } from './utils/figma-node-utils';
 
 /** @/components 커스텀 컴포넌트 (매핑 폴더에 두지 않음). generator.ts CUSTOM_COMPONENT_FIGMA_NAMES와 동일 유지 */
 const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
@@ -654,37 +654,46 @@ export class FigmaDesignExtractor {
     } {
         let libraryName: string | undefined;
 
+        // node가 INSTANCE이고 라이브러리 컴포넌트를 알 수 있으면, 그 이름으로 매핑을 우선 시도한다.
         if (node.type === 'INSTANCE' && (node as any).componentId && this.componentInfo.has((node as any).componentId)) {
             const info = this.componentInfo.get((node as any).componentId)!;
             libraryName = (info.name || (info as any).description || (info as any).key || '') as string;
         }
 
-        // 1) 인스턴스 이름(node.name)으로 먼저 시도 → List/Table 등은 "Item #1", "Cell #1" 같은 이름 사용
-        let mappingByName = findMappingByFigmaName(node.name);
+        const nodeName = String(node.name || '').trim();
 
-        if (!mappingByName && /^Item #\d+$/i.test(String(node.name || '').trim())) {
-            mappingByName = findMappingByFigmaName('<ListItem>');
-        }
-        if (!mappingByName && (node.name.startsWith('Cell #') || node.name.startsWith('cell #'))) {
-            const props = (node as any).componentProperties || {};
-            const hasSmallProp = Object.keys(props).some((key) => key.toLowerCase() === 'small');
-            if (hasSmallProp) {
-                mappingByName = findMappingByFigmaName('<TableCell>');
-            }
-        }
+        // List/Table 계열 예외는 "인스턴스여도" 동일하게 노드 이름 패턴으로 override 한다.
+        const isListItemSlot = /^Item #\d+$/i.test(nodeName);
+        const isTableCellSlot = nodeName.startsWith('Cell #') || nodeName.startsWith('cell #');
+        const props = (node as any).componentProperties || {};
+        const hasSmallProp = isTableCellSlot && Object.keys(props).some((key) => key.toLowerCase() === 'small');
 
-        // 2) 매칭 안 되면 라이브러리 이름, 3) 그다음 구조 추론
-        if (!mappingByName) {
-            mappingByName =
-                (libraryName ? findMappingByFigmaName(libraryName) : null) ||
-                this.inferMappingFromStructure(node);
+        // 1) (가능하면) componentId -> libraryName 기반 매핑
+        let mappingByResolvedInstanceName: ReturnType<typeof findMappingByFigmaName> | null =
+            libraryName ? findMappingByFigmaName(libraryName) : null;
+
+        // 2) 예외 override (Item #N / Cell #N)
+        if (isTableCellSlot && hasSmallProp) {
+            mappingByResolvedInstanceName = findMappingByFigmaName('<TableCell>');
+        } else if (isListItemSlot) {
+            mappingByResolvedInstanceName = findMappingByFigmaName('<ListItem>');
         }
 
-        const mapping = mappingByName || (componentType ? findMappingByType(componentType) : null);
+        // 3) INSTANCE는 libraryName 매핑이 있으면 확정. 실패했을 때만 node.name 기반 매핑으로 fallback
+        if (!mappingByResolvedInstanceName) {
+            mappingByResolvedInstanceName = findMappingByFigmaName(node.name);
+        }
+
+        // 4) 그래도 없으면 구조 추론 (마지막 fallback)
+        if (!mappingByResolvedInstanceName) {
+            mappingByResolvedInstanceName = this.inferMappingFromStructure(node);
+        }
+
+        const mapping = mappingByResolvedInstanceName || (componentType ? findMappingByType(componentType) : null);
 
         return {
             mapping,
-            normalizedComponentName: mappingByName?.figmaNames?.[0] || node.name,
+            normalizedComponentName: mappingByResolvedInstanceName?.figmaNames?.[0] || node.name,
             libraryName,
         };
     }
@@ -893,7 +902,10 @@ export class FigmaDesignExtractor {
      * @param context 컨텍스트 (Table의 small 값 등)
      * @returns 컴포넌트 디자인 설정
      */
-    private async extractComponentDesign(node: FigmaNode, context?: { tableSmall?: boolean }): Promise<ComponentDesignConfig | null> {
+    private async extractComponentDesign(
+        node: FigmaNode,
+        context?: { tableSmall?: boolean; lastTypographyText?: string | null },
+    ): Promise<ComponentDesignConfig | null> {
         // 숨김 노드는 완전히 제외 (추출 및 하위 조회 모두 스킵)
         if ((node as any)?.visible === false) {
             return null;
@@ -1025,7 +1037,12 @@ export class FigmaDesignExtractor {
             const children: ComponentDesignConfig[] = [];
             // Has Value=false Select의 라벨 텍스트가 Select 내부에서 안 잡히는 경우가 있어,
             // 같은 컨테이너(한 줄 툴바)에서 직전 Typography 텍스트를 label로 주입한다.
-            let lastTypographyText: string | null = null;
+            // 중첩 layout(Left Area > Stack > Instance #1)에서 부모의 Typography를 전달하기 위해 context로 넘긴다.
+            const layoutContext: { tableSmall?: boolean; lastTypographyText?: string | null } = {
+                ...context,
+                tableSmall: tableSmallContext?.tableSmall ?? context?.tableSmall,
+                lastTypographyText: context?.lastTypographyText ?? null,
+            };
             for (const child of node.children) {
                 // 숨김 레이어는 제외
                 if ((child as any)?.visible === false) {
@@ -1045,7 +1062,7 @@ export class FigmaDesignExtractor {
                         if (child.children) {
                             for (const nestedChild of child.children) {
                                 if ((nestedChild as any)?.visible === false) continue;
-                                const nestedComponent = await this.extractComponentDesign(nestedChild);
+                                const nestedComponent = await this.extractComponentDesign(nestedChild, layoutContext);
                                 if (nestedComponent) {
                                     children.push(nestedComponent);
                                 }
@@ -1085,7 +1102,7 @@ export class FigmaDesignExtractor {
                                 // <TableHead>의 속성 추출 (피그마 인스턴스에서 직접 Small 속성 추출)
                                 // 디버깅: <TableHead> 인스턴스의 componentProperties 확인
                                 console.log(`🔍 [<TableHead>] extractComponentProperties 호출 전: name=${headRowChild.name}, componentProperties=`, JSON.stringify((headRowChild as any).componentProperties || {}));
-                                const headCellProperties = await this.extractComponentProperties(headRowChild, tableSmallContext);
+                                const headCellProperties = await this.extractComponentProperties(headRowChild, layoutContext);
                                 console.log(`🔍 [<TableHead>] extractComponentProperties 호출 후: properties=`, JSON.stringify(headCellProperties));
                                 if (textContent) {
                                     headCellProperties.text = textContent;
@@ -1102,7 +1119,7 @@ export class FigmaDesignExtractor {
                                 tableCellChildren.push(tableCell);
                             } else {
                                 // 다른 타입의 children도 처리
-                                const headRowChildComponent = await this.extractComponentDesign(headRowChild, tableSmallContext);
+                                const headRowChildComponent = await this.extractComponentDesign(headRowChild, layoutContext);
                                 if (headRowChildComponent) {
                                     tableCellChildren.push(headRowChildComponent);
                                 }
@@ -1124,7 +1141,7 @@ export class FigmaDesignExtractor {
                         componentId: child.id,
                         componentName: '<TableHead>',
                         componentType: 'table',
-                        properties: await this.extractComponentProperties(child, tableSmallContext),
+                        properties: await this.extractComponentProperties(child, layoutContext),
                         children: [tableRow]
                     };
                     
@@ -1160,7 +1177,7 @@ export class FigmaDesignExtractor {
                                 // 피그마 인스턴스에서 직접 Small 속성 추출
                                 // 디버깅: <TableCell> 인스턴스의 componentProperties 확인
                                 console.log(`🔍 [<TableCell>] extractComponentProperties 호출 전: name=${cellRowChild.name}, componentProperties=`, JSON.stringify((cellRowChild as any).componentProperties || {}));
-                                const cellProperties = await this.extractComponentProperties(cellRowChild, tableSmallContext);
+                                const cellProperties = await this.extractComponentProperties(cellRowChild, layoutContext);
                                 console.log(`🔍 [<TableCell>] extractComponentProperties 호출 후: properties=`, JSON.stringify(cellProperties));
                                 
                                 // 재귀적으로 텍스트 내용 추출 (TableCell 안에 Box > Typography > TEXT 구조)
@@ -1186,7 +1203,7 @@ export class FigmaDesignExtractor {
                                         if ((cellChild as any)?.visible === false) continue;
                                         // TEXT 타입은 텍스트로 처리되므로 children에서 제외
                                         if (cellChild.type === 'TEXT') continue;
-                                        const cellChildComponent = await this.extractComponentDesign(cellChild);
+                                        const cellChildComponent = await this.extractComponentDesign(cellChild, layoutContext);
                                         if (cellChildComponent) {
                                             cellChildren.push(cellChildComponent);
                                         }
@@ -1207,7 +1224,7 @@ export class FigmaDesignExtractor {
                                 tableCellChildren.push(tableCell);
                             } else {
                                 // 다른 타입의 경우 TableCell로 변환
-                                const cellProperties = await this.extractComponentProperties(cellRowChild, tableSmallContext);
+                                const cellProperties = await this.extractComponentProperties(cellRowChild, layoutContext);
                                 
                                 // 재귀적으로 텍스트 내용 추출 (TableCell 안에 Box > Typography > TEXT 구조)
                                 const extractTextRecursively = (node: any): string => {
@@ -1232,7 +1249,7 @@ export class FigmaDesignExtractor {
                                         if ((cellChild as any)?.visible === false) continue;
                                         // TEXT 타입은 텍스트로 처리되므로 children에서 제외
                                         if (cellChild.type === 'TEXT') continue;
-                                        const cellChildComponent = await this.extractComponentDesign(cellChild, tableSmallContext);
+                                        const cellChildComponent = await this.extractComponentDesign(cellChild, layoutContext);
                                         if (cellChildComponent) {
                                             cellChildren.push(cellChildComponent);
                                         }
@@ -1260,7 +1277,7 @@ export class FigmaDesignExtractor {
                         componentId: child.id,
                         componentName: '<TableRow>',
                         componentType: 'table',
-                        properties: await this.extractComponentProperties(child, tableSmallContext),
+                        properties: await this.extractComponentProperties(child, layoutContext),
                         children: tableCellChildren
                     };
                     
@@ -1273,25 +1290,53 @@ export class FigmaDesignExtractor {
                     continue;
                 }
                 
-                // 모든 자식 노드 처리
-                let childComponent = await this.extractComponentDesign(child, tableSmallContext);
-                childComponent = await this.promoteLayoutWrapperToInnerButton(child, childComponent, tableSmallContext, node);
-
-                // 직전 Typography 텍스트 기억
-                if (childComponent?.componentType === 'typography') {
-                    const t = (childComponent.properties as any)?.text;
-                    if (typeof t === 'string' && t.trim()) lastTypographyText = t.trim();
+                // Stack 등 하위 layout 진입 전: 같은 레이아웃의 이전 형제 중 Typography/라벨성 노드에서만 텍스트 수집 (FilterToggleGroup 등 제외)
+                const isChildLayout = this.determineComponentType(child) === 'layout';
+                if (isChildLayout && (node.children || []).length > 1) {
+                    const labelLikeName = (n: any) => {
+                        const name = String(n?.name ?? '').toLowerCase();
+                        return name.includes('typography') || name === 'label' || name.includes('t label');
+                    };
+                    for (const prev of node.children || []) {
+                        if (prev === child) break;
+                        if ((prev as any)?.visible === false) continue;
+                        if (!labelLikeName(prev)) continue;
+                        let txt = findTextRecursively([prev as any]);
+                        if (!txt?.trim() && (prev as any).id && this.fileKey) {
+                            const fetched = await this.getFileNodes((prev as any).id);
+                            if (fetched) txt = findTextRecursively([fetched]);
+                        }
+                        if (txt && typeof txt === 'string' && txt.trim()) {
+                            layoutContext.lastTypographyText = txt.trim();
+                            break;
+                        }
+                    }
                 }
 
-                // Has Value=false Select인데 label이 비면, 직전 Typography 텍스트를 label로 승격
+                // 모든 자식 노드 처리
+                let childComponent = await this.extractComponentDesign(child, layoutContext);
+                childComponent = await this.promoteLayoutWrapperToInnerButton(child, childComponent, layoutContext, node);
+
+                // 직전 Typography 텍스트 기억 (중첩 layout으로 전달되도록 context에 반영)
+                // 인스턴스는 componentProperties에 텍스트가 없을 수 있으므로 노드 전체(자신+자식)에서 추출 (피그마 있는 그대로)
+                if (childComponent?.componentType === 'typography') {
+                    const fromProps = (childComponent.properties as any)?.text;
+                    const fromNode = findTextRecursively([child as any]);
+                    const t = (typeof fromProps === 'string' && fromProps.trim() ? fromProps : (fromNode || '')).trim();
+                    if (t) layoutContext.lastTypographyText = t;
+                }
+
+                // Has Value=false Select인데 label이 비면, 직전 Typography 텍스트를 label로 승격 (Stack 안 Select도 부모 Left Area의 Typography 사용)
                 if (childComponent) {
                     const mappingForChild = findMappingByFigmaName(childComponent.componentName) || findMappingByType(childComponent.componentType);
                     if (mappingForChild?.muiName === 'Select') {
                         const props = ((child as any).componentProperties || {}) as Record<string, unknown>;
                         const hasValue = getFigmaBooleanProp(child as any, 'Has Value', 'Has Value?', 'HasValue', 'HasValue?');
                         const hasLabel = typeof (childComponent.properties as any)?.label === 'string' && String((childComponent.properties as any)?.label).trim();
-                        if (hasValue === false && !hasLabel && lastTypographyText) {
-                            (childComponent.properties as any).label = lastTypographyText;
+                        const fallbackLabel = layoutContext.lastTypographyText ?? null;
+                        // Figma 응답에서 Has Value=false boolean이 누락되는 경우가 있어 undefined도 허용
+                        if ((hasValue === false || hasValue === undefined) && !hasLabel && fallbackLabel) {
+                            (childComponent.properties as any).label = fallbackLabel;
                         }
                     }
                 }
@@ -1428,21 +1473,27 @@ export class FigmaDesignExtractor {
     private determineComponentType(node: FigmaNode): ComponentDesignConfig['componentType'] | null {
         const name = node.name;
 
-        // 1. 새 매핑 시스템에서 MUI 컴포넌트 검색 (우선) - INSTANCE 타입도 처리
-        const mappingKey = findMappingKeyByFigmaName(name);
-        if (mappingKey) {
-            // 68개 매핑을 14개 카테고리로 분류
-            return this.categorizeComponentType(mappingKey);
-        }
-        // 1-1. @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
+        // 1. @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
         if (isCustomComponentFigmaName(name)) {
             return 'tabs';
         }
 
-        // 1-1-1. INSTANCE는 먼저 라이브러리(componentInfo) 기반으로 판정
+        // 2. INSTANCE면 componentId → 라이브러리 이름 기반 매핑을 1순위로 판정한다.
         // - 라이브러리에서 <Stack>, <Button> 등 실제 컴포넌트 이름을 가져와 매핑
         // - generic button/select 추론보다 먼저 실행해, Stack 인스턴스가 Button으로 오인되지 않도록 함
         if (node.type === 'INSTANCE' && (node as any).componentId) {
+            // 슬롯 예외: Item #N / Cell #N 은 레이어명 패턴이 의미를 가지므로 우선 처리
+            const nodeName = String(name || '').trim();
+            if (/^Item #\d+$/i.test(nodeName)) {
+                return 'list';
+            }
+            if (nodeName.startsWith('Cell #') || nodeName.startsWith('cell #')) {
+                const props = (node as any).componentProperties || {};
+                const hasSmallProp = Object.keys(props).some((key) => key.toLowerCase() === 'small');
+                if (hasSmallProp) {
+                    return 'table';
+                }
+            }
             const componentId = (node as any).componentId;
 
             // componentInfo에서 실제 컴포넌트 이름 가져오기
@@ -1464,6 +1515,10 @@ export class FigmaDesignExtractor {
                     !libLc.includes('button') &&
                     !libLc.includes('iconbutton')
                 ) {
+                    // 라이브러리명이 Stack처럼 보여도, 내부 구조가 Select/TextField 등으로 명확하면 그쪽을 우선
+                    const inferred = this.inferMappingFromStructure(node);
+                    const inferredKey = inferred?.figmaNames?.[0] ? findMappingKeyByFigmaName(inferred.figmaNames[0]) : null;
+                    if (inferredKey) return this.categorizeComponentType(inferredKey);
                     return 'layout';
                 }
                 if (
@@ -1472,6 +1527,10 @@ export class FigmaDesignExtractor {
                     !libLc.includes('textfield') &&
                     !libLc.includes('text field')
                 ) {
+                    // 라이브러리명이 Box처럼 보여도, 내부 구조가 Select/TextField 등으로 명확하면 그쪽을 우선
+                    const inferred = this.inferMappingFromStructure(node);
+                    const inferredKey = inferred?.figmaNames?.[0] ? findMappingKeyByFigmaName(inferred.figmaNames[0]) : null;
+                    if (inferredKey) return this.categorizeComponentType(inferredKey);
                     return 'layout';
                 }
                 // @/components 커스텀 컴포넌트 (매핑 없이 이름만 인식)
@@ -1599,6 +1658,13 @@ export class FigmaDesignExtractor {
                     return 'layout';
                 }
             }
+        }
+
+        // 3. 새 매핑 시스템에서 MUI 컴포넌트 검색 (레이어명 기반) - INSTANCE 매핑 실패 시 fallback
+        const mappingKey = findMappingKeyByFigmaName(name);
+        if (mappingKey) {
+            // 68개 매핑을 14개 카테고리로 분류
+            return this.categorizeComponentType(mappingKey);
         }
 
         // 1-2. FRAME은 항상 layout(Stack/Box)으로 처리하여 중첩 Stack 구조 보존

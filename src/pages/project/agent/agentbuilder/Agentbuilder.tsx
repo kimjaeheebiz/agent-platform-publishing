@@ -46,13 +46,7 @@ export const Agentbuilder: React.FC = () => {
                     borderBottomColor: 'divider',
                 }}
             >
-                <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{
-                        p: '0px',
-                    }}
-                >
+                <Stack direction="row" spacing={1}>
                     <Button variant="contained" size="small" color="secondary">
                         변수 설정
                     </Button>
@@ -69,20 +63,18 @@ export const Agentbuilder: React.FC = () => {
                         비동기 실행 결과
                     </Button>
                 </Stack>
-                <Stack
-                    direction="row"
-                    spacing={1}
-                    alignItems="center"
-                    justifyContent="flex-end"
-                    sx={{
-                        p: '0px',
-                    }}
-                >
+                <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
                     <Button variant="contained" size="small">
                         저장
                     </Button>
                     <Button variant="outlined" size="small" color="secondary">
                         저장 이력
+                    </Button>
+                    <Button variant="outlined" size="small" color="secondary">
+                        가져오기
+                    </Button>
+                    <Button variant="outlined" size="small" color="secondary">
+                        내보내기
                     </Button>
                     <Button variant="outlined" size="small">
                         테스트 실행
@@ -97,36 +89,32 @@ export const Agentbuilder: React.FC = () => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
-                    p: '0px',
                 }}
             >
-                <Stack
-                    sx={{
-                        p: '0px',
-                    }}
-                >
+                <Stack>
                     <Paper>
-                        <Stack
-                            spacing={1}
-                            sx={{
-                                p: '0px',
-                            }}
-                        >
+                        <Stack spacing={1}>
                             <Stack
                                 sx={{
-                                    p: '0px',
                                     borderBottom: '1px solid',
                                     borderBottomColor: 'divider',
                                 }}
                             >
-                                <Stack
-                                    direction="row"
-                                    sx={{
-                                        p: '0px',
-                                    }}
-                                >
-                                    <Tab label="" />
-                                    <Tab label="" />
+                                <Stack direction="row">
+                                    <Tab
+                                        sx={{
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                        label=""
+                                    />
+                                    <Tab
+                                        sx={{
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                        label=""
+                                    />
                                 </Stack>
                             </Stack>
                             <Stack
@@ -139,6 +127,7 @@ export const Agentbuilder: React.FC = () => {
                                 }}
                             >
                                 <TextField
+                                    size="small"
                                     slotProps={{
                                         input: {
                                             startAdornment: (
@@ -155,7 +144,6 @@ export const Agentbuilder: React.FC = () => {
                             </Stack>
                             <Stack
                                 sx={{
-                                    p: '0px',
                                     borderTop: '1px solid',
                                     borderTopColor: 'divider',
                                 }}
@@ -175,21 +163,8 @@ export const Agentbuilder: React.FC = () => {
                                             px: '16px',
                                         }}
                                     >
-                                        <Stack
-                                            direction="row"
-                                            spacing={0.5}
-                                            alignItems="center"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                spacing={0.5}
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" spacing={0.5} alignItems="center">
+                                            <Stack direction="row" spacing={0.5}>
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -216,7 +191,6 @@ export const Agentbuilder: React.FC = () => {
                                                     <Stack
                                                         justifyContent="center"
                                                         sx={{
-                                                            p: '0px',
                                                             height: '18px',
                                                             backgroundColor: 'text.secondary',
                                                         }}
@@ -229,20 +203,8 @@ export const Agentbuilder: React.FC = () => {
                                                 <ContentCopy />
                                             </IconButton>
                                         </Stack>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Stack direction="row" alignItems="center">
                                                 <Typography
                                                     sx={{
                                                         borderRadius: '4px',
@@ -270,21 +232,8 @@ export const Agentbuilder: React.FC = () => {
                                             px: '16px',
                                         }}
                                     >
-                                        <Stack
-                                            direction="row"
-                                            spacing={0.5}
-                                            alignItems="center"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                spacing={0.5}
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" spacing={0.5} alignItems="center">
+                                            <Stack direction="row" spacing={0.5}>
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -311,7 +260,6 @@ export const Agentbuilder: React.FC = () => {
                                                     <Stack
                                                         justifyContent="center"
                                                         sx={{
-                                                            p: '0px',
                                                             height: '18px',
                                                             backgroundColor: 'text.secondary',
                                                         }}
@@ -324,20 +272,8 @@ export const Agentbuilder: React.FC = () => {
                                                 <ContentCopy />
                                             </IconButton>
                                         </Stack>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Stack direction="row" alignItems="center">
                                                 <Typography
                                                     sx={{
                                                         borderRadius: '4px',
@@ -364,21 +300,8 @@ export const Agentbuilder: React.FC = () => {
                                             px: '16px',
                                         }}
                                     >
-                                        <Stack
-                                            direction="row"
-                                            spacing={0.5}
-                                            alignItems="center"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                spacing={0.5}
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" spacing={0.5} alignItems="center">
+                                            <Stack direction="row" spacing={0.5}>
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -405,7 +328,6 @@ export const Agentbuilder: React.FC = () => {
                                                     <Stack
                                                         justifyContent="center"
                                                         sx={{
-                                                            p: '0px',
                                                             height: '18px',
                                                             backgroundColor: 'text.secondary',
                                                         }}
@@ -418,20 +340,8 @@ export const Agentbuilder: React.FC = () => {
                                                 <ContentCopy />
                                             </IconButton>
                                         </Stack>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Stack direction="row" alignItems="center">
                                                 <Typography
                                                     sx={{
                                                         borderRadius: '4px',
@@ -458,21 +368,8 @@ export const Agentbuilder: React.FC = () => {
                                             px: '16px',
                                         }}
                                     >
-                                        <Stack
-                                            direction="row"
-                                            spacing={0.5}
-                                            alignItems="center"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                spacing={0.5}
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" spacing={0.5} alignItems="center">
+                                            <Stack direction="row" spacing={0.5}>
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -499,7 +396,6 @@ export const Agentbuilder: React.FC = () => {
                                                     <Stack
                                                         justifyContent="center"
                                                         sx={{
-                                                            p: '0px',
                                                             height: '18px',
                                                             backgroundColor: 'text.secondary',
                                                         }}
@@ -512,20 +408,8 @@ export const Agentbuilder: React.FC = () => {
                                                 <ContentCopy />
                                             </IconButton>
                                         </Stack>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Stack direction="row" alignItems="center">
                                                 <Typography
                                                     sx={{
                                                         borderRadius: '4px',
@@ -552,21 +436,8 @@ export const Agentbuilder: React.FC = () => {
                                             px: '16px',
                                         }}
                                     >
-                                        <Stack
-                                            direction="row"
-                                            spacing={0.5}
-                                            alignItems="center"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                spacing={0.5}
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" spacing={0.5} alignItems="center">
+                                            <Stack direction="row" spacing={0.5}>
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -593,7 +464,6 @@ export const Agentbuilder: React.FC = () => {
                                                     <Stack
                                                         justifyContent="center"
                                                         sx={{
-                                                            p: '0px',
                                                             height: '18px',
                                                             backgroundColor: 'text.secondary',
                                                         }}
@@ -606,20 +476,8 @@ export const Agentbuilder: React.FC = () => {
                                                 <ContentCopy />
                                             </IconButton>
                                         </Stack>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Stack direction="row" alignItems="center">
                                                 <Typography
                                                     sx={{
                                                         borderRadius: '4px',
@@ -646,21 +504,8 @@ export const Agentbuilder: React.FC = () => {
                                             px: '16px',
                                         }}
                                     >
-                                        <Stack
-                                            direction="row"
-                                            spacing={0.5}
-                                            alignItems="center"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                spacing={0.5}
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" spacing={0.5} alignItems="center">
+                                            <Stack direction="row" spacing={0.5}>
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -687,7 +532,6 @@ export const Agentbuilder: React.FC = () => {
                                                     <Stack
                                                         justifyContent="center"
                                                         sx={{
-                                                            p: '0px',
                                                             height: '18px',
                                                             backgroundColor: 'text.secondary',
                                                         }}
@@ -700,20 +544,8 @@ export const Agentbuilder: React.FC = () => {
                                                 <ContentCopy />
                                             </IconButton>
                                         </Stack>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            sx={{
-                                                p: '0px',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                sx={{
-                                                    p: '0px',
-                                                }}
-                                            >
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Stack direction="row" alignItems="center">
                                                 <Typography
                                                     sx={{
                                                         borderRadius: '4px',
@@ -731,7 +563,6 @@ export const Agentbuilder: React.FC = () => {
                 </Stack>
                 <Stack
                     sx={{
-                        p: '0px',
                         backgroundColor: 'background.defaultLightgray',
                     }}
                 >
@@ -745,7 +576,6 @@ export const Agentbuilder: React.FC = () => {
                             direction="row"
                             spacing={1}
                             sx={{
-                                p: '0px',
                                 borderRadius: '4px',
                             }}
                         >
@@ -769,7 +599,6 @@ export const Agentbuilder: React.FC = () => {
                             direction="row"
                             spacing={1}
                             sx={{
-                                p: '0px',
                                 borderRadius: '4px',
                             }}
                         >
