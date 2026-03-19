@@ -770,7 +770,7 @@
     },
     "9": {
       "$type": "lineHeights",
-      "$value": "160%"
+      "$value": "120%"
     },
     "10": {
       "$type": "lineHeights",
@@ -850,7 +850,7 @@
     },
     "29": {
       "$type": "lineHeights",
-      "$value": 48
+      "$value": 36
     },
     "30": {
       "$type": "lineHeights",
@@ -858,7 +858,7 @@
     },
     "31": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": "150%"
     },
     "32": {
       "$type": "lineHeights",
@@ -1377,7 +1377,7 @@
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.9}",
+        "lineHeight": "{lineHeights.0}",
         "fontSize": "{fontSize.3}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -1705,8 +1705,8 @@
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
-        "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "lineHeight": "{lineHeights.6}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
