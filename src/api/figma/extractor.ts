@@ -20,6 +20,7 @@ import { findDescendantByName, findTextRecursively, getFigmaBooleanProp } from '
 const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
     '<FavoriteButton>', 'FavoriteButton',
     '<StatusChip>', 'StatusChip',
+    '<ServerChip>', 'ServerChip',
     '<FilterToggleGroup>', 'FilterToggleGroup',
 ]);
 
@@ -1000,8 +1001,9 @@ export class FigmaDesignExtractor {
         const isMenuList = figmaNameMapping?.muiName === 'MenuList';
         const isList = figmaNameMapping?.muiName === 'List';
         const isDrawer = figmaNameMapping?.muiName === 'Drawer';
+        const isAccordion = figmaNameMapping?.muiName === 'Accordion';
 
-        if ((isLayout || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isList || isDrawer) && node.children) {
+        if ((isLayout || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isList || isDrawer || isAccordion) && node.children) {
 
             // ✅ 매핑에서 extractChildren이 있는지 확인
             const mapping = findMappingByType(componentType);
@@ -1819,6 +1821,8 @@ export class FigmaDesignExtractor {
             'listItemText': 'list',
             'listItemIcon': 'list',
             'accordion': 'list',
+            'accordionSummary': 'list',
+            'accordionDetails': 'list',
 
             // Tabs 카테고리
             'toggleButtonGroup': 'tabs',
@@ -2577,6 +2581,28 @@ export class FigmaDesignExtractor {
                     }
                     if (typeof value === 'string') {
                         (properties as any).status = value.toLowerCase();
+                    }
+                }
+            }
+        } catch {}
+
+        // ServerChip: Figma State → state (local/dev/stage)
+        try {
+            const nodeName = (node as any).name || '';
+            const isServerChip = nodeName === '<ServerChip>' || nodeName === 'ServerChip';
+            if (isServerChip) {
+                const rawProps = (node as any).componentProperties || {};
+                const stateKey = Object.keys(rawProps).find((key) => key.toLowerCase() === 'state');
+                if (stateKey) {
+                    const raw = (rawProps as any)[stateKey];
+                    let value: any;
+                    if (raw && typeof raw === 'object' && 'value' in raw) {
+                        value = (raw as any).value;
+                    } else {
+                        value = raw;
+                    }
+                    if (typeof value === 'string') {
+                        (properties as any).state = value.toLowerCase();
                     }
                 }
             }

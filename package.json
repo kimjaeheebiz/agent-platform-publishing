@@ -10,7 +10,7 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "build:theme": "npx --yes tsx design-system/generators/to-mui-theme.ts",
+        "build:theme": "npx --yes tsx design-system/generators/to-mui-theme.ts && npx --yes tsx design-system/generators/merge-theme-with-app-components.ts",
         "figma:setup": "npx tsx scripts/figma-sync-cli.ts setup",
         "figma:page": "npx tsx scripts/figma-sync-cli.ts generate-content",
         "figma:pages": "npx tsx scripts/figma-sync-cli.ts generate-content",

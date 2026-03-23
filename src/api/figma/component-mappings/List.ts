@@ -16,7 +16,8 @@ function isListItemLikeNode(node: FigmaNode | undefined): boolean {
  * List의 직계 자식 중 ListItem으로 쓸 노드만 반환.
  * Figma에서 List > Stack > [Stack, Stack, ...] 처럼 래퍼가 있으면 한 단계 풀어서 Item 또는 ListItem 구조 노드를 직접 자식으로 넣음.
  */
-async function extractListChildren(node: FigmaNode): Promise<FigmaNode[]> {
+/** List / AccordionDetails 등에서 ListItem 후보만 골라낼 때 공용 */
+export async function extractListChildren(node: FigmaNode): Promise<FigmaNode[]> {
     const direct = (node.children || []).filter((c: any) => c?.visible !== false);
     const out: FigmaNode[] = [];
     for (const child of direct) {

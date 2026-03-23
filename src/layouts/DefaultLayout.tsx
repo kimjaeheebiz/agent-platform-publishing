@@ -1,9 +1,9 @@
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { PageHeader } from './PageHeader';
+import { ProjectSubmenuTabs } from './ProjectSubmenuTabs';
 import { useRouterPageTitle } from '@/hooks/useRouterPageTitle';
 import { HEADER_HEIGHT, findRouteByUrl } from '@/config';
 import { useColorMode } from '@/contexts/ColorModeContext';
@@ -13,10 +13,6 @@ export const DefaultLayout = () => {
 
     const location = useLocation();
     const currentRoute = findRouteByUrl(location.pathname);
-
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
     const { toggleTheme } = useColorMode();
 
     return (
@@ -27,10 +23,11 @@ export const DefaultLayout = () => {
                 height: '100vh',
                 overflow: 'hidden',
                 pt: `${HEADER_HEIGHT}px`,
+                backgroundColor: 'background.default',
             }}
         >
             {/* <Header> */}
-            <Header onMenuToggle={() => setSidebarOpen(!sidebarOpen)} onToggleTheme={toggleTheme} />
+            <Header onToggleTheme={toggleTheme} />
 
             {/* MainArea */}
             <Box
@@ -41,7 +38,7 @@ export const DefaultLayout = () => {
                 }}
             >
                 {/* <Sidebar> */}
-                <Sidebar open={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+                <Sidebar />
 
                 {/* Main */}
                 <Box
@@ -53,6 +50,7 @@ export const DefaultLayout = () => {
                         overflow: 'auto',
                     }}
                 >
+                    <ProjectSubmenuTabs />
                     {/* <PageHeader> */}
                     {currentRoute && currentRoute.showPageHeader && <PageHeader title={currentRoute.title} />}
 

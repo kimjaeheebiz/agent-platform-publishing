@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Button, Card, CardContent } from '@mui/material';
+import { Grid, Box, Typography, Button, Card, CardContent, Stack, Chip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ArrowForward } from '@mui/icons-material';
 
@@ -45,9 +45,12 @@ const HomeContent = () => {
                 <Grid size={6}>
                     <Card variant="outlined">
                         <CardContent>
-                            <Typography variant="h5" component="h3" gutterBottom>
-                                프로젝트 / 에이전트 / 에이전트 빌더
-                            </Typography>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography variant="h5" component="h3" gutterBottom>
+                                    프로젝트 / 에이전트 / 에이전트 빌더
+                                </Typography>
+                                <Chip label="작업 중" color="error" size="small" />
+                            </Stack>
                             <Typography sx={{ mb: 2 }}>프로젝트별 에이전트의 워크플로우 관리</Typography>
                             <Button
                                 variant="contained"
@@ -62,9 +65,12 @@ const HomeContent = () => {
                 <Grid size={6}>
                     <Card variant="outlined">
                         <CardContent>
-                            <Typography variant="h5" component="h3" gutterBottom>
-                                계정 정보
-                            </Typography>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography variant="h5" component="h3" gutterBottom>
+                                    계정 정보
+                                </Typography>
+                                <Chip label="작업 중" color="error" size="small" />
+                            </Stack>
                             <Typography sx={{ mb: 2 }}>계정 정보</Typography>
                             <Button variant="contained" endIcon={<ArrowForward />} onClick={() => navigate('/account')}>
                                 계정 정보

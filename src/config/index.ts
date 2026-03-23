@@ -32,7 +32,7 @@ export type {
 } from './app';
 
 // Navigation
-export { NAVIGATION_MENU, MAIN_MENUS, getMainMenuTitle } from './navigation';
+export { NAVIGATION_MENU, MAIN_MENUS, getMainMenuTitle, getProjectSubmenuTabs } from './navigation';
 
 // Pages
 export { PAGES, findPageById } from './pages';

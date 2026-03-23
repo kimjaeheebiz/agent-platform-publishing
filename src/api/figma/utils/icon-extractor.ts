@@ -660,6 +660,43 @@ export async function extractIconsForMenuItem(
 }
 
 /**
+ * AccordionSummary: 피그마 레이어 "Accordion Expand Icon" 아래 첫 아이콘 → MUI expandIcon
+ */
+export async function extractIconsForAccordionSummary(node: FigmaNode, extractor?: any): Promise<IconData> {
+    const result: IconData = {};
+    const expandSlot = findDescendantByName(node, /Accordion Expand Icon/i);
+    if (!expandSlot) return result;
+    const iconNode = findFirstIconLikeDescendant(expandSlot as any);
+    if (!iconNode) return result;
+
+    const iconComponentId = (iconNode as any).componentId as string | undefined;
+    const iconProps = (iconNode as any).componentProperties || {};
+    let swappedId: string | undefined;
+    for (const [key, raw] of Object.entries(iconProps)) {
+        const prop = raw as any;
+        if (prop?.type === 'INSTANCE_SWAP' && (key.toLowerCase().includes('instance') || key.toLowerCase().includes('icon'))) {
+            swappedId = prop.value as string | undefined;
+            if (swappedId) break;
+        }
+    }
+    const effectiveId = swappedId || iconComponentId;
+    if (!effectiveId) return result;
+
+    const discoveredName = normalizeFigmaNodeName((iconNode as any).name);
+    const fetchedName = await fetchIconName(effectiveId, extractor);
+    const resolvedName = normalizeFigmaNodeName(fetchedName || discoveredName);
+    if (!resolvedName || resolvedName === 'Icon') return result;
+
+    result.endIconComponentId = effectiveId;
+    result.endIcon = resolvedName;
+    const sizeRaw = getPropValue(iconProps as Record<string, unknown>, 'Size');
+    if (typeof sizeRaw === 'string' && sizeRaw.trim() && /^(Small|Medium|Large|Inherit)$/i.test(sizeRaw.trim())) {
+        result.endIconSize = sizeRaw.trim();
+    }
+    return result;
+}
+
+/**
  * 범용 Icon 추출 (모든 위치 지원)
  */
 export async function extractIconsUniversal(

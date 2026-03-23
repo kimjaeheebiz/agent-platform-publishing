@@ -2,24 +2,22 @@ import React from 'react';
 import {
     Box,
     Button,
-    Chip,
     IconButton,
-    InputAdornment,
     ListItem,
     ListItemText,
+    Menu,
+    MenuItem,
     Paper,
     Stack,
-    Tab,
-    TextField,
+    Tabs,
     Typography,
 } from '@mui/material';
 import {
     AddCircleOutlineOutlined,
-    ContentCopy,
+    ChevronLeft,
     CropFreeOutlined,
     RedoOutlined,
     RemoveCircleOutlineOutlined,
-    Search,
     UndoOutlined,
 } from '@mui/icons-material';
 
@@ -51,36 +49,27 @@ export const Agentbuilder: React.FC = () => {
                         변수 설정
                     </Button>
                     <Button variant="outlined" size="small" color="secondary">
-                        세션 설정
+                        에이전트 설정
                     </Button>
-                    <Button variant="outlined" size="small" color="secondary">
-                        배포 관리
+                    <Button variant="contained" size="small" color="inherit">
+                        가져오기
                     </Button>
-                    <Button variant="outlined" size="small" color="secondary">
-                        스케쥴링 설정
-                    </Button>
-                    <Button variant="outlined" size="small" color="secondary">
-                        비동기 실행 결과
+                    <Button variant="contained" size="small" color="inherit">
+                        내보내기
                     </Button>
                 </Stack>
                 <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+                    <Button variant="contained" size="small" color="inherit">
+                        저장 이력
+                    </Button>
                     <Button variant="contained" size="small">
                         저장
                     </Button>
                     <Button variant="outlined" size="small" color="secondary">
-                        저장 이력
-                    </Button>
-                    <Button variant="outlined" size="small" color="secondary">
-                        가져오기
-                    </Button>
-                    <Button variant="outlined" size="small" color="secondary">
-                        내보내기
-                    </Button>
-                    <Button variant="outlined" size="small">
                         테스트 실행
                     </Button>
                     <Button variant="contained" size="small" color="secondary">
-                        노드 모음
+                        노드 추가
                     </Button>
                 </Stack>
             </Stack>
@@ -93,529 +82,166 @@ export const Agentbuilder: React.FC = () => {
             >
                 <Stack>
                     <Paper>
-                        <Stack spacing={1}>
-                            <Stack
-                                sx={{
-                                    borderBottom: '1px solid',
-                                    borderBottomColor: 'divider',
-                                }}
-                            >
-                                <Stack direction="row">
-                                    <Tab
-                                        sx={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                        label=""
-                                    />
-                                    <Tab
-                                        sx={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                        label=""
-                                    />
-                                </Stack>
-                            </Stack>
-                            <Stack
-                                direction="row"
-                                spacing={1}
-                                alignItems="center"
-                                sx={{
-                                    py: '0px',
-                                    px: '16px',
-                                }}
-                            >
-                                <TextField
-                                    size="small"
-                                    slotProps={{
-                                        input: {
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <Search />
-                                                </InputAdornment>
-                                            ),
-                                        },
-                                    }}
-                                ></TextField>
-                                <Button variant="outlined" size="small">
-                                    설정
-                                </Button>
-                            </Stack>
-                            <Stack
-                                sx={{
-                                    borderTop: '1px solid',
-                                    borderTopColor: 'divider',
-                                }}
-                            >
-                                <Stack
-                                    sx={{
-                                        py: '3px',
-                                        px: '0px',
-                                        borderBottom: '1px solid',
-                                        borderBottomColor: 'divider',
-                                    }}
-                                >
-                                    <Stack
-                                        justifyContent="center"
-                                        sx={{
-                                            py: '4px',
-                                            px: '16px',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    sx={{
-                                                        py: '2px',
-                                                        px: '0px',
-                                                        backgroundColor: 'text.primary',
-                                                    }}
-                                                >
-                                                    $name
-                                                </Stack>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    sx={{
-                                                        py: '3px',
-                                                        px: '6px',
-                                                        height: '18px',
-                                                        backgroundColor: 'action.selected',
-                                                        borderRadius: '100px',
-                                                    }}
-                                                >
-                                                    <Stack
-                                                        justifyContent="center"
-                                                        sx={{
-                                                            height: '18px',
-                                                            backgroundColor: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Chip label="" />
-                                                    </Stack>
-                                                </Stack>
-                                            </Stack>
-                                            <IconButton color="default">
-                                                <ContentCopy />
-                                            </IconButton>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Stack direction="row" alignItems="center">
-                                                <Typography
-                                                    sx={{
-                                                        borderRadius: '4px',
-                                                    }}
-                                                >
-                                                    &#123;
-                                                </Typography>
-                                            </Stack>
-                                            <Button size="xsmall"></Button>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                                <Stack
-                                    sx={{
-                                        py: '3px',
-                                        px: '0px',
-                                        borderBottom: '1px solid',
-                                        borderBottomColor: 'divider',
-                                    }}
-                                >
-                                    <Stack
-                                        justifyContent="center"
-                                        sx={{
-                                            py: '4px',
-                                            px: '16px',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    sx={{
-                                                        py: '2px',
-                                                        px: '0px',
-                                                        backgroundColor: 'text.primary',
-                                                    }}
-                                                >
-                                                    $name
-                                                </Stack>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    sx={{
-                                                        py: '3px',
-                                                        px: '6px',
-                                                        height: '18px',
-                                                        backgroundColor: 'action.selected',
-                                                        borderRadius: '100px',
-                                                    }}
-                                                >
-                                                    <Stack
-                                                        justifyContent="center"
-                                                        sx={{
-                                                            height: '18px',
-                                                            backgroundColor: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Chip label="" />
-                                                    </Stack>
-                                                </Stack>
-                                            </Stack>
-                                            <IconButton color="default">
-                                                <ContentCopy />
-                                            </IconButton>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Stack direction="row" alignItems="center">
-                                                <Typography
-                                                    sx={{
-                                                        borderRadius: '4px',
-                                                    }}
-                                                >
-                                                    Value
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                                <Stack
-                                    sx={{
-                                        py: '3px',
-                                        px: '0px',
-                                        borderBottom: '1px solid',
-                                        borderBottomColor: 'divider',
-                                    }}
-                                >
-                                    <Stack
-                                        justifyContent="center"
-                                        sx={{
-                                            py: '4px',
-                                            px: '16px',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    sx={{
-                                                        py: '2px',
-                                                        px: '0px',
-                                                        backgroundColor: 'text.primary',
-                                                    }}
-                                                >
-                                                    $name
-                                                </Stack>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    sx={{
-                                                        py: '3px',
-                                                        px: '6px',
-                                                        height: '18px',
-                                                        backgroundColor: 'action.selected',
-                                                        borderRadius: '100px',
-                                                    }}
-                                                >
-                                                    <Stack
-                                                        justifyContent="center"
-                                                        sx={{
-                                                            height: '18px',
-                                                            backgroundColor: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Chip label="" />
-                                                    </Stack>
-                                                </Stack>
-                                            </Stack>
-                                            <IconButton color="default">
-                                                <ContentCopy />
-                                            </IconButton>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Stack direction="row" alignItems="center">
-                                                <Typography
-                                                    sx={{
-                                                        borderRadius: '4px',
-                                                    }}
-                                                >
-                                                    Value
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                                <Stack
-                                    sx={{
-                                        py: '3px',
-                                        px: '0px',
-                                        borderBottom: '1px solid',
-                                        borderBottomColor: 'divider',
-                                    }}
-                                >
-                                    <Stack
-                                        justifyContent="center"
-                                        sx={{
-                                            py: '4px',
-                                            px: '16px',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    sx={{
-                                                        py: '2px',
-                                                        px: '0px',
-                                                        backgroundColor: 'text.primary',
-                                                    }}
-                                                >
-                                                    $name
-                                                </Stack>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    sx={{
-                                                        py: '3px',
-                                                        px: '6px',
-                                                        height: '18px',
-                                                        backgroundColor: 'action.selected',
-                                                        borderRadius: '100px',
-                                                    }}
-                                                >
-                                                    <Stack
-                                                        justifyContent="center"
-                                                        sx={{
-                                                            height: '18px',
-                                                            backgroundColor: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Chip label="" />
-                                                    </Stack>
-                                                </Stack>
-                                            </Stack>
-                                            <IconButton color="default">
-                                                <ContentCopy />
-                                            </IconButton>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Stack direction="row" alignItems="center">
-                                                <Typography
-                                                    sx={{
-                                                        borderRadius: '4px',
-                                                    }}
-                                                >
-                                                    Value
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                                <Stack
-                                    sx={{
-                                        py: '3px',
-                                        px: '0px',
-                                        borderBottom: '1px solid',
-                                        borderBottomColor: 'divider',
-                                    }}
-                                >
-                                    <Stack
-                                        justifyContent="center"
-                                        sx={{
-                                            py: '4px',
-                                            px: '16px',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    sx={{
-                                                        py: '2px',
-                                                        px: '0px',
-                                                        backgroundColor: 'text.primary',
-                                                    }}
-                                                >
-                                                    $name
-                                                </Stack>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    sx={{
-                                                        py: '3px',
-                                                        px: '6px',
-                                                        height: '18px',
-                                                        backgroundColor: 'action.selected',
-                                                        borderRadius: '100px',
-                                                    }}
-                                                >
-                                                    <Stack
-                                                        justifyContent="center"
-                                                        sx={{
-                                                            height: '18px',
-                                                            backgroundColor: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Chip label="" />
-                                                    </Stack>
-                                                </Stack>
-                                            </Stack>
-                                            <IconButton color="default">
-                                                <ContentCopy />
-                                            </IconButton>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Stack direction="row" alignItems="center">
-                                                <Typography
-                                                    sx={{
-                                                        borderRadius: '4px',
-                                                    }}
-                                                >
-                                                    Value
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                                <Stack
-                                    sx={{
-                                        py: '3px',
-                                        px: '0px',
-                                        borderBottom: '1px solid',
-                                        borderBottomColor: 'divider',
-                                    }}
-                                >
-                                    <Stack
-                                        justifyContent="center"
-                                        sx={{
-                                            py: '4px',
-                                            px: '16px',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    sx={{
-                                                        py: '2px',
-                                                        px: '0px',
-                                                        backgroundColor: 'text.primary',
-                                                    }}
-                                                >
-                                                    $name
-                                                </Stack>
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    sx={{
-                                                        py: '3px',
-                                                        px: '6px',
-                                                        height: '18px',
-                                                        backgroundColor: 'action.selected',
-                                                        borderRadius: '100px',
-                                                    }}
-                                                >
-                                                    <Stack
-                                                        justifyContent="center"
-                                                        sx={{
-                                                            height: '18px',
-                                                            backgroundColor: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Chip label="" />
-                                                    </Stack>
-                                                </Stack>
-                                            </Stack>
-                                            <IconButton color="default">
-                                                <ContentCopy />
-                                            </IconButton>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Stack direction="row" alignItems="center">
-                                                <Typography
-                                                    sx={{
-                                                        borderRadius: '4px',
-                                                    }}
-                                                >
-                                                    Value
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                            </Stack>
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            sx={{
+                                py: '0px',
+                                pl: '0px',
+                                pr: '16px',
+                                border: '1px solid',
+                                borderColor: 'divider',
+                            }}
+                        >
+                            <Tabs></Tabs>
                         </Stack>
                     </Paper>
+                    <IconButton color="default">
+                        <ChevronLeft />
+                    </IconButton>
                 </Stack>
                 <Stack
                     sx={{
                         backgroundColor: 'background.defaultLightgray',
                     }}
                 >
-                    <Stack></Stack>
-                    <Paper
-                        sx={{
-                            borderRadius: '4px',
-                        }}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={1}
+                    <Stack>
+                        <Menu
+                            open
+                            slotProps={{ list: { dense: true } }}
+                            sx={{
+                                width: '160px',
+                            }}
+                        >
+                            <MenuItem
+                                dense
+                                sx={{
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                부드러운 선
+                            </MenuItem>
+                            <MenuItem
+                                dense
+                                sx={{
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                꺽은 선
+                            </MenuItem>
+                        </Menu>
+                    </Stack>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Paper
                             sx={{
                                 borderRadius: '4px',
                             }}
                         >
-                            <IconButton color="default">
-                                <CropFreeOutlined />
-                            </IconButton>
-                            <IconButton color="default">
-                                <AddCircleOutlineOutlined />
-                            </IconButton>
-                            <IconButton color="default">
-                                <RemoveCircleOutlineOutlined />
-                            </IconButton>
-                        </Stack>
-                    </Paper>
-                    <Paper
-                        sx={{
-                            borderRadius: '4px',
-                        }}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={1}
+                            <Button size="xsmall"></Button>
+                        </Paper>
+                        <Paper
                             sx={{
                                 borderRadius: '4px',
                             }}
                         >
-                            <IconButton color="default">
-                                <UndoOutlined />
-                            </IconButton>
-                            <IconButton color="default">
-                                <RedoOutlined />
-                            </IconButton>
+                            <Stack
+                                direction="row"
+                                spacing={0.5}
+                                sx={{
+                                    borderRadius: '4px',
+                                }}
+                            >
+                                <IconButton color="default">
+                                    <CropFreeOutlined />
+                                </IconButton>
+                                <IconButton color="default">
+                                    <AddCircleOutlineOutlined />
+                                </IconButton>
+                                <IconButton color="default">
+                                    <RemoveCircleOutlineOutlined />
+                                </IconButton>
+                            </Stack>
+                        </Paper>
+                        <Paper
+                            sx={{
+                                borderRadius: '4px',
+                            }}
+                        >
+                            <Stack
+                                direction="row"
+                                spacing={0.5}
+                                sx={{
+                                    borderRadius: '4px',
+                                }}
+                            >
+                                <IconButton color="default">
+                                    <UndoOutlined />
+                                </IconButton>
+                                <IconButton color="default">
+                                    <RedoOutlined />
+                                </IconButton>
+                            </Stack>
+                        </Paper>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            p: '8px',
+                            backgroundColor: '_components.paper.elevation-0',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: '16px',
+                        }}
+                    >
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Button
+                                color="success"
+                                sx={{
+                                    height: '32px',
+                                }}
+                            ></Button>
+                            <Typography variant="body2">시작</Typography>
                         </Stack>
-                    </Paper>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            p: '8px',
+                            backgroundColor: '_components.paper.elevation-0',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: '16px',
+                        }}
+                    >
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Button
+                                color="info"
+                                sx={{
+                                    height: '32px',
+                                }}
+                            ></Button>
+                            <Typography variant="body2">코드 실행</Typography>
+                        </Stack>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            p: '8px',
+                            backgroundColor: '_components.paper.elevation-0',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: '16px',
+                        }}
+                    >
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Button
+                                color="info"
+                                sx={{
+                                    height: '32px',
+                                }}
+                            ></Button>
+                            <Typography variant="body2">메시지 보내기</Typography>
+                        </Stack>
+                    </Stack>
                 </Stack>
-                <ListItem
-                    sx={{
-                        height: '771px',
-                    }}
-                >
+                <ListItem>
                     <ListItemText primary="메시지 보내기" />
                 </ListItem>
             </Box>

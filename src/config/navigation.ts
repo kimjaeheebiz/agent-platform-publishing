@@ -160,6 +160,26 @@ export const NAVIGATION_MENU: NavigationMenuItem[] = (() => {
     );
 })();
 
+/**
+ * `/project/:projectId/...` 구간에서 3뎁스 탭 목록.
+ * `NAVIGATION_MENU`의 프로젝트 > 프로젝트 N > (에이전트·CREDENTIAL·…) 와 동일 소스입니다.
+ */
+export function getProjectSubmenuTabs(pathname: string): NavigationMenuGrandChild[] | null {
+    const m = pathname.match(/^\/project\/([^/]+)/);
+    if (!m) return null;
+    const pathPrefix = `/project/${m[1]}/`;
+
+    for (const top of NAVIGATION_MENU) {
+        if (!top.children?.length) continue;
+        for (const second of top.children) {
+            if (!second.children?.length) continue;
+            const hit = second.children.some((gc) => gc.path.startsWith(pathPrefix));
+            if (hit) return second.children;
+        }
+    }
+    return null;
+}
+
 // =========================================================================
 // 라우팅 정보 생성
 // =========================================================================

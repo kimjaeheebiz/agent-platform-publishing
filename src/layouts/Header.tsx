@@ -1,7 +1,24 @@
-import { AppBar, Toolbar, Box, Stack, IconButton, Link, useTheme } from '@mui/material';
+import { useState } from 'react';
+import {
+    AppBar,
+    Toolbar,
+    Box,
+    Stack,
+    IconButton,
+    Link,
+    useTheme,
+    Button,
+    Avatar,
+    Menu,
+    MenuItem,
+    Divider,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Brand } from '@/components';
-import { Menu, DarkModeOutlined, LightModeOutlined, AccountCircleOutlined } from '@mui/icons-material';
+import { Brand, ServerChip } from '@/components';
+import { Menu as MenuIcon, DarkModeOutlined, LightModeOutlined, PersonOutline, AccountCircleOutlined, Logout } from '@mui/icons-material';
 import { HEADER_HEIGHT, Z_INDEX } from '@/config';
 
 export interface HeaderProps {
@@ -14,17 +31,22 @@ export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
     const theme = useTheme();
     const isDark = theme.palette.mode === 'dark';
 
+    const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+    const userMenuOpen = Boolean(userMenuAnchor);
+
+    // 다크모드와 관계없이 헤더 배경은 항상 피그마 darkFill 토큰을 사용합니다.
+    const appBarBg = '_components.appBar.darkFill';
+
     return (
         <AppBar
             component="header"
-            color="inherit"
+            color="primary"
             position="fixed"
             elevation={0}
             sx={{
                 minHeight: `${HEADER_HEIGHT}px`,
-                borderBottom: '1px solid',
-                borderColor: 'divider',
-                justifyContent: 'center',
+                backgroundColor: appBarBg,
+                borderBottom: 'none',
                 zIndex: Z_INDEX.HEADER,
             }}
         >
@@ -32,7 +54,7 @@ export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     {onMenuToggle && (
                         <IconButton color="inherit" aria-label="메뉴 토글" onClick={onMenuToggle} edge="start">
-                            <Menu />
+                            <MenuIcon />
                         </IconButton>
                     )}
                     <Link
@@ -47,15 +69,71 @@ export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
                     >
                         <Brand variant="mark" />
                     </Link>
+                    <ServerChip state="local" />
                 </Box>
 
-                <Stack direction="row" spacing={1}>
-                    <IconButton color="inherit" aria-label="테마 토글" onClick={onToggleTheme}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                    <IconButton color="inherit" size="small" aria-label="테마 토글" onClick={onToggleTheme}>
                         {isDark ? <LightModeOutlined /> : <DarkModeOutlined />}
                     </IconButton>
-                    <IconButton color="inherit" aria-label="계정 관리" onClick={() => navigate('/login')}>
-                        <AccountCircleOutlined />
-                    </IconButton>
+                    <Button
+                        color="inherit"
+                        size="small"
+                        aria-label="계정 메뉴"
+                        aria-controls={userMenuOpen ? 'header-user-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={userMenuOpen ? 'true' : undefined}
+                        onClick={(e) => setUserMenuAnchor(e.currentTarget)}
+                        sx={{ gap: 1 }}
+                    >
+                        <Avatar sx={{ width: 26, height: 26, fontSize: '13px', bgcolor: 'primary.main', color: 'inherit' }}>
+                            <PersonOutline fontSize="small" />
+                        </Avatar>
+                        홍길동
+                    </Button>
+                    <Menu
+                        id="header-user-menu"
+                        anchorEl={userMenuAnchor}
+                        open={userMenuOpen}
+                        onClose={() => setUserMenuAnchor(null)}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        slotProps={{
+                            paper: {
+                                sx: {
+                                    p: 0,
+                                    minWidth: 260,
+                                },
+                            },
+                        }}
+                    >
+                        <ListItem sx={{ py: 0 }}>
+                            <ListItemText primary="홍길동" secondary="honggildong@hecto.co.kr" />
+                        </ListItem>
+                        <Divider sx={{ my: 1 }} />
+                        <MenuItem
+                            onClick={() => {
+                                setUserMenuAnchor(null);
+                                navigate('/account');
+                            }}
+                        >
+                            <ListItemIcon>
+                                <AccountCircleOutlined fontSize="small" />
+                            </ListItemIcon>
+                            계정 정보
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                setUserMenuAnchor(null);
+                                navigate('/login');
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Logout fontSize="small" />
+                            </ListItemIcon>
+                            로그아웃
+                        </MenuItem>
+                    </Menu>
                 </Stack>
             </Toolbar>
         </AppBar>

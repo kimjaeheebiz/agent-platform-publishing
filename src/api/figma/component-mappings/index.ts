@@ -58,7 +58,7 @@ import { CircularProgressMapping } from './CircularProgress';
 import { LinearProgressMapping } from './LinearProgress';
 import { DrawerMapping } from './Drawer';
 import { AutocompleteMapping } from './Autocomplete';
-import { AccordionMapping } from './Accordion';
+import { AccordionMapping, AccordionDetailsMapping, AccordionSummaryMapping } from './Accordion';
 import { BreadcrumbsMapping } from './Breadcrumbs';
 import { SliderMapping } from './Slider';
 import { RatingMapping } from './Rating';
@@ -136,6 +136,8 @@ export const COMPONENT_MAPPINGS = {
     drawer: DrawerMapping,
     autocomplete: AutocompleteMapping,
     accordion: AccordionMapping,
+    accordionSummary: AccordionSummaryMapping,
+    accordionDetails: AccordionDetailsMapping,
     breadcrumbs: BreadcrumbsMapping,
     slider: SliderMapping,
     rating: RatingMapping,
@@ -260,6 +262,8 @@ export {
     DrawerMapping,
     AutocompleteMapping,
     AccordionMapping,
+    AccordionSummaryMapping,
+    AccordionDetailsMapping,
     BreadcrumbsMapping,
     SliderMapping,
     RatingMapping,

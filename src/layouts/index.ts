@@ -6,6 +6,7 @@ export { ErrorLayout } from './ErrorLayout';
 // Components
 export { Header } from './Header';
 export { PageHeader } from './PageHeader';
+export { ProjectSubmenuTabs } from './ProjectSubmenuTabs';
 export { Breadcrumb } from './Breadcrumb';
 export { Sidebar } from './Sidebar';
 export { Navigation } from './Navigation/Navigation';

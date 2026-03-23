@@ -1,7 +1,7 @@
 /*
   Adapter: Tokens Studio → MUI ThemeOptions (px → rem 변환 포함)
-  실행: tsx design-system/generators/to-mui-theme.ts
-  - design-system/tokens/generated/* 를 읽어 src/theme/generated/theme.(light|dark).json 생성
+  실행: npm run build:theme (= to-mui-theme.ts → merge-theme-with-app-components.ts)
+  - design-system/tokens/generated/* → theme.(light|dark).json → mergedMuiThemeOptions.ts (muiComponents 병합)
 
   아키텍처:
   1. Core 선반영 (core.json 기반) - 디자인 핵심 UI
@@ -10,7 +10,7 @@
      - breakpoints: breakpoints/Mode 1.json
      - shape: shape/Mode 1.json
      - shadows: core.elevation (elevation 1~24 → MUI shadows)
-     - components: core.button/chip/tooltip/badge/alert/input → MUI components
+     - components: core → MUI (`mui-components-from-tokens.ts` 선언 매핑 + buildComponentsOverrides)
 
   2. Palette 오버레이 (Light/Dark) - 컬러 테마
      - palette/Light.json → theme.light.json
@@ -26,6 +26,7 @@
 import fs from 'fs';
 import path from 'path';
 import * as MuiColors from '@mui/material/colors';
+import { buildMuiComponentsFromDesignTokens } from './mui-components-from-tokens';
 import {
     Json,
     JsonRecord,
@@ -385,10 +386,12 @@ function resolveColorRef(value: unknown) {
     const m = value.match(/^\{([a-zA-Z]+)\.(A?\d+)\}$/);
     if (m) {
         const [, name, shade] = m as [string, string, string];
-        const palette = (MuiColors as Record<string, unknown>)[name] as Record<string, string> | undefined;
-        if (palette && palette[shade]) return palette[shade];
+        // 토큰 소스(material/colors/Mode 1.json)를 최우선으로 사용하고,
+        // MUI 내장 색상은 토큰 미존재 시 fallback으로만 사용한다.
         const mc = getMaterialColorHex(name, shade);
         if (mc) return mc;
+        const palette = (MuiColors as Record<string, unknown>)[name] as Record<string, string> | undefined;
+        if (palette && palette[shade]) return palette[shade];
         return value;
     }
 
@@ -411,6 +414,40 @@ function resolveColorRef(value: unknown) {
     }
 
     return value;
+}
+
+/**
+ * palette token reference resolver
+ * - 1) 먼저 기존 resolveColorRef 로 MUI/material/brand 참조를 해석
+ * - 2) 실패하면 (예: "{_components.paper.elevation-4}") palette JSON 안에서 경로를 찾아 $value를 재귀 해석
+ */
+function resolvePaletteRef(raw: unknown, paletteRoot: Json): unknown {
+    if (typeof raw !== 'string') return raw;
+
+    // 1) MUI/material/brand 패턴 우선 해석
+    const resolvedByColorRef = resolveColorRef(raw);
+    if (typeof resolvedByColorRef === 'string' && resolvedByColorRef !== raw) return resolvedByColorRef;
+
+    // 2) palette 내부 참조 해석: "{a.b.c}"
+    const m = raw.match(/^\{(.+)\}$/);
+    if (!m) return raw;
+
+    const keys = m[1].split('.');
+    let cur: unknown = paletteRoot as unknown;
+    for (const k of keys) {
+        if (cur && typeof cur === 'object' && k in (cur as Record<string, unknown>)) {
+            cur = (cur as Record<string, unknown>)[k];
+        } else {
+            return raw;
+        }
+    }
+
+    if (cur && typeof cur === 'object' && '$value' in (cur as Record<string, unknown>)) {
+        const v = (cur as Record<string, unknown>).$value;
+        return resolvePaletteRef(v, paletteRoot);
+    }
+
+    return raw;
 }
 
 // 헬퍼: _states 그룹에서 값 추출 (hover, selected, focusVisible, outlinedBorder, focus)
@@ -519,6 +556,21 @@ function buildPalette(mode: 'light' | 'dark') {
     const divider =
         hasProperty(p, 'divider') && isTokenValue(p.divider) ? resolveColorRef(p.divider.$value) : undefined;
 
+    const appBar = (p as any)._components?.appBar as
+        | {
+              defaultFill?: { $value?: unknown };
+              darkFill?: { $value?: unknown };
+          }
+        | undefined;
+
+    const appBarGroup =
+        appBar && (appBar.defaultFill?.$value !== undefined || appBar.darkFill?.$value !== undefined)
+            ? {
+                  defaultFill: appBar.defaultFill?.$value !== undefined ? resolvePaletteRef(appBar.defaultFill.$value, p) : undefined,
+                  darkFill: appBar.darkFill?.$value !== undefined ? resolvePaletteRef(appBar.darkFill.$value, p) : undefined,
+              }
+            : undefined;
+
     return {
         mode,
         ...(primary ? { primary } : {}),
@@ -532,20 +584,19 @@ function buildPalette(mode: 'light' | 'dark') {
         ...(action ? { action } : {}),
         ...(common ? { common } : {}),
         ...(divider ? { divider } : {}),
+        ...(appBarGroup ? { _components: { appBar: appBarGroup } } : {}),
     };
 }
 
 /**
- * core.json 컴포넌트 토큰 → MUI theme.components 매핑
- * 참조: https://mui.com/material-ui/customization/theme-components/
+ * core.json 컴포넌트 토큰 → MUI theme.components
+ * 선언적 매핑·버튼 시퀀스는 `mui-components-from-tokens.ts`에서 관리 (to-mui-theme에 if 블록 추가 불필요)
  *
- * core.button.*, chip.*, tooltip.*, alert.*, input.* 등을 MUI 컴포넌트 스타일로 변환
+ * @see https://mui.com/material-ui/customization/theme-components/
  */
 function buildComponentsOverrides(tokensCore: Json, tokensTypos: Json): JsonRecord {
-    const components: JsonRecord = {};
     const parseWeight = createFontWeightParser(tokensTypos);
 
-    // Helper: 타이포 토큰 → 스타일 객체
     const parseTypoToken = (tokenValue: unknown): JsonRecord => {
         if (!tokenValue || typeof tokenValue !== 'object') return {};
         const token = asJsonRecord(tokenValue);
@@ -566,97 +617,7 @@ function buildComponentsOverrides(tokensCore: Json, tokensTypos: Json): JsonReco
         return result;
     };
 
-    // MuiButton: core.button.large/medium/small + 커스텀 xsmall (Figma/디자인 시스템용)
-    // 참조: https://mui.com/material-ui/customization/theme-components/#adding-new-component-variants
-    if (tokensCore?.button) {
-        const btn = asJsonRecord(tokensCore.button);
-        const variants: Array<{ props: JsonRecord; style: JsonRecord }> = [];
-        if (btn.large && typeof btn.large === 'object' && btn.large !== null && '$value' in btn.large) {
-            variants.push({ props: { size: 'large' }, style: parseTypoToken(asJsonRecord(btn.large).$value) });
-        }
-        if (btn.medium && typeof btn.medium === 'object' && btn.medium !== null && '$value' in btn.medium) {
-            variants.push({ props: { size: 'medium' }, style: parseTypoToken(asJsonRecord(btn.medium).$value) });
-        }
-        if (btn.small && typeof btn.small === 'object' && btn.small !== null && '$value' in btn.small) {
-            variants.push({ props: { size: 'small' }, style: parseTypoToken(asJsonRecord(btn.small).$value) });
-        }
-        // xsmall: core에 없으면 small보다 작은 고정 스타일로 추가 (Figma XSmall 등)
-        const xsmallStyle: JsonRecord = {
-            fontSize: '0.75rem',
-            padding: '2px 6px',
-            minWidth: 0,
-        };
-        variants.push({ props: { size: 'xsmall' }, style: xsmallStyle });
-        components.MuiButton = { variants };
-    }
-
-    // MuiChip: core.chip.label
-    if (hasProperty(tokensCore, 'chip')) {
-        const chip = asJsonRecord(tokensCore.chip);
-        if (hasProperty(chip, 'label') && isTokenValue(chip.label)) {
-            components.MuiChip = {
-                styleOverrides: {
-                    label: parseTypoToken(chip.label.$value),
-                },
-            };
-        }
-    }
-
-    // MuiTooltip: core.tooltip.label
-    if (hasProperty(tokensCore, 'tooltip')) {
-        const tooltip = asJsonRecord(tokensCore.tooltip);
-        if (hasProperty(tooltip, 'label') && isTokenValue(tooltip.label)) {
-            components.MuiTooltip = {
-                styleOverrides: {
-                    tooltip: parseTypoToken(tooltip.label.$value),
-                },
-            };
-        }
-    }
-
-    // MuiBadge: core.badge.label
-    if (hasProperty(tokensCore, 'badge')) {
-        const badge = asJsonRecord(tokensCore.badge);
-        if (hasProperty(badge, 'label') && isTokenValue(badge.label)) {
-            components.MuiBadge = {
-                styleOverrides: {
-                    badge: parseTypoToken(badge.label.$value),
-                },
-            };
-        }
-    }
-
-    // MuiAlert: core.alert.title/description
-    if (hasProperty(tokensCore, 'alert')) {
-        const alert = asJsonRecord(tokensCore.alert);
-        const styleOverrides: JsonRecord = {};
-        if (hasProperty(alert, 'title') && isTokenValue(alert.title)) {
-            styleOverrides.message = parseTypoToken(alert.title.$value);
-        }
-        if (Object.keys(styleOverrides).length > 0) {
-            components.MuiAlert = { styleOverrides };
-        }
-    }
-
-    // MuiTextField (Input): core.input.label/value/helper
-    if (hasProperty(tokensCore, 'input')) {
-        const input = asJsonRecord(tokensCore.input);
-        const inputOverrides: JsonRecord = {};
-        if (hasProperty(input, 'label') && isTokenValue(input.label)) {
-            inputOverrides.label = parseTypoToken(input.label.$value);
-        }
-        if (hasProperty(input, 'value') && isTokenValue(input.value)) {
-            inputOverrides.input = parseTypoToken(input.value.$value);
-        }
-        if (hasProperty(input, 'helper') && isTokenValue(input.helper)) {
-            inputOverrides.helperText = parseTypoToken(input.helper.$value);
-        }
-        if (Object.keys(inputOverrides).length > 0) {
-            components.MuiTextField = { styleOverrides: inputOverrides };
-        }
-    }
-
-    return components;
+    return buildMuiComponentsFromDesignTokens(tokensCore, parseTypoToken);
 }
 
 /**

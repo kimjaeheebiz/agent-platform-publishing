@@ -770,7 +770,7 @@
     },
     "9": {
       "$type": "lineHeights",
-      "$value": "160%"
+      "$value": "120%"
     },
     "10": {
       "$type": "lineHeights",
@@ -850,7 +850,7 @@
     },
     "29": {
       "$type": "lineHeights",
-      "$value": 48
+      "$value": 36
     },
     "30": {
       "$type": "lineHeights",
@@ -858,7 +858,7 @@
     },
     "31": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": "150%"
     },
     "32": {
       "$type": "lineHeights",
@@ -1295,7 +1295,7 @@
     "subtitle2": {
       "fontSize": "0.875rem",
       "fontWeight": 500,
-      "lineHeight": 1.6
+      "lineHeight": 1.2
     },
     "caption": {
       "fontSize": "0.75rem",
@@ -1556,7 +1556,7 @@
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.29}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1585,8 +1585,8 @@
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
-        "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "lineHeight": "{lineHeights.6}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1750,54 +1750,6 @@
     "0px 9px 46px 8px #0000001f, 0px 24px 38px 3px #00000024, 0px 11px 15px -7px #00000033"
   ],
   "components": {
-    "MuiButton": {
-      "variants": [
-        {
-          "props": {
-            "size": "large"
-          },
-          "style": {
-            "fontSize": "0.9375rem",
-            "fontWeight": 500,
-            "lineHeight": "26px",
-            "textTransform": "uppercase"
-          }
-        },
-        {
-          "props": {
-            "size": "medium"
-          },
-          "style": {
-            "fontSize": "0.875rem",
-            "fontWeight": 500,
-            "lineHeight": "24px",
-            "textTransform": "uppercase"
-          }
-        },
-        {
-          "props": {
-            "size": "small"
-          },
-          "style": {
-            "fontSize": "0.8125rem",
-            "fontWeight": 500,
-            "lineHeight": "20px",
-            "letterSpacing": 0.46,
-            "textTransform": "uppercase"
-          }
-        },
-        {
-          "props": {
-            "size": "xsmall"
-          },
-          "style": {
-            "fontSize": "0.75rem",
-            "padding": "2px 6px",
-            "minWidth": 0
-          }
-        }
-      ]
-    },
     "MuiChip": {
       "styleOverrides": {
         "label": {
@@ -1852,6 +1804,47 @@
           "lineHeight": 1.3
         }
       }
+    },
+    "MuiButton": {
+      "variants": [
+        {
+          "props": {
+            "size": "large"
+          },
+          "style": {
+            "fontSize": "0.9375rem",
+            "fontWeight": 500,
+            "lineHeight": "26px",
+            "textTransform": "uppercase",
+            "minHeight": "42px"
+          }
+        },
+        {
+          "props": {
+            "size": "medium"
+          },
+          "style": {
+            "fontSize": "0.875rem",
+            "fontWeight": 500,
+            "lineHeight": "24px",
+            "textTransform": "uppercase",
+            "minHeight": "36px"
+          }
+        },
+        {
+          "props": {
+            "size": "small"
+          },
+          "style": {
+            "fontSize": "0.8125rem",
+            "fontWeight": 500,
+            "lineHeight": "20px",
+            "letterSpacing": 0.46,
+            "textTransform": "uppercase",
+            "minHeight": "30px"
+          }
+        }
+      ]
     }
   },
   "brand": {
@@ -1955,10 +1948,10 @@
   "palette": {
     "mode": "dark",
     "primary": {
-      "light": "#ede7f6",
-      "main": "#b388ff",
-      "dark": "#4a148c",
-      "contrastText": "#212121",
+      "light": "#d1c4e9",
+      "main": "#7c4dff",
+      "dark": "#512da8",
+      "contrastText": "#ffffff",
       "_states": {
         "hover": "#a288ff14",
         "selected": "#a288ff29",
@@ -1969,8 +1962,8 @@
     },
     "secondary": {
       "light": "#ffffff",
-      "main": "#ffffff",
-      "dark": "#d9d9d9",
+      "main": "#f5f5f5",
+      "dark": "#bdbdbd",
       "contrastText": "#212121",
       "_states": {
         "hover": "#ffffff14",
@@ -1983,7 +1976,7 @@
     "error": {
       "light": "#ff8a80",
       "main": "#ff5252",
-      "dark": "#d50000",
+      "dark": "#e53935",
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#ff525214",
@@ -1993,10 +1986,10 @@
       }
     },
     "warning": {
-      "light": "#ffcebb",
-      "main": "#ff783c",
-      "dark": "#f45c0f",
-      "contrastText": "#212121",
+      "light": "#ffaf8f",
+      "main": "#ff6114",
+      "dark": "#d84e05",
+      "contrastText": "#ffffff",
       "_states": {
         "hover": "#ff906114",
         "selected": "#ff906129",
@@ -2007,8 +2000,8 @@
     "info": {
       "light": "#8dc8ff",
       "main": "#36a1ff",
-      "dark": "#0e83ef",
-      "contrastText": "#212121",
+      "dark": "#1270dc",
+      "contrastText": "#ffffff",
       "_states": {
         "hover": "#36a1ff14",
         "selected": "#36a1ff29",
@@ -2018,9 +2011,9 @@
     },
     "success": {
       "light": "#7cdab9",
-      "main": "#00c087",
+      "main": "#00b473",
       "dark": "#009259",
-      "contrastText": "#212121",
+      "contrastText": "#ffffff",
       "_states": {
         "hover": "#00c08714",
         "selected": "#00c08729",
@@ -2038,7 +2031,7 @@
       "paper": "#212121"
     },
     "action": {
-      "active": "#ffffff8f",
+      "active": "#ffffff",
       "hover": "#ffffff14",
       "selected": "#ffffff29",
       "disabled": "#ffffff61",
@@ -2049,6 +2042,12 @@
       "white": "#ffffff",
       "black": "#000000"
     },
-    "divider": "#ffffff1f"
+    "divider": "#3c3c3c",
+    "_components": {
+      "appBar": {
+        "defaultFill": "#272727",
+        "darkFill": "#323232"
+      }
+    }
   }
 }

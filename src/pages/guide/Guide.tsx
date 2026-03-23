@@ -553,7 +553,7 @@ export const Guide = () => {
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
                         <Chip label="Filled" variant="filled" />
                         <Chip label="Outlined" variant="outlined" />
-                        <Chip label="Deletable" onDelete={() => { }} />
+                        <Chip label="Deletable" color="primary" onDelete={() => { }} />
                         <Chip label="With Icon" icon={<Star />} />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
@@ -689,6 +689,10 @@ export const Guide = () => {
                             <TextField label="TextField Medium" size="medium" fullWidth />
                         </Grid>
                         <Grid size={3}>
+                            <TextField label="TextField Large" size="large" fullWidth />
+                        </Grid>
+                        <Grid size={3} />
+                        <Grid size={3}>
                             <FormControl fullWidth size="small">
                                 <InputLabel id="sizeSmallLabel">Select Small</InputLabel>
                                 <Select
@@ -716,11 +720,12 @@ export const Guide = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
+                        <Grid size={6} />
                         <Grid size={3}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        size="small"
+                                        size="large"
                                         checked={checked}
                                         onChange={(e) => setChecked(e.target.checked)}
                                     />

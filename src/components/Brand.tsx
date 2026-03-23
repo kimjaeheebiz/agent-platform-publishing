@@ -40,7 +40,6 @@ export const Brand = ({ size = 'small', showText = true, variant = 'logo', color
             {showText && (
                 <Typography
                     variant={textVariantMap[size]}
-                    color={color === 'white' ? 'common.white' : 'text.primary'}
                     sx={{ lineHeight: 1.1 }}
                 >
                     {APP_INFO.name}

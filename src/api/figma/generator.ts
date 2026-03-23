@@ -31,6 +31,8 @@ const CUSTOM_COMPONENT_FIGMA_NAMES = new Set<string>([
     'FavoriteButton',
     '<StatusChip>',
     'StatusChip',
+    '<ServerChip>',
+    'ServerChip',
     '<FilterToggleGroup>',
     'FilterToggleGroup',
 ]);
@@ -391,7 +393,27 @@ ${typographyStyles}
         const isSelect = mapping?.muiName === 'Select';
         const isList = mapping?.muiName === 'List';
         const isDrawer = mapping?.muiName === 'Drawer';
-        const shouldRenderChildren = (componentType === 'layout' || componentType === 'card' || componentType === 'table' || isCardSubComponent || isTableSubComponent || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isSelect || isList || isDrawer) && children && children.length > 0;
+        const isAccordion = mapping?.muiName === 'Accordion';
+        const isAccordionSummary = mapping?.muiName === 'AccordionSummary';
+        const isAccordionDetails = mapping?.muiName === 'AccordionDetails';
+        const shouldRenderChildren =
+            (componentType === 'layout' ||
+                componentType === 'card' ||
+                componentType === 'table' ||
+                isCardSubComponent ||
+                isTableSubComponent ||
+                isToggleButtonGroup ||
+                isButtonGroup ||
+                isMenu ||
+                isMenuList ||
+                isSelect ||
+                isList ||
+                isDrawer ||
+                isAccordion ||
+                isAccordionSummary ||
+                isAccordionDetails) &&
+            children &&
+            children.length > 0;
 
         const isGridContainer =
             mapping?.muiName === 'Grid' &&
@@ -476,6 +498,12 @@ ${typographyStyles}
             const status = String(p.status);
             if (status) {
                 props.push(`status="${status}"`);
+            }
+        }
+        if (componentName === 'ServerChip' && typeof p.state === 'string') {
+            const state = String(p.state);
+            if (state) {
+                props.push(`state="${state}"`);
             }
         }
         // FilterToggleGroup: 피그마에서 추출한 options(value, label, count) 출력

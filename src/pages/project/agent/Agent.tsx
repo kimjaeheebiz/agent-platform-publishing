@@ -33,25 +33,10 @@ export const Agent: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
-                    p: '0px',
                 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        p: '0px',
-                    }}
-                >
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{
-                            p: '0px',
-                        }}
-                    >
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack direction="row" spacing={1} alignItems="center">
                         <FilterToggleGroup
                             options={[
                                 { value: 'all', label: '전체', count: 5, selected: true },
@@ -60,14 +45,7 @@ export const Agent: React.FC = () => {
                             ]}
                         />
                     </Stack>
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{
-                            p: '0px',
-                        }}
-                    >
+                    <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
                             size="small"
                             placeholder="에이전트 이름, 소유자 이름, 소유자 이메일"
@@ -83,7 +61,9 @@ export const Agent: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
+                        >
+                            Value
+                        </TextField>
                         <Button variant="contained" size="small" startIcon={<Add />}>
                             에이전트 추가
                         </Button>
@@ -108,11 +88,7 @@ export const Agent: React.FC = () => {
                                     <FavoriteButton selected />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -131,11 +107,7 @@ export const Agent: React.FC = () => {
                                     <StatusChip status="active" />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -151,14 +123,7 @@ export const Agent: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             복제
                                         </Button>
@@ -176,11 +141,7 @@ export const Agent: React.FC = () => {
                                     <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -199,11 +160,7 @@ export const Agent: React.FC = () => {
                                     <StatusChip status="stop" />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -219,14 +176,7 @@ export const Agent: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             복제
                                         </Button>
@@ -244,11 +194,7 @@ export const Agent: React.FC = () => {
                                     <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -267,11 +213,7 @@ export const Agent: React.FC = () => {
                                     <StatusChip status="undeployed" />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -287,14 +229,7 @@ export const Agent: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             복제
                                         </Button>
@@ -312,11 +247,7 @@ export const Agent: React.FC = () => {
                                     <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -335,11 +266,7 @@ export const Agent: React.FC = () => {
                                     <StatusChip status="inactive" />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -355,14 +282,7 @@ export const Agent: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             복제
                                         </Button>
@@ -380,11 +300,7 @@ export const Agent: React.FC = () => {
                                     <FavoriteButton />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">에이전트 이름</Typography>
                                         <Typography
                                             variant="caption"
@@ -403,11 +319,7 @@ export const Agent: React.FC = () => {
                                     <StatusChip status="inactive" />
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack>
                                         <Typography variant="body2">홍길동</Typography>
                                         <Typography
                                             variant="caption"
@@ -423,14 +335,7 @@ export const Agent: React.FC = () => {
                                     <Typography variant="body2">2025.01.01</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Stack
-                                        direction="row"
-                                        spacing={0.5}
-                                        alignItems="center"
-                                        sx={{
-                                            p: '0px',
-                                        }}
-                                    >
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             복제
                                         </Button>

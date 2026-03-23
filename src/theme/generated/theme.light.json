@@ -770,7 +770,7 @@
     },
     "9": {
       "$type": "lineHeights",
-      "$value": "160%"
+      "$value": "120%"
     },
     "10": {
       "$type": "lineHeights",
@@ -850,7 +850,7 @@
     },
     "29": {
       "$type": "lineHeights",
-      "$value": 48
+      "$value": 36
     },
     "30": {
       "$type": "lineHeights",
@@ -858,7 +858,7 @@
     },
     "31": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": "150%"
     },
     "32": {
       "$type": "lineHeights",
@@ -1295,7 +1295,7 @@
     "subtitle2": {
       "fontSize": "0.875rem",
       "fontWeight": 500,
-      "lineHeight": 1.6
+      "lineHeight": 1.2
     },
     "caption": {
       "fontSize": "0.75rem",
@@ -1556,7 +1556,7 @@
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.29}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1585,8 +1585,8 @@
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
-        "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "lineHeight": "{lineHeights.6}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1750,54 +1750,6 @@
     "0px 9px 46px 8px #0000001f, 0px 24px 38px 3px #00000024, 0px 11px 15px -7px #00000033"
   ],
   "components": {
-    "MuiButton": {
-      "variants": [
-        {
-          "props": {
-            "size": "large"
-          },
-          "style": {
-            "fontSize": "0.9375rem",
-            "fontWeight": 500,
-            "lineHeight": "26px",
-            "textTransform": "uppercase"
-          }
-        },
-        {
-          "props": {
-            "size": "medium"
-          },
-          "style": {
-            "fontSize": "0.875rem",
-            "fontWeight": 500,
-            "lineHeight": "24px",
-            "textTransform": "uppercase"
-          }
-        },
-        {
-          "props": {
-            "size": "small"
-          },
-          "style": {
-            "fontSize": "0.8125rem",
-            "fontWeight": 500,
-            "lineHeight": "20px",
-            "letterSpacing": 0.46,
-            "textTransform": "uppercase"
-          }
-        },
-        {
-          "props": {
-            "size": "xsmall"
-          },
-          "style": {
-            "fontSize": "0.75rem",
-            "padding": "2px 6px",
-            "minWidth": 0
-          }
-        }
-      ]
-    },
     "MuiChip": {
       "styleOverrides": {
         "label": {
@@ -1852,6 +1804,47 @@
           "lineHeight": 1.3
         }
       }
+    },
+    "MuiButton": {
+      "variants": [
+        {
+          "props": {
+            "size": "large"
+          },
+          "style": {
+            "fontSize": "0.9375rem",
+            "fontWeight": 500,
+            "lineHeight": "26px",
+            "textTransform": "uppercase",
+            "minHeight": "42px"
+          }
+        },
+        {
+          "props": {
+            "size": "medium"
+          },
+          "style": {
+            "fontSize": "0.875rem",
+            "fontWeight": 500,
+            "lineHeight": "24px",
+            "textTransform": "uppercase",
+            "minHeight": "36px"
+          }
+        },
+        {
+          "props": {
+            "size": "small"
+          },
+          "style": {
+            "fontSize": "0.8125rem",
+            "fontWeight": 500,
+            "lineHeight": "20px",
+            "letterSpacing": 0.46,
+            "textTransform": "uppercase",
+            "minHeight": "30px"
+          }
+        }
+      ]
     }
   },
   "brand": {
@@ -1955,16 +1948,16 @@
   "palette": {
     "mode": "light",
     "primary": {
-      "light": "#b388ff",
+      "light": "#a288ff",
       "main": "#651fff",
       "dark": "#6200ea",
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#7c4dff0a",
-        "selected": "#7c4dff14",
+        "selected": "#7c4dff1a",
         "focusVisible": "#7c4dff4d",
         "outlinedBorder": "#7c4dff80",
-        "focus": "#7c4dff29"
+        "focus": "#7c4dff1f"
       }
     },
     "secondary": {
@@ -1974,7 +1967,7 @@
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#1212120a",
-        "selected": "#12121214",
+        "selected": "#1212121a",
         "focusVisible": "#1212124d",
         "outlinedBorder": "#12121280",
         "focus": "#1212121f"
@@ -1987,7 +1980,7 @@
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#ff17440a",
-        "selected": "#ff174414",
+        "selected": "#ff17441a",
         "focusVisible": "#ff17444d",
         "outlinedBorder": "#ff174480"
       }
@@ -1995,11 +1988,11 @@
     "warning": {
       "light": "#ff9061",
       "main": "#ff6114",
-      "dark": "#e65509",
+      "dark": "#d84e05",
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#ff783c0a",
-        "selected": "#ff783c14",
+        "selected": "#ff783c1a",
         "focusVisible": "#ff783c4d",
         "outlinedBorder": "#ff783c80"
       }
@@ -2011,7 +2004,7 @@
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#0291fe0a",
-        "selected": "#0291fe14",
+        "selected": "#0291fe1a",
         "focusVisible": "#0291fe4d",
         "outlinedBorder": "#0291fe80"
       }
@@ -2023,7 +2016,7 @@
       "contrastText": "#ffffff",
       "_states": {
         "hover": "#00a5670a",
-        "selected": "#00a56714",
+        "selected": "#00a5671a",
         "focusVisible": "#00a5674d",
         "outlinedBorder": "#00a56780"
       }
@@ -2038,9 +2031,9 @@
       "paper": "#ffffff"
     },
     "action": {
-      "active": "#0000008f",
+      "active": "#212121",
       "hover": "#0000000a",
-      "selected": "#00000014",
+      "selected": "#0000001a",
       "disabled": "#00000061",
       "disabledBackground": "#0000001f",
       "focus": "#0000001f"
@@ -2049,6 +2042,12 @@
       "white": "#ffffff",
       "black": "#000000"
     },
-    "divider": "#0000001f"
+    "divider": "#e0e0e0",
+    "_components": {
+      "appBar": {
+        "defaultFill": "#e9e9e9",
+        "darkFill": "#212121"
+      }
+    }
   }
 }

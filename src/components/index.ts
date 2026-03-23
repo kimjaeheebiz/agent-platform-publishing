@@ -10,3 +10,6 @@ export type { FilterOption, FilterToggleGroupProps } from './FilterToggleGroup';
 
 export { StatusChip } from './StatusChip';
 export type { Status } from './StatusChip';
+
+export { ServerChip } from './ServerChip';
+export type { ServerState } from './ServerChip';

@@ -32,6 +32,9 @@ export const FIGMA_CONFIG = {
             // error: '0:6',
         },
 
+        /** Library — Header 우측 User / Profile Menu (Paper, Figma 노드 I14096:8283;11477:188247) */
+        headerProfileMenu: '14096:8283;11477:188247',
+
         // Pages (Frame)
         pages: {
             'project.agent': '80:10329',
