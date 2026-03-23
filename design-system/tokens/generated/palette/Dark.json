@@ -914,7 +914,7 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "color",
-    "$value": "#ffffff1f",
+    "$value": "{grey.800}",
     "$description": "Reflects the divider variable from the theme object"
   },
   "_components": {
@@ -927,7 +927,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#ffffff3b"
+        "$value": "#555555"
       },
       "activeFill": {
         "$extensions": {
@@ -1006,7 +1006,7 @@
             "com.figma.hiddenFromPublishing": false
           },
           "$type": "color",
-          "$value": "#ffffff3b"
+          "$value": "#555555"
         },
         "hoverBorder": {
           "$extensions": {
@@ -1137,7 +1137,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{_components.paper.elevation-4}"
+        "$value": "{_components.paper.elevation-10}"
       }
     },
     "breadcrumbs": {
@@ -1397,7 +1397,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#313131",
+        "$value": "#323232",
         "$description": "Reflects the background.paper variable from the theme object"
       },
       "elevation-11": {
@@ -1409,7 +1409,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#313131",
+        "$value": "#323232",
         "$description": "Reflects the background.paper variable from the theme object"
       },
       "elevation-12": {
