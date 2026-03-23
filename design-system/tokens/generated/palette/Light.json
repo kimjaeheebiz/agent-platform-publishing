@@ -706,7 +706,7 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "color",
-    "$value": "#0000001f",
+    "$value": "#e0e0e0",
     "$description": "Reflects the divider variable from the theme object"
   },
   "_components": {
