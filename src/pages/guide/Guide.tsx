@@ -553,7 +553,7 @@ export const Guide = () => {
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
                         <Chip label="Filled" variant="filled" />
                         <Chip label="Outlined" variant="outlined" />
-                        <Chip label="Deletable" color="primary" onDelete={() => { }} />
+                        <Chip label="Deletable" onDelete={() => { }} />
                         <Chip label="With Icon" icon={<Star />} />
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
