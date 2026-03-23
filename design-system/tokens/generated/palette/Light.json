@@ -118,7 +118,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#00000014",
+      "$value": "#0000001a",
       "$description": "Reflects the action.selected variable from the theme object"
     },
     "disabledBackground": {
@@ -211,7 +211,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#ff174414",
+        "$value": "#ff17441a",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
@@ -301,7 +301,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#ff783c14",
+        "$value": "#ff783c1a",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
@@ -391,7 +391,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#0291fe14",
+        "$value": "#0291fe1a",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
@@ -492,7 +492,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#00a56714",
+        "$value": "#00a5671a",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focusVisible": {
@@ -1464,7 +1464,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#7c4dff14",
+        "$value": "#7c4dff1a",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
@@ -1476,7 +1476,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#7c4dff29",
+        "$value": "#7c4dff1f",
         "$description": "Used for focus states. The token represents the value of action.focusOpacity (0.12 by default) of the main token."
       },
       "focusVisible": {
@@ -1566,7 +1566,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#12121214",
+        "$value": "#1212121a",
         "$description": "Used for selected states. The token represents the value of action.selectedOpacity (0.08 by default) of the main token."
       },
       "focus": {
