@@ -9,6 +9,12 @@ export const FormLabelMapping: ComponentMapping = {
     muiName: 'FormLabel',
     
     muiProps: {
+        // color
+        color: {
+            type: 'union',
+            values: ['error', 'info', 'primary', 'secondary', 'success', 'warning'] as const,
+        },
+
         // component
         component: {
             type: 'string',

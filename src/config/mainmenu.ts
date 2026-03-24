@@ -124,6 +124,15 @@ export const MAIN_MENUS: MenuItem[] = [
                         type: 'item',
                         pageId: 'project.knowledgebase',
                         path: '/project/project1/knowledgebase',
+                        children: [
+                            {
+                                id: 'project1.knowledgebase.document',
+                                title: '문서',
+                                type: 'item',
+                                pageId: 'project.knowledgebase.document',
+                                path: '/project/project1/knowledgebase/document',
+                            },
+                        ],
                     },
                     {
                         id: 'project1.apikey',
@@ -175,6 +184,15 @@ export const MAIN_MENUS: MenuItem[] = [
                         type: 'item',
                         pageId: 'project.knowledgebase',
                         path: '/project/project2/knowledgebase',
+                        children: [
+                            {
+                                id: 'project2.knowledgebase.document',
+                                title: '문서',
+                                type: 'item',
+                                pageId: 'project.knowledgebase.document',
+                                path: '/project/project2/knowledgebase/document',
+                            },
+                        ],
                     },
                     {
                         id: 'project2.apikey',

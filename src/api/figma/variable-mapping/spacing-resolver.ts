@@ -12,6 +12,14 @@ const SPACING_TOKEN_PATH = 'design-system/tokens/generated/spacing/Mode 1.json';
 // px → 토큰 이름 맵 캐시
 let pxToTokenCache: Record<number, string> | null = null;
 
+/** Token Studio보내기에서 `$value`가 숫자 또는 문자열("24")로 올 수 있음 */
+function parseSpacingPxRaw(raw: unknown): number | null {
+    if (raw == null) return null;
+    if (typeof raw === 'number' && !Number.isNaN(raw)) return raw;
+    const n = parseFloat(String(raw).replace(',', '.').trim());
+    return Number.isNaN(n) ? null : n;
+}
+
 /**
  * spacing 토큰 JSON 로드 및 px → 토큰 맵 생성 함수
  */
@@ -25,13 +33,14 @@ function loadSpacingTokenMap(): Record<number, string> {
         }
         const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<
             string,
-            { $value?: number }
+            { $value?: number | string }
         >;
         const map: Record<number, string> = {};
         for (const [tokenName, entry] of Object.entries(data)) {
-            if (entry?.$value != null && typeof entry.$value === 'number') {
-                // "0,5" → "0.5" 정규화 처리
-                map[entry.$value] = tokenName.replace(',', '.');
+            const px = parseSpacingPxRaw(entry?.$value);
+            if (px != null) {
+                // 토큰 키 "0,5" → MUI spacing 인자 "0.5"
+                map[px] = tokenName.replace(',', '.');
             }
         }
         pxToTokenCache = map;
@@ -63,11 +72,12 @@ export function getSpacingPxFromTokenName(tokenName: string): number | null {
     tokenNameToPxCache = {};
     try {
         if (!fs.existsSync(filePath)) return null;
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, { $value?: number }>;
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, { $value?: number | string }>;
         for (const [key, entry] of Object.entries(data)) {
-            if (entry?.$value != null && typeof entry.$value === 'number') {
-                tokenNameToPxCache[key] = entry.$value;
-                tokenNameToPxCache[key.replace(',', '.')] = entry.$value;
+            const px = parseSpacingPxRaw(entry?.$value);
+            if (px != null) {
+                tokenNameToPxCache[key] = px;
+                tokenNameToPxCache[key.replace(',', '.')] = px;
             }
         }
     } catch {

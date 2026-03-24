@@ -2,7 +2,6 @@ import React from 'react';
 import {
     Box,
     Button,
-    Checkbox,
     Chip,
     FormControl,
     IconButton,
@@ -39,6 +38,7 @@ export const Document: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -46,24 +46,22 @@ export const Document: React.FC = () => {
                         <Typography variant="body1">총 6건</Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
                             <FormControl
-                                size="small"
                                 sx={{
-                                    width: '160px',
+                                    width: '200px',
                                 }}
                             >
                                 <InputLabel id="select-확장자-label">확장자</InputLabel>
-                                <Select labelId="select-확장자-label" size="small" label="확장자">
+                                <Select labelId="select-확장자-label" label="확장자">
                                     <MenuItem value={`확장자`}>확장자</MenuItem>
                                 </Select>
                             </FormControl>
                             <FormControl
-                                size="small"
                                 sx={{
-                                    width: '160px',
+                                    width: '200px',
                                 }}
                             >
                                 <InputLabel id="select-등록일-label">등록일</InputLabel>
-                                <Select labelId="select-등록일-label" size="small" label="등록일">
+                                <Select labelId="select-등록일-label" label="등록일">
                                     <MenuItem value={`등록일`}>등록일</MenuItem>
                                 </Select>
                             </FormControl>
@@ -71,7 +69,7 @@ export const Document: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            size="small"
+                            size="medium"
                             placeholder="문서 이름, 등록자 이름"
                             slotProps={{
                                 input: {
@@ -85,12 +83,10 @@ export const Document: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
-                        <Button variant="outlined" size="small">
-                            설정
-                        </Button>
-                        <Button variant="contained" size="small" startIcon={<Add />}>
-                            지식베이스 추가
+                        />
+                        <Button variant="outlined">설정</Button>
+                        <Button variant="contained" startIcon={<Add />}>
+                            문서 추가
                         </Button>
                     </Stack>
                 </Stack>
@@ -98,7 +94,7 @@ export const Document: React.FC = () => {
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell></TableCell>
+                                <TableCell>문서 이름</TableCell>
                                 <TableCell>용량</TableCell>
                                 <TableCell>청킹 상태</TableCell>
                                 <TableCell>등록자</TableCell>
@@ -109,7 +105,6 @@ export const Document: React.FC = () => {
                         <TableBody>
                             <TableRow>
                                 <TableCell>
-                                    <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Stack
                                             direction="row"
@@ -136,7 +131,15 @@ export const Document: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="완료" color="success" size="small" />
+                                        <Chip
+                                            label="완료"
+                                            color="success"
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: 'success._states.selected',
+                                                color: 'success.main',
+                                            }}
+                                        />
                                         <Typography
                                             variant="caption"
                                             sx={{
@@ -178,14 +181,13 @@ export const Document: React.FC = () => {
                                             삭제
                                         </Button>
                                         <IconButton color="default">
-                                            <MoreVert />
+                                            <MoreVert fontSize="inherit" />
                                         </IconButton>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Stack
                                             direction="row"
@@ -212,7 +214,15 @@ export const Document: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
-                                        <Chip label="완료" color="success" size="small" />
+                                        <Chip
+                                            label="완료"
+                                            color="success"
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: 'success._states.selected',
+                                                color: 'success.main',
+                                            }}
+                                        />
                                         <Typography
                                             variant="caption"
                                             sx={{
@@ -254,14 +264,13 @@ export const Document: React.FC = () => {
                                             삭제
                                         </Button>
                                         <IconButton color="default">
-                                            <MoreVert />
+                                            <MoreVert fontSize="inherit" />
                                         </IconButton>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Stack
                                             direction="row"
@@ -287,7 +296,15 @@ export const Document: React.FC = () => {
                                     <Typography variant="body2">999.99KB</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip label="오류" color="error" size="small" />
+                                    <Chip
+                                        label="오류"
+                                        color="error"
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'error._states.selected',
+                                            color: 'error.main',
+                                        }}
+                                    />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -320,14 +337,13 @@ export const Document: React.FC = () => {
                                             삭제
                                         </Button>
                                         <IconButton color="default">
-                                            <MoreVert />
+                                            <MoreVert fontSize="inherit" />
                                         </IconButton>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Stack
                                             direction="row"
@@ -353,7 +369,15 @@ export const Document: React.FC = () => {
                                     <Typography variant="body2">999.99MB</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip label="오류" color="error" size="small" />
+                                    <Chip
+                                        label="오류"
+                                        color="error"
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'error._states.selected',
+                                            color: 'error.main',
+                                        }}
+                                    />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -386,15 +410,14 @@ export const Document: React.FC = () => {
                                             삭제
                                         </Button>
                                         <IconButton color="default">
-                                            <MoreVert />
+                                            <MoreVert fontSize="inherit" />
                                         </IconButton>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Checkbox size="small" />
-                                    <Stack direction="row" spacing={1}>
+                                    <Stack direction="row" spacing={1} alignItems="center">
                                         <Stack
                                             direction="row"
                                             alignItems="center"
@@ -419,7 +442,15 @@ export const Document: React.FC = () => {
                                     <Typography variant="body2">999.99GB</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip label="오류" color="error" size="small" />
+                                    <Chip
+                                        label="오류"
+                                        color="error"
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'error._states.selected',
+                                            color: 'error.main',
+                                        }}
+                                    />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -452,14 +483,13 @@ export const Document: React.FC = () => {
                                             삭제
                                         </Button>
                                         <IconButton color="default">
-                                            <MoreVert />
+                                            <MoreVert fontSize="inherit" />
                                         </IconButton>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Checkbox size="small" />
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Stack
                                             direction="row"
@@ -485,7 +515,15 @@ export const Document: React.FC = () => {
                                     <Typography variant="body2">999.99GB</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip label="오류" color="error" size="small" />
+                                    <Chip
+                                        label="오류"
+                                        color="error"
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'error._states.selected',
+                                            color: 'error.main',
+                                        }}
+                                    />
                                 </TableCell>
                                 <TableCell>
                                     <Stack>
@@ -518,7 +556,7 @@ export const Document: React.FC = () => {
                                             삭제
                                         </Button>
                                         <IconButton color="default">
-                                            <MoreVert />
+                                            <MoreVert fontSize="inherit" />
                                         </IconButton>
                                     </Stack>
                                 </TableCell>

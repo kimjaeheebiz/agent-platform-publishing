@@ -152,6 +152,7 @@ export const SelectMapping: ComponentMapping = {
         size: {
             type: 'union',
             values: ['small', 'medium'] as const,
+            default: 'medium',
             extractFromFigma: (node) => {
                 const s = (node as any).componentProperties?.Size?.value ?? (node as any).componentProperties?.size?.value;
                 return typeof s === 'string' ? s.toLowerCase() : s;
@@ -256,26 +257,24 @@ export const SelectMapping: ComponentMapping = {
             const labelId = `select-${safeId}-label`;
             const labEsc = labelText.trim().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
             const propsTrim = props.replace(/^\s+/, '').trim();
-            const hasSize = /\bsize=/.test(propsTrim);
+            const hasSmallSize = /\bsize="small"\b/.test(propsTrim);
             const hasLabelProp = /\blabel=/.test(propsTrim);
-            const sizeAttr = hasSize ? '' : 'size="small" ';
+            const formControlSizeAttr = hasSmallSize ? ' size="small"' : '';
             const labelAttr = hasLabelProp ? '' : `label="${labEsc}" `;
-            return `<FormControl size="small"${sx ? ` sx={${sx}}` : ''}>
+            return `<FormControl${formControlSizeAttr}${sx ? ` sx={${sx}}` : ''}>
             <InputLabel id="${labelId}">${labelText.trim()}</InputLabel>
             <Select
             labelId="${labelId}"
-            ${labelAttr}${sizeAttr}${propsTrim}
+            ${labelAttr}${propsTrim}
             >
             ${safeContent}
             </Select>
         </FormControl>`;
         }
 
-        // 라벨 없을 때도 피그마 Small = MUI size="small" 반영 (props에 size 없으면 기본 출력)
+        // 라벨 없을 때는 기본값 medium 미출력, 피그마 Small일 때만 size 출력
         const propsTrim = props.replace(/^\s+/, '').trim();
-        const hasSize = /\bsize=/.test(propsTrim);
-        const sizeAttr = hasSize ? '' : ' size="small"';
-        return `<Select${sizeAttr}${props ? ` ${propsTrim}` : ''}${sxAttribute}>
+        return `<Select${props ? ` ${propsTrim}` : ''}${sxAttribute}>
             ${safeContent}
         </Select>`;
     },

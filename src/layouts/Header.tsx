@@ -15,6 +15,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
+    Typography,
 } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Brand, ServerChip } from '@/components';
@@ -74,7 +75,7 @@ export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
 
                 <Stack direction="row" spacing={1} alignItems="center">
                     <IconButton color="inherit" size="small" aria-label="테마 토글" onClick={onToggleTheme}>
-                        {isDark ? <LightModeOutlined /> : <DarkModeOutlined />}
+                        {isDark ? <LightModeOutlined fontSize="small" /> : <DarkModeOutlined fontSize="small" />}
                     </IconButton>
                     <Button
                         color="inherit"
@@ -89,7 +90,7 @@ export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
                         <Avatar sx={{ width: 26, height: 26, fontSize: '13px', bgcolor: 'primary.main', color: 'inherit' }}>
                             <PersonOutline fontSize="small" />
                         </Avatar>
-                        홍길동
+                        <Typography variant="body2">홍길동</Typography>
                     </Button>
                     <Menu
                         id="header-user-menu"

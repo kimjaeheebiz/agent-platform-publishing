@@ -685,7 +685,22 @@ export class FigmaDesignExtractor {
             mappingByResolvedInstanceName = findMappingByFigmaName(node.name);
         }
 
-        // 4) 그래도 없으면 구조 추론 (마지막 fallback)
+        // 4) 커스텀 폼 래퍼 이름을 FormControl로 정규화
+        if (!mappingByResolvedInstanceName) {
+            const trimmedNodeName = nodeName.trim();
+            const normalizedName = trimmedNodeName.replace(/\s+/g, ' ');
+            const isFormWrapperName =
+                normalizedName === '<FormControls>' ||
+                normalizedName === 'FormControls' ||
+                normalizedName === '<FormLabelArea>' ||
+                normalizedName === 'FormLabelArea' ||
+                normalizedName.startsWith('<FormGroup>');
+            if (isFormWrapperName) {
+                mappingByResolvedInstanceName = findMappingByFigmaName('<FormControl>');
+            }
+        }
+
+        // 5) 그래도 없으면 구조 추론 (마지막 fallback)
         if (!mappingByResolvedInstanceName) {
             mappingByResolvedInstanceName = this.inferMappingFromStructure(node);
         }
@@ -911,6 +926,10 @@ export class FigmaDesignExtractor {
         if ((node as any)?.visible === false) {
             return null;
         }
+        // 피그마 보조 레이어(Spacing/Spacer 등)는 페이지 코드로 생성하지 않음
+        if (this.isNonVisualHelperNode(node)) {
+            return null;
+        }
         // 컴포넌트 타입 결정
         let componentType = this.determineComponentType(node);
         if (!componentType) return null;
@@ -993,6 +1012,7 @@ export class FigmaDesignExtractor {
         // Card는 커스텀 추출 로직 사용
         const isCardFamily = componentType === 'card';
         const isLayout = componentType === 'layout';
+        const isFormType = componentType === 'form';
         const isTableType = componentType === 'table'; // TableContainer도 포함
         const figmaNameMapping = findMappingByFigmaName(componentName);
         const isToggleButtonGroup = figmaNameMapping?.muiName === 'ToggleButtonGroup';
@@ -1002,8 +1022,10 @@ export class FigmaDesignExtractor {
         const isList = figmaNameMapping?.muiName === 'List';
         const isDrawer = figmaNameMapping?.muiName === 'Drawer';
         const isAccordion = figmaNameMapping?.muiName === 'Accordion';
+        const isFormControl = figmaNameMapping?.muiName === 'FormControl';
+        const isRadioGroup = figmaNameMapping?.muiName === 'RadioGroup';
 
-        if ((isLayout || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isList || isDrawer || isAccordion) && node.children) {
+        if ((isLayout || isFormType || isCardFamily || isTableType || isToggleButtonGroup || isButtonGroup || isMenu || isMenuList || isList || isDrawer || isAccordion || isFormControl || isRadioGroup) && node.children) {
 
             // ✅ 매핑에서 extractChildren이 있는지 확인
             const mapping = findMappingByType(componentType);
@@ -1048,6 +1070,10 @@ export class FigmaDesignExtractor {
             for (const child of node.children) {
                 // 숨김 레이어는 제외
                 if ((child as any)?.visible === false) {
+                    continue;
+                }
+                // Spacing/Spacer 등 보조 레이어는 제외
+                if (this.isNonVisualHelperNode(child)) {
                     continue;
                 }
                 // Instance Slot은 제외
@@ -1452,6 +1478,24 @@ export class FigmaDesignExtractor {
         }
 
         return component;
+    }
+
+    /**
+     * 피그마 편집 보조용 레이어(Spacing/Spacer/스크롤 보조 등) 여부
+     * - 실제 UI 의미가 없는 경우 생성 코드에서 제외
+     */
+    private isNonVisualHelperNode(node: FigmaNode): boolean {
+        const n = String(node.name || '').trim().toLowerCase();
+        if (!n) return false;
+        if (
+            n.startsWith('spacing |') ||
+            n === 'spacer' ||
+            n === 'min-width' ||
+            n.includes('_native browser scroll')
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -2405,7 +2449,7 @@ export class FigmaDesignExtractor {
                     }
 
                     // 실제 텍스트 노드의 컬러 정보 추출
-                    if (child.fills && child.fills.length > 0) {
+                    if (child.fills && child.fills.length > 0 && componentType !== 'layout') {
                         console.log(`🔍 하위 텍스트 노드 "${child.characters}" fills 상세:`, child.fills[0]);
 
                         // Variable ID 기반으로 색상 정보 추출
@@ -2513,6 +2557,36 @@ export class FigmaDesignExtractor {
             const gridColumnGap = (node as { gridColumnGap?: number }).gridColumnGap;
             if (gridRowGap !== undefined) (properties as { rowSpacing?: number }).rowSpacing = gridRowGap;
             if (gridColumnGap !== undefined) (properties as { columnSpacing?: number }).columnSpacing = gridColumnGap;
+        }
+
+        // Paper도 Figma Auto Layout 정렬/패딩을 sx로 반영 (layout 타입이 아니어도 보존)
+        if (componentType !== 'layout' && mapping?.muiName === 'Paper' && node.layoutMode && node.layoutMode !== 'NONE') {
+            if (node.primaryAxisAlignItems) {
+                properties.justifyContent = this.mapAlignment(node.primaryAxisAlignItems);
+            }
+            if (node.counterAxisAlignItems) {
+                properties.alignItems = this.mapAlignment(node.counterAxisAlignItems);
+            }
+
+            const layoutBound = (node as { boundVariables?: Record<string, { id: string }> }).boundVariables;
+            const paddingObj = this.getPaddingFromNode(node);
+            if (paddingObj) {
+                properties.padding = paddingObj;
+                if (layoutBound?.paddingLeft?.id || layoutBound?.paddingRight?.id || layoutBound?.paddingTop?.id || layoutBound?.paddingBottom?.id) {
+                    const paddingStyle: { left?: string; right?: string; top?: string; bottom?: string } = {};
+                    for (const key of ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'] as const) {
+                        const id = layoutBound?.[key]?.id;
+                        if (id) {
+                            const token = await this.extractThemeTokenFromVariableId(id);
+                            if (token) {
+                                const k = key.replace('padding', '').toLowerCase() as 'left' | 'right' | 'top' | 'bottom';
+                                paddingStyle[k] = token;
+                            }
+                        }
+                    }
+                    if (Object.keys(paddingStyle).length) (properties as any).paddingStyle = paddingStyle;
+                }
+            }
         }
 
         // FRAME 이름에 '버튼'이 있으면 componentType이 button으로 잡혀 layout 패딩 블록이 스킵됨 → 오토레이아웃 패딩만이라도 반영
@@ -2699,6 +2773,13 @@ export class FigmaDesignExtractor {
 
         if (node.itemSpacing !== undefined) {
             layout.spacing = node.itemSpacing;
+        }
+
+        if (node.primaryAxisAlignItems) {
+            layout.justifyContent = this.mapAlignment(node.primaryAxisAlignItems) as LayoutConfig['justifyContent'];
+        }
+        if (node.counterAxisAlignItems) {
+            layout.alignItems = this.mapAlignment(node.counterAxisAlignItems) as LayoutConfig['alignItems'];
         }
 
         const paddingObj = this.getPaddingFromNode(node);

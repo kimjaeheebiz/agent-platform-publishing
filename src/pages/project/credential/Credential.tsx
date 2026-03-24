@@ -36,6 +36,7 @@ export const Credential: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -43,7 +44,6 @@ export const Credential: React.FC = () => {
                         <Typography variant="body1">총 5건</Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
                             <FormControl
-                                size="small"
                                 sx={{
                                     width: '200px',
                                 }}
@@ -53,7 +53,6 @@ export const Credential: React.FC = () => {
                                 </InputLabel>
                                 <Select
                                     labelId="select-Credential-유형-label"
-                                    size="small"
                                     label="Credential 유형"
                                 >
                                     <MenuItem value={`Credential 유형`}>Credential 유형</MenuItem>
@@ -63,7 +62,6 @@ export const Credential: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            size="small"
                             placeholder="Credential 이름, 등록자 이름, 등록자 이메일"
                             slotProps={{
                                 input: {
@@ -77,10 +75,8 @@ export const Credential: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        >
-                            Value
-                        </TextField>
-                        <Button variant="contained" size="small" startIcon={<Add />}>
+                        />
+                        <Button variant="contained" startIcon={<Add />}>
                             Credential 추가
                         </Button>
                     </Stack>

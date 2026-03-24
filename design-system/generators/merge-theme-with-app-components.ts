@@ -14,6 +14,7 @@ import fs from 'fs';
 import path from 'path';
 import deepmerge from '@mui/utils/deepmerge';
 import type { ThemeOptions } from '@mui/material/styles';
+import { applyPalettePlaceholdersToTheme } from '../../src/theme/appTheme/palettePlaceholderReplacements.ts';
 import { appComponents, appMuiButtonVariantAppend } from '../../src/theme/appTheme/muiComponents.ts';
 
 const REPO_ROOT = process.cwd();
@@ -22,31 +23,6 @@ const OUT_FILE = path.join(REPO_ROOT, 'src', 'theme', 'generated', 'mergedMuiThe
 type ExtendedThemeOptions = ThemeOptions & {
     brand?: { colors?: Record<string, unknown> };
 };
-
-type TableCellRootOverride = {
-    borderBottom?: unknown;
-};
-
-type TableCellHeadOverride = {
-    backgroundColor?: unknown;
-};
-
-function replacePlaceholdersDeep(input: unknown, replacements: Record<string, string | undefined>): unknown {
-    if (typeof input === 'string') {
-        return replacements[input] ?? input;
-    }
-    if (Array.isArray(input)) {
-        return input.map((item) => replacePlaceholdersDeep(item, replacements));
-    }
-    if (input && typeof input === 'object') {
-        const out: Record<string, unknown> = {};
-        for (const [k, v] of Object.entries(input as Record<string, unknown>)) {
-            out[k] = replacePlaceholdersDeep(v, replacements);
-        }
-        return out;
-    }
-    return input;
-}
 
 function hasBrandColors(brand: unknown): brand is { colors: Record<string, unknown> } {
     return (
@@ -90,80 +66,11 @@ function appendMuiButtonVariants(themeOptions: ThemeOptions): ThemeOptions {
     };
 }
 
-function applyTableCellDividerPlaceholder(themeOptions: ThemeOptions): ThemeOptions {
-    const paletteDivider = themeOptions.palette?.divider;
-    const actionHover = themeOptions.palette?.action?.hover;
-
-    const muiTableCell = themeOptions.components?.MuiTableCell;
-    const styleOverrides = muiTableCell?.styleOverrides;
-    if (!styleOverrides || typeof styleOverrides !== 'object') return themeOptions;
-
-    const root = (styleOverrides as { root?: unknown }).root;
-    const head = (styleOverrides as { head?: unknown }).head;
-    const rootOverride = root && typeof root === 'object' ? (root as TableCellRootOverride) : undefined;
-    const headOverride = head && typeof head === 'object' ? (head as TableCellHeadOverride) : undefined;
-
-    const shouldReplaceBorder = rootOverride?.borderBottom === '1px solid __PALETTE_DIVIDER__' && !!paletteDivider;
-    const shouldReplaceHeadBg = headOverride?.backgroundColor === '__PALETTE_ACTION_HOVER__' && !!actionHover;
-    if (!shouldReplaceBorder && !shouldReplaceHeadBg) return themeOptions;
-
-    return {
-        ...themeOptions,
-        components: {
-            ...themeOptions.components,
-            MuiTableCell: {
-                ...muiTableCell,
-                styleOverrides: {
-                    ...styleOverrides,
-                    ...(root && typeof root === 'object'
-                        ? {
-                            root: {
-                                ...(root as Record<string, unknown>),
-                                ...(shouldReplaceBorder ? { borderBottom: `1px solid ${paletteDivider}` } : {}),
-                            },
-                        }
-                        : {}),
-                    ...(head && typeof head === 'object'
-                        ? {
-                            head: {
-                                ...(head as Record<string, unknown>),
-                                ...(shouldReplaceHeadBg ? { backgroundColor: actionHover } : {}),
-                            },
-                        }
-                        : {}),
-                },
-            },
-        },
-    };
-}
-
-function applyColorPlaceholders(themeOptions: ThemeOptions): ThemeOptions {
-    const p = themeOptions.palette as any;
-    const replacements: Record<string, string | undefined> = {
-        __PALETTE_DIVIDER__: p?.divider,
-        __PALETTE_ACTION_HOVER__: p?.action?.hover,
-        __CHIP_PRIMARY_BG__: p?.primary?._states?.selected ?? p?.action?.selected,
-        __CHIP_PRIMARY_FG__: p?.primary?.main,
-        __CHIP_SECONDARY_BG__: p?.secondary?._states?.selected ?? p?.action?.selected,
-        __CHIP_SECONDARY_FG__: p?.secondary?.main,
-        __CHIP_ERROR_BG__: p?.error?._states?.selected ?? p?.action?.selected,
-        __CHIP_ERROR_FG__: p?.error?.main,
-        __CHIP_WARNING_BG__: p?.warning?._states?.selected ?? p?.action?.selected,
-        __CHIP_WARNING_FG__: p?.warning?.main,
-        __CHIP_INFO_BG__: p?.info?._states?.selected ?? p?.action?.selected,
-        __CHIP_INFO_FG__: p?.info?.main,
-        __CHIP_SUCCESS_BG__: p?.success?._states?.selected ?? p?.action?.selected,
-        __CHIP_SUCCESS_FG__: p?.success?.main,
-    };
-    return replacePlaceholdersDeep(themeOptions, replacements) as ThemeOptions;
-}
-
 export function buildMergedThemeOptions(rawJson: ThemeOptions): ThemeOptions {
     const extended = extendColorSystem(rawJson as ExtendedThemeOptions) as ThemeOptions;
     const withButton = appendMuiButtonVariants(extended);
     const merged = deepmerge(withButton, { components: appComponents }) as ThemeOptions;
-    const withTableCell = applyTableCellDividerPlaceholder(merged);
-    return applyColorPlaceholders(withTableCell);
+    return applyPalettePlaceholdersToTheme(merged);
 }
 
 function main() {

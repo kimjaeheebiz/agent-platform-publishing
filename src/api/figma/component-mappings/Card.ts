@@ -65,6 +65,24 @@ export const CardMapping: ComponentMapping = {
             );
             
             if (paperNode) {
+                // Paper의 실제 스타일 속성(sx 대상)을 Card로 승계
+                if (extractor?.extractComponentProperties) {
+                    const paperExtracted = await extractor.extractComponentProperties(paperNode);
+                    if (paperExtracted) {
+                        if ((paperExtracted as any).padding !== undefined) {
+                            (properties as any).padding = (paperExtracted as any).padding;
+                        }
+                        if ((paperExtracted as any).paddingStyle !== undefined) {
+                            (properties as any).paddingStyle = (paperExtracted as any).paddingStyle;
+                        }
+                        if ((paperExtracted as any).borderRadiusStyle !== undefined) {
+                            (properties as any).borderRadiusStyle = (paperExtracted as any).borderRadiusStyle;
+                        } else if ((paperExtracted as any).borderRadius !== undefined) {
+                            (properties as any).borderRadius = (paperExtracted as any).borderRadius;
+                        }
+                    }
+                }
+
                 // Paper의 componentProperties에서 variant, elevation 추출
                 const paperProps = (paperNode as any).componentProperties || {};
                 

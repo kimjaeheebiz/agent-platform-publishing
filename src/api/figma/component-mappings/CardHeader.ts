@@ -52,7 +52,7 @@ export const CardHeaderMapping: ComponentMapping = {
         },
     },
     
-    excludeFromSx: ['width'],
+    excludeFromSx: ['width', 'display', 'alignItems'],
     
     // ✅ 하위 컴포넌트 추출 커스텀 로직
     extractProperties: async (node: FigmaNode, extractor?: any): Promise<ComponentProperties> => {
@@ -81,7 +81,7 @@ export const CardHeaderMapping: ComponentMapping = {
                     // Subheader 찾기 ({Subheader} 또는 Subheader 포함)
                     if (childName.includes('subheader') || (childName.includes('sub') && childName.includes('header'))) {
                         const subheaderText = extractTextFromNode(child);
-                        if (subheaderText) {
+                        if (subheaderText && !isPlaceholderText(subheaderText)) {
                             (properties as any).subheader = subheaderText;
                             console.log(`✅ [CardHeader] subheader 추출: "${subheaderText}"`);
                         }
@@ -109,8 +109,9 @@ export const CardHeaderMapping: ComponentMapping = {
             }
             
             // 3. IconButton에서 action icon 추출 (icon-extractor.ts 재사용)
-            const iconButton = node.children.find(child => 
-                child.name === '<IconButton>' || child.name.toLowerCase().includes('iconbutton')
+            const iconButton = node.children.find(child =>
+                child.visible !== false &&
+                (child.name === '<IconButton>' || child.name.toLowerCase().includes('iconbutton'))
             );
             if (iconButton) {
                 (properties as any).hasAction = true;
@@ -236,5 +237,11 @@ function extractTextFromNode(node: FigmaNode): string | null {
     }
     
     return null;
+}
+
+/** "{Subheader}" 같은 피그마 플레이스홀더 텍스트는 실제 값으로 취급하지 않음 */
+function isPlaceholderText(text: string): boolean {
+    const t = text.trim();
+    return /^\{[^{}]+\}$/.test(t);
 }
 

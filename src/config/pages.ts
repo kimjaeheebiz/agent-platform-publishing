@@ -84,7 +84,7 @@ export const PAGES: Record<string, PageConfig> = {
     'project.knowledgebase.document': {
         id: 'project.knowledgebase.document',
         title: '문서',
-        path: '/project/knowledgebase/:documentId',
+        path: '/project/knowledgebase/document',
         showBackButton: true,
     },
     'project.apikey': {

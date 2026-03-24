@@ -139,13 +139,49 @@ export const ChipMapping: ComponentMapping = {
         },
     },
 
-    excludeFromSx: ['backgroundColor', 'borderColor', 'color', 'borderRadius'],
+    excludeFromSx: ['width', 'height', 'backgroundColor', 'borderColor', 'color', 'borderRadius'],
     extractContent: () => null,
 
     /** Chip 자식: Thumbnail? ON 시 <Avatar>(Initials) 또는 <Icon> → avatar / icon prop */
     extractProperties: async (node, extractor) => {
         const props = (node as any).componentProperties || {};
         const result: Record<string, unknown> = {};
+
+        const pickTokenFromFill = async (target: any): Promise<string | undefined> => {
+            const fill0 = target?.fills?.[0] as { boundVariables?: { color?: { id?: string } } } | undefined;
+            const variableId = fill0?.boundVariables?.color?.id;
+            if (variableId && extractor && typeof (extractor as any).extractThemeTokenFromVariableId === 'function') {
+                const token = await (extractor as any).extractThemeTokenFromVariableId(variableId);
+                if (typeof token === 'string' && token.trim() !== '') return token;
+            }
+            if (target?.fills?.[0] && extractor && typeof (extractor as any).extractColorWithStyle === 'function') {
+                const info = await (extractor as any).extractColorWithStyle(target.fills[0]);
+                const styleName = (info && typeof info === 'object' && 'styleName' in info)
+                    ? (info as { styleName?: string }).styleName
+                    : undefined;
+                if (typeof styleName === 'string' && styleName.trim() !== '') return styleName;
+            }
+            return undefined;
+        };
+
+        const findFirstTextNode = (nodes: any[]): any | null => {
+            if (!Array.isArray(nodes)) return null;
+            for (const n of nodes) {
+                if (!n || n.visible === false) continue;
+                if (n.type === 'TEXT') return n;
+                if (Array.isArray(n.children)) {
+                    const found = findFirstTextNode(n.children);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+
+        const bgToken = await pickTokenFromFill(node);
+        if (bgToken) result.__chipBgColorStyle = bgToken;
+        const labelTextNode = findFirstTextNode((node as any).children || []);
+        const labelToken = await pickTokenFromFill(labelTextNode);
+        if (labelToken) result.__chipLabelColorStyle = labelToken;
 
         const thumbnailOn = getFigmaBooleanProp(node, 'Thumbnail?', 'Thumbnail');
         if (!thumbnailOn) return result;
@@ -163,7 +199,7 @@ export const ChipMapping: ComponentMapping = {
                 const initialsVal = key ? (ap[key]?.value ?? ap[key]) : initials;
                 if (typeof initialsVal === 'string' && initialsVal) {
                     result['__chipAvatarInitials'] = initialsVal;
-                    return result;
+                    continue;
                 }
                 if (content === 'Icon' || (typeof content === 'string' && content.toLowerCase() === 'icon')) {
                     const iconChild = (child as any).children?.find((c: any) =>
@@ -174,7 +210,7 @@ export const ChipMapping: ComponentMapping = {
                             ?? (iconChild as any).name?.replace?.(/<|>/g, '')?.trim();
                         if (iconName && iconName !== 'Icon') {
                             result['__chipIconName'] = iconName;
-                            return result;
+                            continue;
                         }
                     }
                 }
@@ -192,7 +228,7 @@ export const ChipMapping: ComponentMapping = {
                 }
                 if (iconName && iconName !== 'Icon') {
                     result['__chipIconName'] = iconName;
-                    return result;
+                    continue;
                 }
             }
         }
@@ -200,9 +236,51 @@ export const ChipMapping: ComponentMapping = {
     },
 
     generateJSX: (componentName, props, content, sx, properties) => {
+        const normalizeThemeColorPath = (raw: unknown): string | null => {
+            if (typeof raw !== 'string' || raw.trim() === '') return null;
+            let v = raw.trim().replace(/^palette\./, '');
+            if (v === 'common.white_states.main') v = 'common.white';
+            if (v === 'common.black_states.main') v = 'common.black';
+            return v;
+        };
+
         const labelVal = String((properties as any).label ?? '').replace(/"/g, '\\"');
         const rest = (props || '').replace(/\s*label="[^"]*"/g, '').trim();
-        const sxAttribute = sx ? ` sx={${sx}}` : '';
+        const chipColor = String((properties as any).color ?? 'default').toLowerCase();
+        const chipVariant = String((properties as any).variant ?? 'filled').toLowerCase();
+        const shouldApplyExplicitColor = chipColor !== 'default';
+
+        const colorMap = new Map<string, string>();
+        const setColorEntry = (key: 'backgroundColor' | 'color' | 'borderColor', value: string) => {
+            colorMap.set(key, value);
+        };
+        if (shouldApplyExplicitColor) {
+            if (chipVariant === 'outlined') {
+                setColorEntry('color', `${chipColor}.main`);
+                setColorEntry('borderColor', `${chipColor}.main`);
+            } else {
+                setColorEntry('backgroundColor', `${chipColor}._states.selected`);
+                setColorEntry('color', `${chipColor}.main`);
+            }
+        }
+        const bgToken = normalizeThemeColorPath((properties as any).__chipBgColorStyle ?? (properties as any).colorStyle);
+        const labelToken = normalizeThemeColorPath((properties as any).__chipLabelColorStyle);
+        if (bgToken) setColorEntry('backgroundColor', bgToken);
+        if (labelToken) setColorEntry('color', labelToken);
+        const colorEntries = Array.from(colorMap.entries()).map(([k, v]) => `${k}: '${v}'`);
+
+        let sxAttribute = '';
+        if (sx && colorEntries.length > 0) {
+            const trimmed = sx.trim();
+            const inner = trimmed.startsWith('{') && trimmed.endsWith('}') ? trimmed.slice(1, -1).trim() : trimmed;
+            const comma = inner.length > 0 ? ', ' : '';
+            sxAttribute = ` sx={{ ${inner}${comma}${colorEntries.join(', ')} }}`;
+        } else if (sx) {
+            sxAttribute = ` sx={${sx}}`;
+        } else if (colorEntries.length > 0) {
+            sxAttribute = ` sx={{ ${colorEntries.join(', ')} }}`;
+        }
+
         return `<Chip label="${labelVal}"${rest ? ` ${rest}` : ''}${sxAttribute} />`;
     },
 };

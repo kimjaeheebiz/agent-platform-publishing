@@ -93,6 +93,8 @@ ${pageCode}`;
 
         // 페이지 최상위 Box padding: Main Content에서 추출한 값이 있을 때만 출력. 없거나 전부 0이면 생략.
         const paddingSxLine = this.buildPaddingSxLine(contentConfig.layout);
+        // MainContent 정렬이 기본(top-left)이 아닐 때만 flex 정렬 sx 추가
+        const alignmentSxLine = this.buildMainContentAlignmentSxLine(contentConfig.layout);
 
         return `${pageSpecificImports}
 
@@ -100,7 +102,7 @@ export const ${componentName}: React.FC = () => {
 ${hooksBlock}    return (
         <Box
             sx={{
-                ${paddingSxLine}minHeight: '100%',
+                ${paddingSxLine}${alignmentSxLine}minHeight: '100%',
             }}
         >
             ${componentJSX}
@@ -144,10 +146,49 @@ ${hooksBlock}    return (
     }
 
     /**
+     * MainContent 정렬이 기본(top-left)이 아닐 때만 페이지 최상위 Box에 flex 정렬 sx를 출력.
+     */
+    private buildMainContentAlignmentSxLine(layout?: LayoutConfig): string {
+        const justifyContent = layout?.justifyContent;
+        const alignItems = layout?.alignItems;
+        const resolvedJustify = justifyContent ?? 'flex-start';
+        const resolvedAlign = alignItems ?? 'flex-start';
+        const isTopLeft = resolvedJustify === 'flex-start' && resolvedAlign === 'flex-start';
+        if (isTopLeft) return '';
+
+        const lines: string[] = [`display: 'flex'`];
+        if (layout?.direction && layout.direction !== 'column') {
+            lines.push(`flexDirection: '${layout.direction}'`);
+        }
+        if (justifyContent) lines.push(`justifyContent: '${justifyContent}'`);
+        if (alignItems) lines.push(`alignItems: '${alignItems}'`);
+        if (lines.length === 1) return '';
+        return `${lines.join(',\n                ')},\n                `;
+    }
+
+    /**
      * properties.paddingStyle / properties.padding → sx 문자열. 없으면 null. (컴포넌트 sx 공통)
      */
     private getPaddingSxFromProperties(properties: ComponentProperties): string | null {
-        // Figma Auto Layout 실제 px 우선 (변수 바인딩 시에도 extractor가 padding 객체를 채움)
+        // 변수 바인딩(paddingStyle)이 있으면 우선 사용: px 하드코딩 대신 theme spacing 토큰 숫자로 출력
+        const paddingStyle = properties.paddingStyle;
+        if (paddingStyle && (paddingStyle.top !== undefined || paddingStyle.right !== undefined || paddingStyle.bottom !== undefined || paddingStyle.left !== undefined)) {
+            const padTok = (tok: string) => {
+                const raw = String(tok ?? '0').trim();
+                if (raw === '0' || raw === '') return '0';
+                const n = this.spacingTokenToNumber(raw);
+                if (!Number.isNaN(n) && n >= 0) return String(n);
+                const px = getSpacingPxFromTokenName(raw);
+                if (px != null) return `'${px}px'`;
+                return raw;
+            };
+            const t = padTok(paddingStyle.top ?? '0');
+            const r = padTok(paddingStyle.right ?? '0');
+            const b = padTok(paddingStyle.bottom ?? '0');
+            const l = padTok(paddingStyle.left ?? '0');
+            return this.buildPaddingSxString(t, r, b, l);
+        }
+        // 변수 바인딩이 없으면 Figma의 실제 px를 그대로 유지
         if (properties.padding != null && typeof properties.padding === 'object') {
             const pad = properties.padding as { left?: number; right?: number; top?: number; bottom?: number };
             const { left = 0, right = 0, top = 0, bottom = 0 } = pad;
@@ -155,23 +196,6 @@ ${hooksBlock}    return (
                 const q = (v: number) => `'${v}px'`;
                 return this.buildPaddingSxString(q(top), q(right), q(bottom), q(left));
             }
-        }
-        const paddingStyle = properties.paddingStyle;
-        if (paddingStyle && (paddingStyle.top !== undefined || paddingStyle.right !== undefined || paddingStyle.bottom !== undefined || paddingStyle.left !== undefined)) {
-            const padTok = (tok: string) => {
-                const raw = String(tok ?? '0').trim();
-                if (raw === '0' || raw === '') return '0';
-                const px = getSpacingPxFromTokenName(raw);
-                if (px != null) return `'${px}px'`;
-                const n = parseFloat(raw.replace(',', '.'));
-                if (!Number.isNaN(n) && n >= 0) return `'${Math.round(n)}px'`;
-                return String(this.spacingTokenToNumber(raw));
-            };
-            const t = padTok(paddingStyle.top ?? '0');
-            const r = padTok(paddingStyle.right ?? '0');
-            const b = padTok(paddingStyle.bottom ?? '0');
-            const l = padTok(paddingStyle.left ?? '0');
-            return this.buildPaddingSxString(t, r, b, l);
         }
         if (properties.padding != null) {
             if (typeof properties.padding === 'object') {
@@ -396,8 +420,11 @@ ${typographyStyles}
         const isAccordion = mapping?.muiName === 'Accordion';
         const isAccordionSummary = mapping?.muiName === 'AccordionSummary';
         const isAccordionDetails = mapping?.muiName === 'AccordionDetails';
+        const isFormControl = mapping?.muiName === 'FormControl';
+        const isRadioGroup = mapping?.muiName === 'RadioGroup';
         const shouldRenderChildren =
             (componentType === 'layout' ||
+                componentType === 'form' ||
                 componentType === 'card' ||
                 componentType === 'table' ||
                 isCardSubComponent ||
@@ -411,7 +438,9 @@ ${typographyStyles}
                 isDrawer ||
                 isAccordion ||
                 isAccordionSummary ||
-                isAccordionDetails) &&
+                isAccordionDetails ||
+                isFormControl ||
+                isRadioGroup) &&
             children &&
             children.length > 0;
 
@@ -533,6 +562,7 @@ ${typographyStyles}
         const isGrid = mapping?.muiName === 'Grid';
         const isBox = mapping?.muiName === 'Box';
         const isTableStructure = mapping ? TABLE_STRUCTURE_MUI_NAMES.has(mapping.muiName) : false;
+        const excludeList = mapping?.excludeFromSx || [];
         if (isTableStructure) {
             return null;
         }
@@ -542,31 +572,31 @@ ${typographyStyles}
         // layout 타입인 경우 Auto Layout 속성 추가 (Grid는 prop으로 처리하므로 sx 제외)
         if (componentType === 'layout' && !isGrid) {
             // display: flex - Stack인 경우 제외 (기본값이므로 불필요)
-            if (properties.display && !isStack) {
+            if (properties.display && !isStack && !excludeList.includes('display')) {
                 sxProps.push(`display: '${properties.display}'`);
             }
 
             // flexDirection - Stack인 경우 제외 (direction prop으로 처리)
-            if (properties.flexDirection && !isStack) {
+            if (properties.flexDirection && !isStack && !excludeList.includes('flexDirection')) {
                 sxProps.push(`flexDirection: '${properties.flexDirection}'`);
             }
 
             // justifyContent - Stack인 경우 제외 (justifyContent prop으로 처리)
-            if (properties.justifyContent && !isStack) {
+            if (properties.justifyContent && !isStack && !excludeList.includes('justifyContent')) {
                 sxProps.push(`justifyContent: '${properties.justifyContent}'`);
             }
 
             // alignItems - Stack인 경우 제외 (alignItems prop으로 처리)
-            if (properties.alignItems && !isStack) {
+            if (properties.alignItems && !isStack && !excludeList.includes('alignItems')) {
                 sxProps.push(`alignItems: '${properties.alignItems}'`);
             }
 
             // gap - 테마 토큰(gapStyle) 우선, 없으면 숫자를 theme.spacing으로 변환. px 하드코딩 없음.
             const gapStyle = (properties as { gapStyle?: string }).gapStyle;
-            if (gapStyle !== undefined && !isStack) {
+            if (gapStyle !== undefined && !isStack && !excludeList.includes('gap')) {
                 const n = this.spacingTokenToNumber(gapStyle);
                 sxProps.push(`gap: ${n}`);
-            } else if (properties.gap && !isStack) {
+            } else if (properties.gap && !isStack && !excludeList.includes('gap')) {
                 sxProps.push(`gap: ${this.mapSpacingToVariable(properties.gap)}`);
             }
 
@@ -587,8 +617,23 @@ ${typographyStyles}
             }
         }
 
-        // 매핑에서 excludeFromSx 확인
-        const excludeList = mapping?.excludeFromSx || [];
+        // Paper도 Figma Auto Layout padding(변수/px)을 sx로 반영
+        if (mapping?.muiName === 'Paper' && componentType !== 'layout' && !isGrid) {
+            const padSx = this.getPaddingSxFromProperties(properties);
+            const omitZeroPaddingSx = padSx != null && this.isZeroPaddingSxString(padSx);
+            if (padSx && !omitZeroPaddingSx) {
+                padSx.split(', ').forEach((prop) => {
+                    const m = /^(py|px|pt|pb|pl|pr|p):\s*(\d+)$/.exec(prop.trim());
+                    if (m) {
+                        const num = parseInt(m[2], 10);
+                        if (num >= 13) sxProps.push(`${m[1]}: '${num}px'`);
+                        else sxProps.push(prop.trim());
+                    } else {
+                        sxProps.push(prop.trim());
+                    }
+                });
+            }
+        }
 
         // width/height 처리
         // - 고정 사이즈(px): width 추가
@@ -619,18 +664,21 @@ ${typographyStyles}
             }
         }
         if (componentType !== 'button' && !excludeList.includes('backgroundColor')) {
+            const isTextLikeMui =
+                componentType === 'typography' ||
+                mapping?.muiName === 'FormLabel' ||
+                mapping?.muiName === 'InputLabel' ||
+                mapping?.muiName === 'FormHelperText';
             // 색상 속성: 테마 변수명(colorStyle)만 사용, HEX는 backgroundColor로만 fallback
             if (properties.colorStyle && !/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(properties.colorStyle)) {
-                const themeColor = properties.colorStyle.startsWith('palette.')
-                    ? properties.colorStyle.replace(/^palette\./, '')
-                    : properties.colorStyle;
-                if (componentType === 'typography') {
+                const themeColor = this.normalizeThemeColorPath(properties.colorStyle);
+                if (isTextLikeMui) {
                     if (themeColor !== 'text.primary') sxProps.push(`color: '${themeColor}'`);
                 } else {
                     sxProps.push(`backgroundColor: '${themeColor}'`);
                 }
             } else if (properties.backgroundColor && properties.backgroundColor !== 'transparent' && !properties.colorStyle) {
-                if (componentType === 'typography') {
+                if (isTextLikeMui) {
                     const bg = properties.backgroundColor;
                     if (bg !== 'text.primary' && !String(bg).includes('text.primary')) sxProps.push(`color: '${bg}'`);
                 } else {
@@ -686,7 +734,11 @@ ${typographyStyles}
             if (borderRadiusStyle) {
                 sxProps.push(`borderRadius: (theme) => theme.${borderRadiusStyle}`);
             } else if (properties.borderRadius != null) {
-                sxProps.push(`borderRadius: '${properties.borderRadius}px'`);
+                // Paper 기본 radius(4px)와 동일하면 중복 sx를 생략
+                const isPaperDefaultRadius = mapping?.muiName === 'Paper' && Number(properties.borderRadius) === 4;
+                if (!isPaperDefaultRadius) {
+                    sxProps.push(`borderRadius: '${properties.borderRadius}px'`);
+                }
             }
         }
         if (properties.opacity) sxProps.push(`opacity: ${properties.opacity}`);
@@ -701,6 +753,10 @@ ${typographyStyles}
 
         // excludeFromSx에 있는 속성들은 sx에서 제외 (layout 타입이 아닌 경우만)
         if (componentType !== 'layout' && !excludeList.includes('justifyContent') && !excludeList.includes('alignItems')) {
+            // Paper/Card 등 비-layout 컴포넌트에서 정렬값이 있으면 flex 컨테이너를 함께 보장
+            if ((properties.justifyContent || properties.alignItems) && !sxProps.some((p) => p.startsWith('display:'))) {
+                sxProps.push(`display: 'flex'`);
+            }
             if (properties.justifyContent) sxProps.push(`justifyContent: '${properties.justifyContent}'`);
             if (properties.alignItems) sxProps.push(`alignItems: '${properties.alignItems}'`);
         }
@@ -1002,6 +1058,15 @@ ${typographyStyles}
         }
         // 토큰 매핑이 없으면 숫자 그대로 반환
         return `${spacingValue}`;
+    }
+
+    /** extractor 색상 토큰 경로를 MUI sx 팔레트 경로로 정규화 */
+    private normalizeThemeColorPath(raw: string): string {
+        const v = raw.replace(/^palette\./, '');
+        // palette.common에는 white_states/black_states 그룹이 없고 white/black만 존재
+        if (v === 'common.white_states.main') return 'common.white';
+        if (v === 'common.black_states.main') return 'common.black';
+        return v;
     }
 
     /**
@@ -1467,11 +1532,13 @@ export const Users = () => {
 
         // 레이아웃 스타일 적용
         if (figmaComponents.layout) {
+            const pVal = this.mapSpacingToVariable(figmaComponents.layout.padding);
+            const gapVal = this.mapSpacingToVariable(figmaComponents.layout.spacing);
             const layoutStyle = `sx={{ 
-                p: ${figmaComponents.layout.padding}, 
+                p: ${pVal}, 
                 display: 'flex', 
                 flexDirection: '${figmaComponents.layout.direction}', 
-                gap: ${figmaComponents.layout.spacing} 
+                gap: ${gapVal} 
             }}`;
 
             // 기존 Box에 스타일 적용

@@ -725,7 +725,7 @@ export const Guide = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        size="large"
+                                        size="small"
                                         checked={checked}
                                         onChange={(e) => setChecked(e.target.checked)}
                                     />

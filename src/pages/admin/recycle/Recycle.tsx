@@ -33,6 +33,7 @@ export const Recycle: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -49,7 +50,6 @@ export const Recycle: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            size="small"
                             placeholder="리소스 이름, 소속 프로젝트 이름"
                             slotProps={{
                                 input: {
@@ -63,7 +63,7 @@ export const Recycle: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
+                        />
                     </Stack>
                 </Stack>
                 <TableContainer component={Paper} elevation={0} variant="outlined">

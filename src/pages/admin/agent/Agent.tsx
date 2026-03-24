@@ -37,6 +37,7 @@ export const Agent: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -51,7 +52,6 @@ export const Agent: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <FormControl
-                            size="small"
                             sx={{
                                 width: '160px',
                             }}
@@ -60,14 +60,12 @@ export const Agent: React.FC = () => {
                             <Select
                                 labelId="select-소속-프로젝트-label"
                                 value="전체"
-                                size="small"
                                 label="소속 프로젝트"
                             >
                                 <MenuItem value={`전체`}>전체</MenuItem>
                             </Select>
                         </FormControl>
                         <TextField
-                            size="small"
                             placeholder="에이전트 이름, 등록자 이름, 등록자 이메일"
                             slotProps={{
                                 input: {
@@ -81,7 +79,7 @@ export const Agent: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
+                        />
                     </Stack>
                 </Stack>
                 <TableContainer component={Paper} elevation={0} variant="outlined">

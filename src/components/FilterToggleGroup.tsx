@@ -21,7 +21,7 @@ export const FilterToggleGroup: React.FC<FilterToggleGroupProps> = ({
     options = [],
     value = '',
     onChange = () => {},
-    size = 'small',
+    size = 'medium',
     ariaLabel = '테이블 필터',
 }) => {
     const defaultValue = useMemo(
@@ -48,11 +48,22 @@ export const FilterToggleGroup: React.FC<FilterToggleGroupProps> = ({
     };
 
     return (
-        <ToggleButtonGroup exclusive value={resolvedValue} onChange={handleChange} aria-label={ariaLabel} size={size}>
+        <ToggleButtonGroup exclusive value={resolvedValue} onChange={handleChange} aria-label={ariaLabel} size={size} color="primary">
             {(options || []).map((option) => (
                 <ToggleButton key={option.value} value={option.value} sx={{ gap: 1 }}>
                     {option.label}
-                    <Chip label={option.count} size="small" />
+                    <Chip
+                        label={option.count}
+                        size="small"
+                        color={option.value === resolvedValue ? 'primary' : 'default'}
+                        sx={{
+                            minWidth: '20px',
+                            height: '20px',
+                            '& .MuiChip-label': {
+                                px: '6px',
+                            },
+                        }}
+                    />
                 </ToggleButton>
             ))}
         </ToggleButtonGroup>

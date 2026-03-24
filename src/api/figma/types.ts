@@ -419,6 +419,10 @@ export interface LayoutConfig {
     containerType: 'flex' | 'grid' | 'absolute';
     direction?: 'row' | 'column';
     spacing?: number;
+    /** MainContent auto-layout 주축 정렬 */
+    justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
+    /** MainContent auto-layout 교차축 정렬 */
+    alignItems?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
     padding?: {
         top: number;
         right: number;

@@ -34,7 +34,7 @@ export const lightThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.37}",
+        "lineHeight": "{lineHeights.36}",
         "fontSize": "{fontSize.10}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -835,7 +835,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "21": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": 22
     },
     "22": {
       "$type": "lineHeights",
@@ -855,11 +855,11 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "26": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": 22
     },
     "27": {
       "$type": "lineHeights",
-      "$value": 22
+      "$value": 24
     },
     "28": {
       "$type": "lineHeights",
@@ -883,23 +883,23 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "33": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": 20
     },
     "34": {
       "$type": "lineHeights",
-      "$value": 20
+      "$value": 14
     },
     "35": {
       "$type": "lineHeights",
-      "$value": 14
+      "$value": 12
     },
     "36": {
       "$type": "lineHeights",
-      "$value": 12
+      "$value": "116.7%"
     },
     "37": {
       "$type": "lineHeights",
-      "$value": "116.7%"
+      "$value": "166%"
     },
     "38": {
       "$type": "lineHeights",
@@ -1453,7 +1453,7 @@ export const lightThemeOptions: ThemeOptions = {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1529,7 +1529,7 @@ export const lightThemeOptions: ThemeOptions = {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1551,13 +1551,13 @@ export const lightThemeOptions: ThemeOptions = {
         "textDecoration": "{textDecoration.none}"
       }
     },
-    "valueSmall": {
+    "valueLarge": {
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.27}",
-        "fontSize": "{fontSize.2}",
+        "fontSize": "{fontSize.4}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1589,7 +1589,7 @@ export const lightThemeOptions: ThemeOptions = {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.6}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1632,20 +1632,6 @@ export const lightThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
-        "letterSpacing": "{letterSpacing.0}",
-        "paragraphSpacing": "{paragraphSpacing.0}",
-        "paragraphIndent": "{paragraphIndent.0}",
-        "textCase": "{textCase.none}",
-        "textDecoration": "{textDecoration.none}"
-      }
-    },
-    "headerSmall": {
-      "$type": "typography",
-      "$value": {
-        "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
@@ -1662,7 +1648,7 @@ export const lightThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.35}",
+        "lineHeight": "{lineHeights.34}",
         "fontSize": "{fontSize.0}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -1694,7 +1680,7 @@ export const lightThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamilies.roboto}",
         "fontWeight": "{fontWeights.roboto-3}",
-        "lineHeight": "{lineHeights.38}",
+        "lineHeight": "{lineHeights.37}",
         "fontSize": "{fontSize.1}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.1}",
@@ -1847,59 +1833,91 @@ export const lightThemeOptions: ThemeOptions = {
         }
       }
     },
-    "MuiTextField": {
+    "MuiFormHelperText": {
       "styleOverrides": {
-        "label": {
-          "fontSize": "0.75rem",
-          "fontWeight": 400,
-          "lineHeight": "12px"
-        },
-        "input": {
-          "fontSize": "0.875rem",
-          "fontWeight": 400,
-          "lineHeight": "24px"
-        },
-        "helperText": {
+        "root": {
           "fontSize": "0.75rem",
           "fontWeight": 400,
           "lineHeight": 1.3
-        },
+        }
+      }
+    },
+    "MuiFormControlLabel": {
+      "styleOverrides": {
+        "label": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.5
+        }
+      }
+    },
+    "MuiFormLabel": {
+      "styleOverrides": {
         "root": {
-          "verticalAlign": "top",
-          "& .MuiFormHelperText-root": {
-            "marginTop": "2px",
-            "marginLeft": 0,
-            "marginRight": 0,
-            "lineHeight": 1.2
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.5
+        }
+      }
+    },
+    "MuiInputLabel": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px",
+          "&.MuiInputLabel-sizeLarge": {
+            "fontSize": "0.9375rem",
+            "fontWeight": 400,
+            "lineHeight": "24px"
+          },
+          "&.MuiInputLabel-outlined.MuiInputLabel-shrink, &.MuiInputLabel-filled.MuiInputLabel-shrink, &.MuiInputLabel-filled.Mui-focused": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(14px, -6px) scale(1)"
+          },
+          "&.MuiInputLabel-standard.MuiInputLabel-shrink": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(0, 0px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiInputLabel-shrink, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled.MuiInputLabel-shrink": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(14px, -6px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard.MuiInputLabel-shrink": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(0, 0px) scale(1)"
+          },
+          "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
+            "transform": "translate(14px, 7px) scale(1)"
+          },
+          "&.MuiInputLabel-standard": {
+            "transform": "translate(0, 10px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled": {
+            "transform": "translate(14px, 5px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard": {
+            "transform": "translate(0, 9px) scale(1)"
           },
           "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "24px"
-                }
-              }
-            },
             {
               "props": {
                 "size": "small"
               },
               "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "30px"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "36px"
+                "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
+                  "transform": "translate(14px, 5px) scale(1)"
+                },
+                "&.MuiInputLabel-standard": {
+                  "transform": "translate(0, 9px) scale(1)"
                 }
               }
             },
@@ -1908,9 +1926,277 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "large"
               },
               "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "42px"
+                "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
+                  "transform": "translate(14px, 10px) scale(1)"
+                },
+                "&.MuiInputLabel-standard": {
+                  "transform": "translate(0, 14px) scale(1)"
                 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MuiOutlinedInput": {
+      "styleOverrides": {
+        "input": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px"
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiOutlinedInput-input": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px",
+              "paddingBlock": "10px",
+              "height": "auto"
+            },
+            "minHeight": "42px"
+          },
+          "&.MuiInputBase-sizeSmall": {
+            "minHeight": "30px",
+            "& .MuiOutlinedInput-input": {
+              "paddingBlock": "5px",
+              "height": "auto"
+            }
+          },
+          "&.MuiInputBase-sizeMedium": {
+            "minHeight": "36px",
+            "& .MuiOutlinedInput-input": {
+              "paddingBlock": "7px",
+              "height": "auto"
+            }
+          },
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "& .MuiOutlinedInput-input": {
+                  "paddingBlock": "5px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "& .MuiOutlinedInput-input": {
+                  "paddingBlock": "7px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "& .MuiOutlinedInput-input": {
+                  "paddingBlock": "10px",
+                  "height": "auto"
+                }
+              }
+            }
+          ]
+        },
+        "notchedOutline": {
+          "& legend": {
+            "fontSize": "12px"
+          }
+        }
+      }
+    },
+    "MuiFilledInput": {
+      "styleOverrides": {
+        "input": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px"
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiFilledInput-input": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px"
+            }
+          },
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "& .MuiFilledInput-input": {
+                  "paddingBlock": "5px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "& .MuiFilledInput-input": {
+                  "paddingBlock": "7px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "& .MuiFilledInput-input": {
+                  "paddingBlock": "10px",
+                  "height": "auto"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MuiInput": {
+      "styleOverrides": {
+        "input": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px"
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiInput-input": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px"
+            }
+          },
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "& .MuiInput-input": {
+                  "paddingBlock": "5px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "& .MuiInput-input": {
+                  "paddingBlock": "7px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "& .MuiInput-input": {
+                  "paddingBlock": "10px",
+                  "height": "auto"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MuiSelect": {
+      "styleOverrides": {
+        "select": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px",
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "paddingBlock": "5px"
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "paddingBlock": "7px"
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "paddingBlock": "10px"
+              }
+            }
+          ]
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiSelect-select": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px"
+            }
+          }
+        },
+        "icon": {
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "fontSize": "1.25rem"
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "fontSize": "1.5rem"
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "fontSize": "1.75rem"
               }
             }
           ]
@@ -1936,9 +2222,9 @@ export const lightThemeOptions: ThemeOptions = {
             "size": "medium"
           },
           "style": {
-            "fontSize": "0.875rem",
+            "fontSize": "0.8125rem",
             "fontWeight": 500,
-            "lineHeight": "24px",
+            "lineHeight": "22px",
             "textTransform": "uppercase",
             "minHeight": "36px"
           }
@@ -1968,7 +2254,57 @@ export const lightThemeOptions: ThemeOptions = {
             "minHeight": "24px"
           }
         }
-      ]
+      ],
+      "styleOverrides": {
+        "root": {
+          "boxShadow": "none",
+          "&:hover": {
+            "boxShadow": "none"
+          },
+          "&:active": {
+            "boxShadow": "none"
+          },
+          "&.Mui-focusVisible": {
+            "boxShadow": "none"
+          },
+          "gap": 0
+        }
+      }
+    },
+    "MuiToggleButton": {
+      "styleOverrides": {
+        "sizeLarge": {
+          "fontSize": "0.9375rem",
+          "fontWeight": 500,
+          "lineHeight": "26px",
+          "textTransform": "none",
+          "minHeight": "42px",
+          "height": "42px",
+          "padding": "8px 14px"
+        },
+        "sizeMedium": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 500,
+          "lineHeight": "22px",
+          "textTransform": "none",
+          "minHeight": "36px",
+          "height": "36px",
+          "padding": "6px 12px"
+        },
+        "sizeSmall": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 500,
+          "lineHeight": "20px",
+          "letterSpacing": 0.46,
+          "textTransform": "none",
+          "minHeight": "30px",
+          "height": "30px",
+          "padding": "4px 12px"
+        },
+        "root": {
+          "textTransform": "none"
+        }
+      }
     },
     "MuiIconButton": {
       "styleOverrides": {
@@ -2022,156 +2358,24 @@ export const lightThemeOptions: ThemeOptions = {
         }
       }
     },
-    "MuiInputLabel": {
+    "MuiTextField": {
       "styleOverrides": {
         "root": {
-          "&.MuiInputLabel-outlined": {
-            "transform": "translate(14px, 9px) scale(1)"
-          },
-          "&.MuiInputLabel-outlined.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-filled": {
-            "transform": "translate(14px, 9px) scale(1)"
-          },
-          "&.MuiInputLabel-filled.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-filled.Mui-focused": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-standard": {
-            "transform": "translate(0, 12px) scale(1)"
-          },
-          "&.MuiInputLabel-standard.MuiInputLabel-shrink": {
-            "transform": "translate(0, 0px) scale(0.75)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined": {
-            "transform": "translate(14px, 6px) scale(1)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-filled": {
-            "transform": "translate(14px, 6px) scale(1)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard": {
-            "transform": "translate(0, 9px) scale(1)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-filled.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard.MuiInputLabel-shrink": {
-            "transform": "translate(0, 0px) scale(0.75)"
+          "verticalAlign": "top",
+          "& .MuiFormHelperText-root": {
+            "marginTop": "2px",
+            "marginLeft": 0,
+            "marginRight": 0,
+            "lineHeight": 1.2
           },
           "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "&.MuiInputLabel-outlined": {
-                  "transform": "translate(14px, 5px) scale(1)"
-                },
-                "&.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 5px) scale(1)"
-                },
-                "&.MuiInputLabel-standard": {
-                  "transform": "translate(0, 10px) scale(1)"
-                }
-              }
-            },
             {
               "props": {
                 "size": "small"
               },
               "style": {
-                "&.MuiInputLabel-outlined": {
-                  "transform": "translate(14px, 6px) scale(1)"
-                },
-                "&.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 6px) scale(1)"
-                },
-                "&.MuiInputLabel-standard": {
-                  "transform": "translate(0, 9px) scale(1)"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "&.MuiInputLabel-outlined": {
-                  "transform": "translate(14px, 12px) scale(1)"
-                },
-                "&.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 12px) scale(1)"
-                },
-                "&.MuiInputLabel-standard": {
-                  "transform": "translate(0, 14px) scale(1)"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiOutlinedInput": {
-      "styleOverrides": {
-        "root": {
-          "&.MuiInputBase-sizeXsmall": {
-            "minHeight": "24px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "2px 8px",
-              "height": "auto",
-              "minHeight": 0
-            }
-          },
-          "&.MuiInputBase-sizeSmall": {
-            "minHeight": "30px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "5px 12px",
-              "height": "auto"
-            }
-          },
-          "&.MuiInputBase-sizeMedium": {
-            "minHeight": "36px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "8px 12px",
-              "height": "auto"
-            }
-          },
-          "&.MuiInputBase-sizeLarge": {
-            "minHeight": "42px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "10px 14px",
-              "height": "auto"
-            }
-          },
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "2px 8px",
-                  "height": "auto",
-                  "minHeight": 0
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "5px 12px",
-                  "height": "auto"
+                "& .MuiInputBase-root": {
+                  "minHeight": "30px"
                 }
               }
             },
@@ -2180,10 +2384,8 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "medium"
               },
               "style": {
-                "minHeight": "36px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "8px 12px",
-                  "height": "auto"
+                "& .MuiInputBase-root": {
+                  "minHeight": "36px"
                 }
               }
             },
@@ -2192,205 +2394,9 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "large"
               },
               "style": {
-                "minHeight": "42px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "10px 14px",
-                  "height": "auto"
+                "& .MuiInputBase-root": {
+                  "minHeight": "42px"
                 }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiInput": {
-      "styleOverrides": {
-        "root": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "& .MuiInput-input": {
-                  "padding": "4px 0",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "& .MuiInput-input": {
-                  "padding": "6px 0",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "minHeight": "36px",
-                "& .MuiInput-input": {
-                  "padding": "8px 0",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "minHeight": "42px",
-                "& .MuiInput-input": {
-                  "padding": "10px 0",
-                  "height": "auto"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiFilledInput": {
-      "styleOverrides": {
-        "root": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "& .MuiFilledInput-input": {
-                  "padding": "4px 10px",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "& .MuiFilledInput-input": {
-                  "padding": "6px 12px",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "minHeight": "36px",
-                "& .MuiFilledInput-input": {
-                  "padding": "8px 12px",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "minHeight": "42px",
-                "& .MuiFilledInput-input": {
-                  "padding": "10px 14px",
-                  "height": "auto"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiSelect": {
-      "styleOverrides": {
-        "select": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "padding": "2px 8px"
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "padding": "5px 12px"
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "minHeight": "36px",
-                "padding": "8px 12px"
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "minHeight": "42px",
-                "padding": "10px 14px"
-              }
-            }
-          ]
-        },
-        "icon": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "fontSize": "1.125rem",
-                "right": 6,
-                "top": "calc(50% - 0.5625rem)"
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "fontSize": "1.25rem"
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "fontSize": "1.5rem"
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "fontSize": "1.75rem"
               }
             }
           ]
@@ -2401,29 +2407,6 @@ export const lightThemeOptions: ThemeOptions = {
       "styleOverrides": {
         "root": {
           "alignItems": "stretch"
-        }
-      }
-    },
-    "MuiToggleButton": {
-      "styleOverrides": {
-        "root": {
-          "textTransform": "none",
-          "lineHeight": "20px"
-        },
-        "sizeSmall": {
-          "minHeight": "30px",
-          "height": "30px",
-          "padding": "4px 12px"
-        },
-        "sizeMedium": {
-          "minHeight": "36px",
-          "height": "36px",
-          "padding": "6px 12px"
-        },
-        "sizeLarge": {
-          "minHeight": "42px",
-          "height": "42px",
-          "padding": "8px 14px"
         }
       }
     },
@@ -2451,9 +2434,6 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "MuiTableCell": {
       "styleOverrides": {
-        "root": {
-          "borderBottom": "1px solid #e0e0e0"
-        },
         "head": {
           "backgroundColor": "#0000000a"
         }
@@ -2655,7 +2635,7 @@ export const lightThemeOptions: ThemeOptions = {
       "white": "#ffffff",
       "black": "#000000"
     },
-    "divider": "#e0e0e0",
+    "divider": "#0000001f",
     "_components": {
       "appBar": {
         "defaultFill": "#e9e9e9",
@@ -2770,7 +2750,7 @@ export const darkThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.37}",
+        "lineHeight": "{lineHeights.36}",
         "fontSize": "{fontSize.10}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -3571,7 +3551,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "21": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": 22
     },
     "22": {
       "$type": "lineHeights",
@@ -3591,11 +3571,11 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "26": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": 22
     },
     "27": {
       "$type": "lineHeights",
-      "$value": 22
+      "$value": 24
     },
     "28": {
       "$type": "lineHeights",
@@ -3619,23 +3599,23 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "33": {
       "$type": "lineHeights",
-      "$value": 24
+      "$value": 20
     },
     "34": {
       "$type": "lineHeights",
-      "$value": 20
+      "$value": 14
     },
     "35": {
       "$type": "lineHeights",
-      "$value": 14
+      "$value": 12
     },
     "36": {
       "$type": "lineHeights",
-      "$value": 12
+      "$value": "116.7%"
     },
     "37": {
       "$type": "lineHeights",
-      "$value": "116.7%"
+      "$value": "166%"
     },
     "38": {
       "$type": "lineHeights",
@@ -4189,7 +4169,7 @@ export const darkThemeOptions: ThemeOptions = {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -4265,7 +4245,7 @@ export const darkThemeOptions: ThemeOptions = {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -4287,13 +4267,13 @@ export const darkThemeOptions: ThemeOptions = {
         "textDecoration": "{textDecoration.none}"
       }
     },
-    "valueSmall": {
+    "valueLarge": {
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.27}",
-        "fontSize": "{fontSize.2}",
+        "fontSize": "{fontSize.4}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -4325,7 +4305,7 @@ export const darkThemeOptions: ThemeOptions = {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.6}",
-        "fontSize": "{fontSize.3}",
+        "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -4368,20 +4348,6 @@ export const darkThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.21}",
-        "fontSize": "{fontSize.3}",
-        "letterSpacing": "{letterSpacing.0}",
-        "paragraphSpacing": "{paragraphSpacing.0}",
-        "paragraphIndent": "{paragraphIndent.0}",
-        "textCase": "{textCase.none}",
-        "textDecoration": "{textDecoration.none}"
-      }
-    },
-    "headerSmall": {
-      "$type": "typography",
-      "$value": {
-        "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
@@ -4398,7 +4364,7 @@ export const darkThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.35}",
+        "lineHeight": "{lineHeights.34}",
         "fontSize": "{fontSize.0}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -4430,7 +4396,7 @@ export const darkThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamilies.roboto}",
         "fontWeight": "{fontWeights.roboto-3}",
-        "lineHeight": "{lineHeights.38}",
+        "lineHeight": "{lineHeights.37}",
         "fontSize": "{fontSize.1}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.1}",
@@ -4583,59 +4549,91 @@ export const darkThemeOptions: ThemeOptions = {
         }
       }
     },
-    "MuiTextField": {
+    "MuiFormHelperText": {
       "styleOverrides": {
-        "label": {
-          "fontSize": "0.75rem",
-          "fontWeight": 400,
-          "lineHeight": "12px"
-        },
-        "input": {
-          "fontSize": "0.875rem",
-          "fontWeight": 400,
-          "lineHeight": "24px"
-        },
-        "helperText": {
+        "root": {
           "fontSize": "0.75rem",
           "fontWeight": 400,
           "lineHeight": 1.3
-        },
+        }
+      }
+    },
+    "MuiFormControlLabel": {
+      "styleOverrides": {
+        "label": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.5
+        }
+      }
+    },
+    "MuiFormLabel": {
+      "styleOverrides": {
         "root": {
-          "verticalAlign": "top",
-          "& .MuiFormHelperText-root": {
-            "marginTop": "2px",
-            "marginLeft": 0,
-            "marginRight": 0,
-            "lineHeight": 1.2
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.5
+        }
+      }
+    },
+    "MuiInputLabel": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px",
+          "&.MuiInputLabel-sizeLarge": {
+            "fontSize": "0.9375rem",
+            "fontWeight": 400,
+            "lineHeight": "24px"
+          },
+          "&.MuiInputLabel-outlined.MuiInputLabel-shrink, &.MuiInputLabel-filled.MuiInputLabel-shrink, &.MuiInputLabel-filled.Mui-focused": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(14px, -6px) scale(1)"
+          },
+          "&.MuiInputLabel-standard.MuiInputLabel-shrink": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(0, 0px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiInputLabel-shrink, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled.MuiInputLabel-shrink": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(14px, -6px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard.MuiInputLabel-shrink": {
+            "fontSize": "0.75rem",
+            "fontWeight": 400,
+            "lineHeight": "12px",
+            "transform": "translate(0, 0px) scale(1)"
+          },
+          "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
+            "transform": "translate(14px, 7px) scale(1)"
+          },
+          "&.MuiInputLabel-standard": {
+            "transform": "translate(0, 10px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled": {
+            "transform": "translate(14px, 5px) scale(1)"
+          },
+          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard": {
+            "transform": "translate(0, 9px) scale(1)"
           },
           "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "24px"
-                }
-              }
-            },
             {
               "props": {
                 "size": "small"
               },
               "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "30px"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "36px"
+                "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
+                  "transform": "translate(14px, 5px) scale(1)"
+                },
+                "&.MuiInputLabel-standard": {
+                  "transform": "translate(0, 9px) scale(1)"
                 }
               }
             },
@@ -4644,9 +4642,277 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "large"
               },
               "style": {
-                "& .MuiInputBase-root": {
-                  "minHeight": "42px"
+                "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
+                  "transform": "translate(14px, 10px) scale(1)"
+                },
+                "&.MuiInputLabel-standard": {
+                  "transform": "translate(0, 14px) scale(1)"
                 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MuiOutlinedInput": {
+      "styleOverrides": {
+        "input": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px"
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiOutlinedInput-input": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px",
+              "paddingBlock": "10px",
+              "height": "auto"
+            },
+            "minHeight": "42px"
+          },
+          "&.MuiInputBase-sizeSmall": {
+            "minHeight": "30px",
+            "& .MuiOutlinedInput-input": {
+              "paddingBlock": "5px",
+              "height": "auto"
+            }
+          },
+          "&.MuiInputBase-sizeMedium": {
+            "minHeight": "36px",
+            "& .MuiOutlinedInput-input": {
+              "paddingBlock": "7px",
+              "height": "auto"
+            }
+          },
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "& .MuiOutlinedInput-input": {
+                  "paddingBlock": "5px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "& .MuiOutlinedInput-input": {
+                  "paddingBlock": "7px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "& .MuiOutlinedInput-input": {
+                  "paddingBlock": "10px",
+                  "height": "auto"
+                }
+              }
+            }
+          ]
+        },
+        "notchedOutline": {
+          "& legend": {
+            "fontSize": "12px"
+          }
+        }
+      }
+    },
+    "MuiFilledInput": {
+      "styleOverrides": {
+        "input": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px"
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiFilledInput-input": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px"
+            }
+          },
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "& .MuiFilledInput-input": {
+                  "paddingBlock": "5px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "& .MuiFilledInput-input": {
+                  "paddingBlock": "7px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "& .MuiFilledInput-input": {
+                  "paddingBlock": "10px",
+                  "height": "auto"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MuiInput": {
+      "styleOverrides": {
+        "input": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px"
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiInput-input": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px"
+            }
+          },
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "& .MuiInput-input": {
+                  "paddingBlock": "5px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "& .MuiInput-input": {
+                  "paddingBlock": "7px",
+                  "height": "auto"
+                }
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "& .MuiInput-input": {
+                  "paddingBlock": "10px",
+                  "height": "auto"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MuiSelect": {
+      "styleOverrides": {
+        "select": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": "22px",
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "minHeight": "30px",
+                "paddingBlock": "5px"
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "minHeight": "36px",
+                "paddingBlock": "7px"
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "minHeight": "42px",
+                "paddingBlock": "10px"
+              }
+            }
+          ]
+        },
+        "root": {
+          "&.MuiInputBase-sizeLarge": {
+            "& .MuiSelect-select": {
+              "fontSize": "0.9375rem",
+              "fontWeight": 400,
+              "lineHeight": "24px"
+            }
+          }
+        },
+        "icon": {
+          "variants": [
+            {
+              "props": {
+                "size": "small"
+              },
+              "style": {
+                "fontSize": "1.25rem"
+              }
+            },
+            {
+              "props": {
+                "size": "medium"
+              },
+              "style": {
+                "fontSize": "1.5rem"
+              }
+            },
+            {
+              "props": {
+                "size": "large"
+              },
+              "style": {
+                "fontSize": "1.75rem"
               }
             }
           ]
@@ -4672,9 +4938,9 @@ export const darkThemeOptions: ThemeOptions = {
             "size": "medium"
           },
           "style": {
-            "fontSize": "0.875rem",
+            "fontSize": "0.8125rem",
             "fontWeight": 500,
-            "lineHeight": "24px",
+            "lineHeight": "22px",
             "textTransform": "uppercase",
             "minHeight": "36px"
           }
@@ -4704,7 +4970,57 @@ export const darkThemeOptions: ThemeOptions = {
             "minHeight": "24px"
           }
         }
-      ]
+      ],
+      "styleOverrides": {
+        "root": {
+          "boxShadow": "none",
+          "&:hover": {
+            "boxShadow": "none"
+          },
+          "&:active": {
+            "boxShadow": "none"
+          },
+          "&.Mui-focusVisible": {
+            "boxShadow": "none"
+          },
+          "gap": 0
+        }
+      }
+    },
+    "MuiToggleButton": {
+      "styleOverrides": {
+        "sizeLarge": {
+          "fontSize": "0.9375rem",
+          "fontWeight": 500,
+          "lineHeight": "26px",
+          "textTransform": "none",
+          "minHeight": "42px",
+          "height": "42px",
+          "padding": "8px 14px"
+        },
+        "sizeMedium": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 500,
+          "lineHeight": "22px",
+          "textTransform": "none",
+          "minHeight": "36px",
+          "height": "36px",
+          "padding": "6px 12px"
+        },
+        "sizeSmall": {
+          "fontSize": "0.8125rem",
+          "fontWeight": 500,
+          "lineHeight": "20px",
+          "letterSpacing": 0.46,
+          "textTransform": "none",
+          "minHeight": "30px",
+          "height": "30px",
+          "padding": "4px 12px"
+        },
+        "root": {
+          "textTransform": "none"
+        }
+      }
     },
     "MuiIconButton": {
       "styleOverrides": {
@@ -4758,156 +5074,24 @@ export const darkThemeOptions: ThemeOptions = {
         }
       }
     },
-    "MuiInputLabel": {
+    "MuiTextField": {
       "styleOverrides": {
         "root": {
-          "&.MuiInputLabel-outlined": {
-            "transform": "translate(14px, 9px) scale(1)"
-          },
-          "&.MuiInputLabel-outlined.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-filled": {
-            "transform": "translate(14px, 9px) scale(1)"
-          },
-          "&.MuiInputLabel-filled.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-filled.Mui-focused": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-standard": {
-            "transform": "translate(0, 12px) scale(1)"
-          },
-          "&.MuiInputLabel-standard.MuiInputLabel-shrink": {
-            "transform": "translate(0, 0px) scale(0.75)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined": {
-            "transform": "translate(14px, 6px) scale(1)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-filled": {
-            "transform": "translate(14px, 6px) scale(1)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard": {
-            "transform": "translate(0, 9px) scale(1)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-filled.MuiInputLabel-shrink": {
-            "transform": "translate(14px, -7px) scale(0.75)"
-          },
-          "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard.MuiInputLabel-shrink": {
-            "transform": "translate(0, 0px) scale(0.75)"
+          "verticalAlign": "top",
+          "& .MuiFormHelperText-root": {
+            "marginTop": "2px",
+            "marginLeft": 0,
+            "marginRight": 0,
+            "lineHeight": 1.2
           },
           "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "&.MuiInputLabel-outlined": {
-                  "transform": "translate(14px, 5px) scale(1)"
-                },
-                "&.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 5px) scale(1)"
-                },
-                "&.MuiInputLabel-standard": {
-                  "transform": "translate(0, 10px) scale(1)"
-                }
-              }
-            },
             {
               "props": {
                 "size": "small"
               },
               "style": {
-                "&.MuiInputLabel-outlined": {
-                  "transform": "translate(14px, 6px) scale(1)"
-                },
-                "&.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 6px) scale(1)"
-                },
-                "&.MuiInputLabel-standard": {
-                  "transform": "translate(0, 9px) scale(1)"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "&.MuiInputLabel-outlined": {
-                  "transform": "translate(14px, 12px) scale(1)"
-                },
-                "&.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 12px) scale(1)"
-                },
-                "&.MuiInputLabel-standard": {
-                  "transform": "translate(0, 14px) scale(1)"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiOutlinedInput": {
-      "styleOverrides": {
-        "root": {
-          "&.MuiInputBase-sizeXsmall": {
-            "minHeight": "24px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "2px 8px",
-              "height": "auto",
-              "minHeight": 0
-            }
-          },
-          "&.MuiInputBase-sizeSmall": {
-            "minHeight": "30px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "5px 12px",
-              "height": "auto"
-            }
-          },
-          "&.MuiInputBase-sizeMedium": {
-            "minHeight": "36px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "8px 12px",
-              "height": "auto"
-            }
-          },
-          "&.MuiInputBase-sizeLarge": {
-            "minHeight": "42px",
-            "& .MuiOutlinedInput-input": {
-              "padding": "10px 14px",
-              "height": "auto"
-            }
-          },
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "2px 8px",
-                  "height": "auto",
-                  "minHeight": 0
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "5px 12px",
-                  "height": "auto"
+                "& .MuiInputBase-root": {
+                  "minHeight": "30px"
                 }
               }
             },
@@ -4916,10 +5100,8 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "medium"
               },
               "style": {
-                "minHeight": "36px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "8px 12px",
-                  "height": "auto"
+                "& .MuiInputBase-root": {
+                  "minHeight": "36px"
                 }
               }
             },
@@ -4928,205 +5110,9 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "large"
               },
               "style": {
-                "minHeight": "42px",
-                "& .MuiOutlinedInput-input": {
-                  "padding": "10px 14px",
-                  "height": "auto"
+                "& .MuiInputBase-root": {
+                  "minHeight": "42px"
                 }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiInput": {
-      "styleOverrides": {
-        "root": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "& .MuiInput-input": {
-                  "padding": "4px 0",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "& .MuiInput-input": {
-                  "padding": "6px 0",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "minHeight": "36px",
-                "& .MuiInput-input": {
-                  "padding": "8px 0",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "minHeight": "42px",
-                "& .MuiInput-input": {
-                  "padding": "10px 0",
-                  "height": "auto"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiFilledInput": {
-      "styleOverrides": {
-        "root": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "& .MuiFilledInput-input": {
-                  "padding": "4px 10px",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "& .MuiFilledInput-input": {
-                  "padding": "6px 12px",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "minHeight": "36px",
-                "& .MuiFilledInput-input": {
-                  "padding": "8px 12px",
-                  "height": "auto"
-                }
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "minHeight": "42px",
-                "& .MuiFilledInput-input": {
-                  "padding": "10px 14px",
-                  "height": "auto"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "MuiSelect": {
-      "styleOverrides": {
-        "select": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "minHeight": "24px",
-                "padding": "2px 8px"
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "minHeight": "30px",
-                "padding": "5px 12px"
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "minHeight": "36px",
-                "padding": "8px 12px"
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "minHeight": "42px",
-                "padding": "10px 14px"
-              }
-            }
-          ]
-        },
-        "icon": {
-          "variants": [
-            {
-              "props": {
-                "size": "xsmall"
-              },
-              "style": {
-                "fontSize": "1.125rem",
-                "right": 6,
-                "top": "calc(50% - 0.5625rem)"
-              }
-            },
-            {
-              "props": {
-                "size": "small"
-              },
-              "style": {
-                "fontSize": "1.25rem"
-              }
-            },
-            {
-              "props": {
-                "size": "medium"
-              },
-              "style": {
-                "fontSize": "1.5rem"
-              }
-            },
-            {
-              "props": {
-                "size": "large"
-              },
-              "style": {
-                "fontSize": "1.75rem"
               }
             }
           ]
@@ -5137,29 +5123,6 @@ export const darkThemeOptions: ThemeOptions = {
       "styleOverrides": {
         "root": {
           "alignItems": "stretch"
-        }
-      }
-    },
-    "MuiToggleButton": {
-      "styleOverrides": {
-        "root": {
-          "textTransform": "none",
-          "lineHeight": "20px"
-        },
-        "sizeSmall": {
-          "minHeight": "30px",
-          "height": "30px",
-          "padding": "4px 12px"
-        },
-        "sizeMedium": {
-          "minHeight": "36px",
-          "height": "36px",
-          "padding": "6px 12px"
-        },
-        "sizeLarge": {
-          "minHeight": "42px",
-          "height": "42px",
-          "padding": "8px 14px"
         }
       }
     },
@@ -5187,9 +5150,6 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "MuiTableCell": {
       "styleOverrides": {
-        "root": {
-          "borderBottom": "1px solid #3c3c3c"
-        },
         "head": {
           "backgroundColor": "#ffffff14"
         }
@@ -5391,7 +5351,7 @@ export const darkThemeOptions: ThemeOptions = {
       "white": "#ffffff",
       "black": "#000000"
     },
-    "divider": "#3c3c3c",
+    "divider": "#ffffff1f",
     "_components": {
       "appBar": {
         "defaultFill": "#272727",

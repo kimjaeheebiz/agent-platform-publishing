@@ -33,6 +33,7 @@ export const Member: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -48,8 +49,8 @@ export const Member: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            size="small"
-                            placeholder="사용자 이름, 사용자 이메일"
+                            size="medium"
+                            placeholder="구성원 이름, 구성원 이메일"
                             slotProps={{
                                 input: {
                                     startAdornment: (
@@ -62,11 +63,8 @@ export const Member: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
-                        <Button variant="outlined" size="small" color="info">
-                            소유자 변경
-                        </Button>
-                        <Button variant="contained" size="small" startIcon={<Add />}>
+                        />
+                        <Button variant="contained" startIcon={<Add />}>
                             구성원 추가
                         </Button>
                     </Stack>

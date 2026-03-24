@@ -33,6 +33,7 @@ export const Apikey: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -48,7 +49,7 @@ export const Apikey: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            size="small"
+                            size="medium"
                             placeholder="API 키 이름, 대상 에이전트, 등록자 이름, 등록자 이메일"
                             slotProps={{
                                 input: {
@@ -62,8 +63,8 @@ export const Apikey: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
-                        <Button variant="contained" size="small" startIcon={<Add />}>
+                        />
+                        <Button variant="contained" startIcon={<Add />}>
                             API 키 추가
                         </Button>
                     </Stack>
@@ -118,9 +119,6 @@ export const Apikey: React.FC = () => {
                                 <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
-                                            복제
-                                        </Button>
-                                        <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
                                         <Button variant="outlined" size="xsmall" color="error">
@@ -164,9 +162,6 @@ export const Apikey: React.FC = () => {
                                 <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
-                                            복제
-                                        </Button>
-                                        <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
                                         <Button variant="outlined" size="xsmall" color="error">
@@ -210,9 +205,6 @@ export const Apikey: React.FC = () => {
                                 <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Button variant="outlined" size="xsmall" color="secondary">
-                                            복제
-                                        </Button>
-                                        <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
                                         <Button variant="outlined" size="xsmall" color="error">
@@ -255,9 +247,6 @@ export const Apikey: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
-                                        <Button variant="outlined" size="xsmall" color="secondary">
-                                            복제
-                                        </Button>
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>
@@ -301,9 +290,6 @@ export const Apikey: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
-                                        <Button variant="outlined" size="xsmall" color="secondary">
-                                            복제
-                                        </Button>
                                         <Button variant="outlined" size="xsmall" color="secondary">
                                             수정
                                         </Button>

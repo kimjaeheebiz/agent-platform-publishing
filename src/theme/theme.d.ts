@@ -17,31 +17,27 @@ declare module '@mui/material/IconButton' {
     }
 }
 
-/** TextField / Select / OutlinedInput 등 입력 계열 size 는 InputBase 로 통합됨 */
+/** TextField / Select / OutlinedInput 등 입력 계열 size 는 InputBase 로 통합됨 (xsmall 미사용) */
 declare module '@mui/material/InputBase' {
     interface InputBasePropsSizeOverrides {
-        xsmall: true;
         large: true;
     }
 }
 
 declare module '@mui/material/TextField' {
     interface TextFieldPropsSizeOverrides {
-        xsmall: true;
         large: true;
     }
 }
 
 declare module '@mui/material/Select' {
     interface SelectPropsSizeOverrides {
-        xsmall: true;
         large: true;
     }
 }
 
 declare module '@mui/material/InputLabel' {
     interface InputLabelPropsSizeOverrides {
-        xsmall: true;
         large: true;
     }
 }

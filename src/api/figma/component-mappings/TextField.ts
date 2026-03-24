@@ -87,6 +87,25 @@ export const TextFieldMapping: ComponentMapping = {
         // fullWidth
         fullWidth: { type: 'boolean', default: false },
 
+        // color
+        color: {
+            type: 'union',
+            values: ['primary', 'secondary', 'error', 'info', 'success', 'warning'] as const,
+        },
+
+        // margin
+        margin: {
+            type: 'union',
+            values: ['none', 'dense', 'normal'] as const,
+            default: 'none',
+        },
+
+        // select
+        select: {
+            type: 'boolean',
+            default: false,
+        },
+
         // multiline
         multiline: { type: 'boolean', default: false },
 
@@ -131,12 +150,20 @@ export const TextFieldMapping: ComponentMapping = {
     transformProps: (properties: ComponentProperties): ComponentProperties => {
         const p = properties as Record<string, unknown>;
         const value = p.value;
-        const defaultValue = p.defaultValue;
-        if (value != null && value !== '' && defaultValue != null && defaultValue !== '') {
-            const { value: _v, defaultValue: _d, ...rest } = p;
+        const hasValue = typeof value === 'string' ? value.trim() !== '' : value != null;
+        const { value: _v, defaultValue: _d, ...rest } = p;
+
+        // 피그마 width=fill은 MUI TextField fullWidth로 출력
+        if (rest.width === 'fill') {
+            rest.fullWidth = true;
+        }
+
+        // TextField는 controlled value 대신, 값이 있을 때만 defaultValue를 출력
+        if (hasValue) {
             return { ...rest, defaultValue: value } as ComponentProperties;
         }
-        return properties;
+        // 값이 없으면 defaultValue 자체를 제거
+        return rest as ComponentProperties;
     },
     extractContent: () => null,
 
@@ -151,9 +178,7 @@ export const TextFieldMapping: ComponentMapping = {
         const propsTrim = (props || '').replace(/^\s+/, '').trim();
         const hasSize = /\bsize=/.test(propsTrim);
         const sizeAttr = hasSize ? '' : ' size="small"';
-        return `<TextField${sizeAttr}${propsTrim ? ` ${propsTrim}` : ''}${sxAttribute}>
-            ${content}
-        </TextField>`;
+        return `<TextField${sizeAttr}${propsTrim ? ` ${propsTrim}` : ''}${sxAttribute} />`;
     },
 };
 

@@ -1,14 +1,20 @@
 import type { ThemeOptions } from '@mui/material/styles';
-import { CONTROL_HEIGHT_BY_SIZE as H } from './constants';
+import {
+    BUTTON_BASE_STYLE as BBS,
+    CONTROL_HEIGHT_BY_SIZE as H,
+    INPUT_LABEL_TRANSFORM as ILT,
+    INPUT_PADDING_BLOCK as PB,
+} from './constants';
 
 /**
  * 앱 전역 MUI `components` — 한 파일에서 문서와 동일한 형태로 관리합니다.
  *
  * - **토큰 테마** (`theme.light.json` 등): 피그마/Token Studio → `npm run build:theme` → `generated/mergedMuiThemeOptions.ts` 에 병합
- * - **컨트롤 높이 상수**: `constants.ts` 의 `CONTROL_HEIGHT_BY_SIZE` (Button variants JSON + 여기서 공통)
+ * - **팔레트 의존 색**: 정적 객체 한계로 `__CHIP_*` / `__PALETTE_*` 문자열 사용 → 치환 규칙은 `palettePlaceholderReplacements.ts`
+ * - **컨트롤 높이·입력 세로 패딩·라벨 transform·body2**: `constants.ts` 의 `CONTROL_HEIGHT_BY_SIZE`, `INPUT_PADDING_BLOCK`, `INPUT_LABEL_TRANSFORM`, `TYPOGRAPHY_BODY2`
  *
  * **`MuiButton`**: large/medium/small은 토큰 JSON variants, **xsmall**은 `appMuiButtonVariantAppend` → `merge-theme-with-app-components.ts`가 빌드 시 병합.
- * `IconButton`·`TextField`/`Select` 입력 계열은 같은 높이 스케일을 `variants`로 맞춤.
+ * `IconButton`·`TextField`/`Select` 입력 계열은 **small/medium/large** 높이 스케일을 `variants`로 맞춤(xsmall 없음).
  *
  * - **IconButton**: MUI는 `size` + `root` 슬롯 스타일로 크기를 잡음
  *   ([API](https://mui.com/material-ui/api/icon-button/) · [theme-components](https://mui.com/material-ui/customization/theme-components/)).
@@ -126,12 +132,6 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
                 },
                 variants: [
                     {
-                        props: { size: 'xsmall' },
-                        style: {
-                            '& .MuiInputBase-root': { minHeight: H.xsmall },
-                        },
-                    },
-                    {
                         props: { size: 'small' },
                         style: {
                             '& .MuiInputBase-root': { minHeight: H.small },
@@ -156,93 +156,60 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
 
     /**
      * InputLabel — `FormControl` size·`CONTROL_HEIGHT_BY_SIZE`에 맞춰 수직 위치 조정.
-     * (medium = 기존 기준 유지, small/large/xsmall 만 보정)
+     * 타이포: 레스트/shrink 모두 12px(`input.label`) 기준, transform만 위치 보정.
      */
     MuiInputLabel: {
         styleOverrides: {
             root: {
                 // medium·size 미지정 시 기준 (기존과 동일)
-                '&.MuiInputLabel-outlined': {
-                    transform: 'translate(14px, 9px) scale(1)',
+                '&.MuiInputLabel-outlined, &.MuiInputLabel-filled': {
+                    transform: ILT.outlinedFilledRest,
                 },
-                '&.MuiInputLabel-outlined.MuiInputLabel-shrink': {
-                    transform: 'translate(14px, -7px) scale(0.75)',
-                },
-                '&.MuiInputLabel-filled': {
-                    transform: 'translate(14px, 9px) scale(1)',
-                },
-                '&.MuiInputLabel-filled.MuiInputLabel-shrink': {
-                    transform: 'translate(14px, -7px) scale(0.75)',
-                },
-                '&.MuiInputLabel-filled.Mui-focused': {
-                    transform: 'translate(14px, -7px) scale(0.75)',
-                },
+                '&.MuiInputLabel-outlined.MuiInputLabel-shrink, &.MuiInputLabel-filled.MuiInputLabel-shrink, &.MuiInputLabel-filled.Mui-focused':
+                    {
+                        transform: ILT.outlinedFilledShrink,
+                    },
                 '&.MuiInputLabel-standard': {
-                    transform: 'translate(0, 12px) scale(1)',
+                    transform: ILT.standardRest,
                 },
                 '&.MuiInputLabel-standard.MuiInputLabel-shrink': {
-                    transform: 'translate(0, 0px) scale(0.75)',
+                    transform: ILT.standardShrink,
                 },
                 // Select(FormControl)처럼 label에 size prop이 직접 전달되지 않는 케이스를 위해
                 // sizeSmall 클래스 기준 보정도 함께 적용합니다.
-                '&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined': {
-                    transform: 'translate(14px, 6px) scale(1)',
-                },
-                '&.MuiInputLabel-sizeSmall.MuiInputLabel-filled': {
-                    transform: 'translate(14px, 6px) scale(1)',
+                '&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled': {
+                    transform: ILT.outlinedFilledSmall,
                 },
                 '&.MuiInputLabel-sizeSmall.MuiInputLabel-standard': {
-                    transform: 'translate(0, 9px) scale(1)',
+                    transform: ILT.standardSmall,
                 },
-                '&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiInputLabel-shrink': {
-                    transform: 'translate(14px, -7px) scale(0.75)',
-                },
-                '&.MuiInputLabel-sizeSmall.MuiInputLabel-filled.MuiInputLabel-shrink': {
-                    transform: 'translate(14px, -7px) scale(0.75)',
-                },
+                '&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiInputLabel-shrink, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled.MuiInputLabel-shrink':
+                    {
+                        transform: ILT.outlinedFilledShrink,
+                    },
                 '&.MuiInputLabel-sizeSmall.MuiInputLabel-standard.MuiInputLabel-shrink': {
-                    transform: 'translate(0, 0px) scale(0.75)',
+                    transform: ILT.standardShrink,
                 },
                 variants: [
                     {
-                        props: { size: 'xsmall' },
-                        style: {
-                            '&.MuiInputLabel-outlined': {
-                                transform: 'translate(14px, 5px) scale(1)',
-                            },
-                            '&.MuiInputLabel-filled': {
-                                transform: 'translate(14px, 5px) scale(1)',
-                            },
-                            '&.MuiInputLabel-standard': {
-                                transform: 'translate(0, 10px) scale(1)',
-                            },
-                        },
-                    },
-                    {
                         props: { size: 'small' },
                         style: {
-                            '&.MuiInputLabel-outlined': {
-                                transform: 'translate(14px, 6px) scale(1)',
-                            },
-                            '&.MuiInputLabel-filled': {
-                                transform: 'translate(14px, 6px) scale(1)',
+                            '&.MuiInputLabel-outlined, &.MuiInputLabel-filled': {
+                                transform: ILT.outlinedFilledSmall,
                             },
                             '&.MuiInputLabel-standard': {
-                                transform: 'translate(0, 9px) scale(1)',
+                                transform: ILT.standardSmall,
                             },
                         },
                     },
                     {
                         props: { size: 'large' },
                         style: {
-                            '&.MuiInputLabel-outlined': {
-                                transform: 'translate(14px, 12px) scale(1)',
-                            },
-                            '&.MuiInputLabel-filled': {
-                                transform: 'translate(14px, 12px) scale(1)',
+                            '&.MuiInputLabel-outlined, &.MuiInputLabel-filled': {
+                                transform: ILT.outlinedFilledLarge,
                             },
                             '&.MuiInputLabel-standard': {
-                                transform: 'translate(0, 14px) scale(1)',
+                                transform: ILT.standardLarge,
                             },
                         },
                     },
@@ -254,59 +221,64 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
     /** TextField outlined — `variant="outlined"` (루트는 minHeight: 멀티라인 대응) */
     MuiOutlinedInput: {
         styleOverrides: {
-            root: {
-                // variants 매칭 + 실제 런타임 size 클래스(.MuiInputBase-size*) 둘 다 동일 패딩
-                '&.MuiInputBase-sizeXsmall': {
-                    minHeight: H.xsmall,
-                    '& .MuiOutlinedInput-input': {
-                        padding: '2px 8px',
-                        height: 'auto',
-                        minHeight: 0,
-                    },
+            // notched outline legend도 label과 동일하게 12px 고정
+            notchedOutline: {
+                '& legend': {
+                    fontSize: '12px',
                 },
+            },
+            root: {
+                // 세로만 지정 — 좌우는 MUI 기본(아이콘·adornment 유무에 따라 비대칭 패딩 유지)
                 '&.MuiInputBase-sizeSmall': {
                     minHeight: H.small,
-                    '& .MuiOutlinedInput-input': { padding: '5px 12px', height: 'auto' },
+                    '& .MuiOutlinedInput-input': {
+                        paddingBlock: PB.outlinedSmall,
+                        height: 'auto',
+                    },
                 },
                 '&.MuiInputBase-sizeMedium': {
                     minHeight: H.medium,
-                    '& .MuiOutlinedInput-input': { padding: '8px 12px', height: 'auto' },
+                    '& .MuiOutlinedInput-input': {
+                        paddingBlock: PB.medium,
+                        height: 'auto',
+                    },
                 },
                 '&.MuiInputBase-sizeLarge': {
                     minHeight: H.large,
-                    '& .MuiOutlinedInput-input': { padding: '10px 14px', height: 'auto' },
+                    '& .MuiOutlinedInput-input': {
+                        paddingBlock: PB.large,
+                        height: 'auto',
+                    },
                 },
                 variants: [
-                    {
-                        props: { size: 'xsmall' },
-                        style: {
-                            minHeight: H.xsmall,
-                            '& .MuiOutlinedInput-input': {
-                                padding: '2px 8px',
-                                height: 'auto',
-                                minHeight: 0,
-                            },
-                        },
-                    },
                     {
                         props: { size: 'small' },
                         style: {
                             minHeight: H.small,
-                            '& .MuiOutlinedInput-input': { padding: '5px 12px', height: 'auto' },
+                            '& .MuiOutlinedInput-input': {
+                                paddingBlock: PB.outlinedSmall,
+                                height: 'auto',
+                            },
                         },
                     },
                     {
                         props: { size: 'medium' },
                         style: {
                             minHeight: H.medium,
-                            '& .MuiOutlinedInput-input': { padding: '8px 12px', height: 'auto' },
+                            '& .MuiOutlinedInput-input': {
+                                paddingBlock: PB.medium,
+                                height: 'auto',
+                            },
                         },
                     },
                     {
                         props: { size: 'large' },
                         style: {
                             minHeight: H.large,
-                            '& .MuiOutlinedInput-input': { padding: '10px 14px', height: 'auto' },
+                            '& .MuiOutlinedInput-input': {
+                                paddingBlock: PB.large,
+                                height: 'auto',
+                            },
                         },
                     },
                 ],
@@ -320,31 +292,33 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
             root: {
                 variants: [
                     {
-                        props: { size: 'xsmall' },
-                        style: {
-                            minHeight: H.xsmall,
-                            '& .MuiInput-input': { padding: '4px 0', height: 'auto' },
-                        },
-                    },
-                    {
                         props: { size: 'small' },
                         style: {
                             minHeight: H.small,
-                            '& .MuiInput-input': { padding: '6px 0', height: 'auto' },
+                            '& .MuiInput-input': {
+                                paddingBlock: PB.outlinedSmall,
+                                height: 'auto',
+                            },
                         },
                     },
                     {
                         props: { size: 'medium' },
                         style: {
                             minHeight: H.medium,
-                            '& .MuiInput-input': { padding: '8px 0', height: 'auto' },
+                            '& .MuiInput-input': {
+                                paddingBlock: PB.medium,
+                                height: 'auto',
+                            },
                         },
                     },
                     {
                         props: { size: 'large' },
                         style: {
                             minHeight: H.large,
-                            '& .MuiInput-input': { padding: '10px 0', height: 'auto' },
+                            '& .MuiInput-input': {
+                                paddingBlock: PB.large,
+                                height: 'auto',
+                            },
                         },
                     },
                 ],
@@ -358,31 +332,27 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
             root: {
                 variants: [
                     {
-                        props: { size: 'xsmall' },
-                        style: {
-                            minHeight: H.xsmall,
-                            '& .MuiFilledInput-input': { padding: '4px 10px', height: 'auto' },
-                        },
-                    },
-                    {
                         props: { size: 'small' },
                         style: {
                             minHeight: H.small,
-                            '& .MuiFilledInput-input': { padding: '6px 12px', height: 'auto' },
+                            '& .MuiFilledInput-input': {
+                                paddingBlock: PB.outlinedSmall,
+                                height: 'auto',
+                            },
                         },
                     },
                     {
                         props: { size: 'medium' },
                         style: {
                             minHeight: H.medium,
-                            '& .MuiFilledInput-input': { padding: '8px 12px', height: 'auto' },
+                            '& .MuiFilledInput-input': { paddingBlock: PB.medium, height: 'auto' },
                         },
                     },
                     {
                         props: { size: 'large' },
                         style: {
                             minHeight: H.large,
-                            '& .MuiFilledInput-input': { padding: '10px 14px', height: 'auto' },
+                            '& .MuiFilledInput-input': { paddingBlock: PB.large, height: 'auto' },
                         },
                     },
                 ],
@@ -392,49 +362,65 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
 
     /**
      * Select — outlined/standard/filled 입력 루트 높이는 위 Input 계열과 동일 스케일.
-     * 드롭다운 아이콘 크기만 사이즈에 맞춤.
+     * `select` 슬롯은 `paddingBlock`만 지정해 좌우는 MUI 기본을 유지합니다.
      */
     MuiSelect: {
         styleOverrides: {
             select: {
                 variants: [
                     {
-                        props: { size: 'xsmall' },
-                        style: {
-                            minHeight: H.xsmall,
-                            padding: '2px 8px',
-                        },
-                    },
-                    {
                         props: { size: 'small' },
                         style: {
                             minHeight: H.small,
-                            padding: '5px 12px',
+                            paddingBlock: PB.outlinedSmall,
                         },
                     },
                     {
                         props: { size: 'medium' },
                         style: {
                             minHeight: H.medium,
-                            padding: '8px 12px',
+                            paddingBlock: PB.medium,
                         },
                     },
                     {
                         props: { size: 'large' },
                         style: {
                             minHeight: H.large,
-                            padding: '10px 14px',
+                            paddingBlock: PB.large,
                         },
                     },
                 ],
             },
             icon: {
                 variants: [
-                    { props: { size: 'xsmall' }, style: { fontSize: '1.125rem', right: 6, top: 'calc(50% - 0.5625rem)' } },
-                    { props: { size: 'small' }, style: { fontSize: '1.25rem' } },
-                    { props: { size: 'medium' }, style: { fontSize: '1.5rem' } },
-                    { props: { size: 'large' }, style: { fontSize: '1.75rem' } },
+                    {
+                        props: { size: 'small' },
+                        style: {
+                            fontSize: '1.25rem',
+                        },
+                    },
+                    {
+                        props: { size: 'medium' },
+                        style: {
+                            fontSize: '1.5rem',
+                        },
+                    },
+                    {
+                        props: { size: 'large' },
+                        style: {
+                            fontSize: '1.75rem',
+                        },
+                    },
                 ],
+            },
+        },
+    },
+
+    MuiButton: {
+        styleOverrides: {
+            root: {
+                ...BBS,
+                gap: 0,
             },
         },
     },
@@ -456,7 +442,7 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
         styleOverrides: {
             root: {
                 textTransform: 'none',
-                lineHeight: '20px',
+                // lineHeight·fontSize는 `core.button.*` → `mui-components-from-tokens` 가 sizeSmall/Medium/Large에 주입
             },
             sizeSmall: {
                 minHeight: H.small,
@@ -500,13 +486,10 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
     },
 
     /**
-     * TableCell 기본 border 보정색 대신 `palette.divider`를 직접 사용.
+     * TableCell — `action.hover` 는 빌드 시 `palettePlaceholderReplacements.ts`가 치환.
      */
     MuiTableCell: {
         styleOverrides: {
-            root: {
-                borderBottom: '1px solid __PALETTE_DIVIDER__',
-            },
             head: {
                 backgroundColor: '__PALETTE_ACTION_HOVER__',
             },

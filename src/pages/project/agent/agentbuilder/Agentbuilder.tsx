@@ -10,11 +10,9 @@ import {
     Paper,
     Stack,
     Tabs,
-    Typography,
 } from '@mui/material';
 import {
     AddCircleOutlineOutlined,
-    ChevronLeft,
     CropFreeOutlined,
     RedoOutlined,
     RemoveCircleOutlineOutlined,
@@ -36,8 +34,8 @@ export const Agentbuilder: React.FC = () => {
                 alignItems="center"
                 justifyContent="space-between"
                 sx={{
-                    py: '8px',
-                    px: '24px',
+                    py: 1,
+                    px: 3,
                     borderTop: '1px solid',
                     borderTopColor: 'divider',
                     borderBottom: '1px solid',
@@ -78,27 +76,17 @@ export const Agentbuilder: React.FC = () => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
+                    flex: 1,
                 }}
             >
                 <Stack>
-                    <Paper>
-                        <Stack
-                            direction="row"
-                            alignItems="center"
-                            sx={{
-                                py: '0px',
-                                pl: '0px',
-                                pr: '16px',
-                                border: '1px solid',
-                                borderColor: 'divider',
-                            }}
-                        >
-                            <Tabs></Tabs>
-                        </Stack>
+                    <Paper
+                        sx={{
+                            backgroundColor: '_components.paper.elevation-0',
+                        }}
+                    >
+                        <Tabs></Tabs>
                     </Paper>
-                    <IconButton color="default">
-                        <ChevronLeft />
-                    </IconButton>
                 </Stack>
                 <Stack
                     sx={{
@@ -106,6 +94,11 @@ export const Agentbuilder: React.FC = () => {
                     }}
                 >
                     <Stack>
+                        <Stack
+                            sx={{
+                                height: '725px',
+                            }}
+                        ></Stack>
                         <Menu
                             open
                             slotProps={{ list: { dense: true } }}
@@ -116,6 +109,7 @@ export const Agentbuilder: React.FC = () => {
                             <MenuItem
                                 dense
                                 sx={{
+                                    display: 'flex',
                                     justifyContent: 'center',
                                 }}
                             >
@@ -124,6 +118,7 @@ export const Agentbuilder: React.FC = () => {
                             <MenuItem
                                 dense
                                 sx={{
+                                    display: 'flex',
                                     justifyContent: 'center',
                                 }}
                             >
@@ -134,14 +129,16 @@ export const Agentbuilder: React.FC = () => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Paper
                             sx={{
-                                borderRadius: '4px',
+                                p: 0.5,
+                                backgroundColor: '_components.paper.elevation-3',
                             }}
                         >
                             <Button size="xsmall"></Button>
                         </Paper>
                         <Paper
                             sx={{
-                                borderRadius: '4px',
+                                p: 0.5,
+                                backgroundColor: '_components.paper.elevation-3',
                             }}
                         >
                             <Stack
@@ -164,7 +161,8 @@ export const Agentbuilder: React.FC = () => {
                         </Paper>
                         <Paper
                             sx={{
-                                borderRadius: '4px',
+                                p: 0.5,
+                                backgroundColor: '_components.paper.elevation-3',
                             }}
                         >
                             <Stack
@@ -182,63 +180,6 @@ export const Agentbuilder: React.FC = () => {
                                 </IconButton>
                             </Stack>
                         </Paper>
-                    </Stack>
-                    <Stack
-                        sx={{
-                            p: '8px',
-                            backgroundColor: '_components.paper.elevation-0',
-                            border: '1px solid',
-                            borderColor: 'divider',
-                            borderRadius: '16px',
-                        }}
-                    >
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Button
-                                color="success"
-                                sx={{
-                                    height: '32px',
-                                }}
-                            ></Button>
-                            <Typography variant="body2">시작</Typography>
-                        </Stack>
-                    </Stack>
-                    <Stack
-                        sx={{
-                            p: '8px',
-                            backgroundColor: '_components.paper.elevation-0',
-                            border: '1px solid',
-                            borderColor: 'divider',
-                            borderRadius: '16px',
-                        }}
-                    >
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Button
-                                color="info"
-                                sx={{
-                                    height: '32px',
-                                }}
-                            ></Button>
-                            <Typography variant="body2">코드 실행</Typography>
-                        </Stack>
-                    </Stack>
-                    <Stack
-                        sx={{
-                            p: '8px',
-                            backgroundColor: '_components.paper.elevation-0',
-                            border: '1px solid',
-                            borderColor: 'divider',
-                            borderRadius: '16px',
-                        }}
-                    >
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Button
-                                color="info"
-                                sx={{
-                                    height: '32px',
-                                }}
-                            ></Button>
-                            <Typography variant="body2">메시지 보내기</Typography>
-                        </Stack>
                     </Stack>
                 </Stack>
                 <ListItem>

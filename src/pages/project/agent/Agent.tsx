@@ -33,6 +33,7 @@ export const Agent: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    width: '1572px',
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -47,7 +48,7 @@ export const Agent: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
-                            size="small"
+                            size="medium"
                             placeholder="에이전트 이름, 소유자 이름, 소유자 이메일"
                             slotProps={{
                                 input: {
@@ -61,10 +62,8 @@ export const Agent: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        >
-                            Value
-                        </TextField>
-                        <Button variant="contained" size="small" startIcon={<Add />}>
+                        />
+                        <Button variant="contained" startIcon={<Add />}>
                             에이전트 추가
                         </Button>
                     </Stack>

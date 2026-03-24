@@ -4,12 +4,15 @@ import {
     Box,
     Button,
     Card,
-    CardActions,
     CardContent,
     CardHeader,
     Chip,
     FormControl,
+    FormLabel,
+    InputLabel,
+    MenuItem,
     Paper,
+    Select,
     Stack,
     TextField,
     Typography,
@@ -23,72 +26,105 @@ export const Account: React.FC = () => {
     return (
         <Box
             sx={{
-                p: 3,
+                px: 3,
+                pt: 3,
+                pb: 10,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 minHeight: '100%',
             }}
         >
             <Stack direction="row" spacing={3}>
                 <Paper
+                    elevation={0}
                     sx={{
                         width: '300px',
-                        borderRadius: '4px',
+                        backgroundColor: 'primary.dark',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                     }}
                 >
-                    <Avatar
-                        sx={{ width: 40, height: 40, backgroundColor: 'common.white_states.main' }}
-                    >
-                        <Person />
-                    </Avatar>
                     <Stack
-                        spacing={0.5}
-                        alignItems="center"
                         sx={{
-                            backgroundColor: '#ffffff',
+                            py: '0px',
+                            px: '75px',
+                            borderRadius: '4px',
                         }}
                     >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                color: 'common.white_states.main',
-                            }}
-                        >
-                            홍길동
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                color: 'common.white_states.main',
-                            }}
-                        >
-                            honggildong@hecto.co.kr
-                        </Typography>
+                        <Stack spacing={2} alignItems="center">
+                            <Avatar sx={{ width: 80, height: 80, backgroundColor: 'common.white' }}>
+                                <Person fontSize="large" sx={{ color: 'primary.dark' }} />
+                            </Avatar>
+                            <Stack spacing={1} alignItems="center">
+                                <Typography
+                                    variant="h5"
+                                    sx={{
+                                        color: 'common.white',
+                                    }}
+                                >
+                                    홍길동
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: 'common.white',
+                                    }}
+                                >
+                                    honggildong@hecto.co.kr
+                                </Typography>
+                            </Stack>
+                            <Chip
+                                label="일반사용자"
+                                sx={{ backgroundColor: 'common.black', color: 'common.white' }}
+                            />
+                        </Stack>
                     </Stack>
-                    <Chip label="일반사용자" color="secondary" size="small" />
                 </Paper>
                 <Card
                     elevation={0}
                     variant="outlined"
                     sx={{
                         width: '600px',
-                        borderRadius: '4px',
+                        p: 1,
                     }}
                 >
-                    <CardHeader title="계정 정보" subheader="{Subheader}" hasAction />
+                    <CardHeader title="계정 정보" />
                     <CardContent>
                         <Stack spacing={4}>
                             <Stack spacing={2}>
-                                <FormControl></FormControl>
-                                <FormControl></FormControl>
+                                <FormControl>
+                                    <FormControl
+                                        sx={{
+                                            backgroundColor: '#ffffff',
+                                        }}
+                                    >
+                                        <FormLabel>이름</FormLabel>
+                                    </FormControl>
+                                    <TextField size="medium" label="홍길동" fullWidth />
+                                </FormControl>
+                                <FormControl>
+                                    <FormControl
+                                        sx={{
+                                            backgroundColor: '#ffffff',
+                                        }}
+                                    >
+                                        <FormLabel>소속</FormLabel>
+                                    </FormControl>
+                                    <FormControl>
+                                        <InputLabel id="select-주헥토-label">(주)헥토</InputLabel>
+                                        <Select labelId="select-주헥토-label" label="(주)헥토">
+                                            <MenuItem value={`(주)헥토`}>(주)헥토</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </FormControl>
                             </Stack>
                             <Stack spacing={1}>
                                 <Stack>
                                     <Stack direction="row">
-                                        <Stack
-                                            spacing={0.5}
-                                            sx={{
-                                                backgroundColor: 'text.primary',
-                                            }}
-                                        >
+                                        <Stack spacing={0.5}>
+                                            <Typography variant="h5">비밀번호 변경</Typography>
                                             <Typography
                                                 variant="body2"
                                                 sx={{
@@ -99,30 +135,26 @@ export const Account: React.FC = () => {
                                                 이상 포함
                                             </Typography>
                                         </Stack>
-                                        <Stack
-                                            spacing={3}
-                                            sx={{
-                                                height: '12px',
-                                                backgroundColor: '#ffffff',
-                                            }}
-                                        >
-                                            <Stack></Stack>
-                                        </Stack>
                                     </Stack>
                                 </Stack>
                                 <Stack direction="row" spacing={2}>
-                                    <TextField label="새 비밀번호">새 비밀번호</TextField>
-                                    <TextField label="새 비밀번호 확인">새 비밀번호 확인</TextField>
+                                    <TextField size="small" label="새 비밀번호" fullWidth />
+                                    <TextField size="small" label="새 비밀번호 확인" fullWidth />
                                 </Stack>
+                            </Stack>
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                <Button variant="contained" color="inherit">
+                                    취소
+                                </Button>
+                                <Button variant="contained">저장</Button>
                             </Stack>
                         </Stack>
                     </CardContent>
-                    <CardActions>
-                        <Button variant="outlined" color="secondary">
-                            취소
-                        </Button>
-                        <Button variant="contained">저장</Button>
-                    </CardActions>
                 </Card>
             </Stack>
         </Box>

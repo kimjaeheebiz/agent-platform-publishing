@@ -37,6 +37,7 @@ export const Users: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    flex: 1,
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -51,23 +52,16 @@ export const Users: React.FC = () => {
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <FormControl
-                            size="small"
                             sx={{
                                 width: '160px',
                             }}
                         >
                             <InputLabel id="select-소속-label">소속</InputLabel>
-                            <Select
-                                labelId="select-소속-label"
-                                value="전체"
-                                size="small"
-                                label="소속"
-                            >
+                            <Select labelId="select-소속-label" value="전체" label="소속">
                                 <MenuItem value={`전체`}>전체</MenuItem>
                             </Select>
                         </FormControl>
                         <TextField
-                            size="small"
                             placeholder="사용자 이름, 사용자 이메일"
                             slotProps={{
                                 input: {
@@ -81,8 +75,8 @@ export const Users: React.FC = () => {
                             sx={{
                                 width: '360px',
                             }}
-                        ></TextField>
-                        <Button variant="contained" size="small" startIcon={<Add />}>
+                        />
+                        <Button variant="contained" startIcon={<Add />}>
                             사용자 추가
                         </Button>
                     </Stack>

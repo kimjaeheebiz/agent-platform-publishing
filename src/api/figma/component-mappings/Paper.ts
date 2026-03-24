@@ -36,9 +36,8 @@ export const PaperMapping: ComponentMapping = {
         },
     },
     
-    // elevation에 따라 MUI가 자동 적용하는 backgroundColor는 sx에 넣지 않음
+    // Paper 기본 스타일과 충돌하는 테두리 계열만 sx에서 제외
     excludeFromSx: [
-        'backgroundColor',
         'borderColor',
         'borderWidth',
         'borderStyle',

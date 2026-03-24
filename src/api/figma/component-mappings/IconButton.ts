@@ -64,6 +64,60 @@ export const IconButtonMapping: ComponentMapping = {
         
         // 아이콘 콘텐츠 추출: <IconButton> > <Icon> > 인스턴스명 구조에서 무조건 인스턴스 가져오기
         try {
+            const toMuiFontSize = (raw: unknown): 'small' | 'medium' | 'large' | 'inherit' | undefined => {
+                if (typeof raw === 'string') {
+                    const s = raw.toLowerCase().trim();
+                    if (s.includes('large')) return 'large';
+                    if (s.includes('small')) return 'small';
+                    if (s.includes('medium')) return 'medium';
+                    if (s.includes('inherit')) return 'inherit';
+                    const px = parseInt(s.replace(/px/gi, '').trim(), 10);
+                    if (!Number.isNaN(px)) {
+                        if (px <= 20) return 'small';
+                        if (px <= 24) return 'medium';
+                        return 'large';
+                    }
+                } else if (typeof raw === 'number') {
+                    if (raw <= 20) return 'small';
+                    if (raw <= 24) return 'medium';
+                    return 'large';
+                }
+                return undefined;
+            };
+
+            const findNamedNode = (nodes: any[], targetName: string): any | null => {
+                if (!Array.isArray(nodes)) return null;
+                for (const n of nodes) {
+                    if (n?.visible === false) continue;
+                    const nm = String(n?.name || '').trim();
+                    if (nm === targetName || nm === `<${targetName}>`) return n;
+                    const found = findNamedNode(n?.children || [], targetName);
+                    if (found) return found;
+                }
+                return null;
+            };
+
+            const findFirstInstance = (nodes: any[]): any | null => {
+                if (!Array.isArray(nodes)) return null;
+                for (const n of nodes) {
+                    if (n?.visible === false) continue;
+                    if (n?.type === 'INSTANCE' && n?.componentId) return n;
+                    const found = findFirstInstance(n?.children || []);
+                    if (found) return found;
+                }
+                return null;
+            };
+
+            const readSizeFromNodeProps = (n: any): 'small' | 'medium' | 'large' | 'inherit' | undefined => {
+                const p = (n as any)?.componentProperties || {};
+                for (const [k, v] of Object.entries(p)) {
+                    if (!String(k).toLowerCase().includes('size')) continue;
+                    const parsed = toMuiFontSize((v as any)?.value ?? v);
+                    if (parsed) return parsed;
+                }
+                return undefined;
+            };
+
             // <Icon> 컨테이너 찾기
             const findIconContainer = (children: any[]): any => {
                 if (!children || children.length === 0) return null;
@@ -91,12 +145,11 @@ export const IconButtonMapping: ComponentMapping = {
             const iconContainer = findIconContainer((node as any).children || []);
             
             if (iconContainer && iconContainer.children && iconContainer.children.length > 0) {
-                // <Icon> 하위에서 첫 번째 INSTANCE 타입 찾기 (이름 조건 없이)
-                const iconInstance = iconContainer.children.find((child: any) => 
-                    child?.visible !== false && 
-                    child.type === 'INSTANCE' && 
-                    child.componentId
-                );
+                // Avatar와 동일하게 중첩 <Icon> 구조를 우선 처리
+                const nestedIconContainer = findNamedNode(iconContainer.children || [], 'Icon');
+                const iconInstance =
+                    findFirstInstance((nestedIconContainer?.children || iconContainer.children || []) as any[]) ||
+                    findFirstInstance(iconContainer.children || []);
                 
                 if (iconInstance && iconInstance.componentId) {
                     const { fetchIconName } = await import('../utils/icon-extractor');
@@ -117,6 +170,29 @@ export const IconButtonMapping: ComponentMapping = {
                     if (muiIconName) {
                         properties.__iconButtonIconName = muiIconName;
                     }
+
+                    // 아이콘 fontSize 추출: INSTANCE → 중첩 Icon 컨테이너 → Icon 컨테이너 순으로 fallback
+                    const parsedSize =
+                        readSizeFromNodeProps(iconInstance) ||
+                        readSizeFromNodeProps(nestedIconContainer) ||
+                        readSizeFromNodeProps(iconContainer);
+                    if (parsedSize) properties.__iconButtonIconFontSize = parsedSize;
+                }
+            } else {
+                // fallback: Icon 컨테이너 명이 다를 때 전체 트리에서 탐색
+                const iconInstance = findFirstInstance((node as any).children || []);
+                if (iconInstance && iconInstance.componentId) {
+                    const { fetchIconName } = await import('../utils/icon-extractor');
+                    const { getMuiIconName } = await import('../icon-mapper');
+                    const rawName = iconInstance.name || '';
+                    let muiIconName = getMuiIconName(iconInstance.componentId, rawName);
+                    if (!muiIconName) {
+                        const fetchedName = await fetchIconName(iconInstance.componentId, extractor);
+                        if (fetchedName) muiIconName = getMuiIconName(iconInstance.componentId, fetchedName);
+                    }
+                    if (muiIconName) properties.__iconButtonIconName = muiIconName;
+                    const parsedSize = readSizeFromNodeProps(iconInstance);
+                    if (parsedSize) properties.__iconButtonIconFontSize = parsedSize;
                 }
             }
         } catch {
@@ -133,8 +209,13 @@ export const IconButtonMapping: ComponentMapping = {
         // Icon 콘텐츠가 감지된 경우 아이콘 컴포넌트로 렌더링
         if (properties && (properties as any).__iconButtonIconName) {
             const icon = (properties as any).__iconButtonIconName as string;
+            const iconFontSize = (properties as any).__iconButtonIconFontSize as string | undefined;
+            const iconSizeAttr =
+                iconFontSize && ['small', 'medium', 'large', 'inherit'].includes(iconFontSize)
+                    ? ` fontSize="${iconFontSize}"`
+                    : '';
             return `<IconButton${props}${sxAttribute}>
-            <${icon} />
+            <${icon}${iconSizeAttr} />
         </IconButton>`;
         }
         
