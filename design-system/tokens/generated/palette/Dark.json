@@ -914,7 +914,7 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "color",
-    "$value": "{grey.800}",
+    "$value": "#ffffff1f",
     "$description": "Reflects the divider variable from the theme object"
   },
   "_components": {
@@ -927,7 +927,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#555555"
+        "$value": "#ffffff3b"
       },
       "activeFill": {
         "$extensions": {
@@ -1006,7 +1006,7 @@
             "com.figma.hiddenFromPublishing": false
           },
           "$type": "color",
-          "$value": "#555555"
+          "$value": "#ffffff3b"
         },
         "hoverBorder": {
           "$extensions": {
