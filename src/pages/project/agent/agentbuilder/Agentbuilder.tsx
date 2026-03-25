@@ -9,6 +9,7 @@ import {
     MenuItem,
     Paper,
     Stack,
+    Tab,
     Tabs,
 } from '@mui/material';
 import {
@@ -26,6 +27,8 @@ export const Agentbuilder: React.FC = () => {
     return (
         <Box
             sx={{
+                display: 'flex',
+                flexDirection: 'column',
                 minHeight: '100%',
             }}
         >
@@ -79,16 +82,41 @@ export const Agentbuilder: React.FC = () => {
                     flex: 1,
                 }}
             >
-                <Stack>
-                    <Paper
-                        sx={{
-                            backgroundColor: '_components.paper.elevation-0',
-                        }}
-                    >
-                        <Tabs></Tabs>
-                    </Paper>
-                </Stack>
-                <Stack
+                {/* 변수 목록 패널 */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        width: '360px',
+                        borderRight: '1px solid',
+                        borderRightColor: 'divider',
+                    }}
+                >
+                    <Tabs value={0} variant="fullWidth" sx={{ borderBottom: '1px solid', borderBottomColor: 'divider' }}>
+                        <Tab label="사용자정의 변수" />
+                        <Tab label="시스템 변수" />
+                    </Tabs>
+                </Paper>
+
+                <Box
+                    sx={{
+                        flex: 1,
+                        backgroundColor: 'background.defaultLightgray',
+                    }}
+                >
+                    리액트 플로우 영역
+                </Box>
+                {/* 노드 목록 패널 */}
+                <Paper
+                    elevation={4}
+                    sx={{
+                        width: '360px',
+                        borderLeft: '1px solid',
+                        borderLeftColor: 'divider',
+                    }}
+                >
+                    노드 목록
+                </Paper>
+                {/* <Stack
                     sx={{
                         backgroundColor: 'background.defaultLightgray',
                     }}
@@ -181,10 +209,7 @@ export const Agentbuilder: React.FC = () => {
                             </Stack>
                         </Paper>
                     </Stack>
-                </Stack>
-                <ListItem>
-                    <ListItemText primary="메시지 보내기" />
-                </ListItem>
+                </Stack> */}
             </Box>
         </Box>
     );

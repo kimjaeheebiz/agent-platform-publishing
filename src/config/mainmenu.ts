@@ -108,7 +108,7 @@ export const MAIN_MENUS: MenuItem[] = [
                         children: [
                             {
                                 id: 'project1.agent.agentbuilder',
-                                title: '에이전트 이름 빌더',
+                                title: '에이전트 이름',
                                 type: 'item',
                                 pageId: 'project.agent.agentbuilder',
                                 path: '/project/project1/agent/agentbuilder',
@@ -168,7 +168,7 @@ export const MAIN_MENUS: MenuItem[] = [
                         children: [
                             {
                                 id: 'project2.agent.agentbuilder',
-                                title: '에이전트 이름 빌더',
+                                title: '에이전트 이름',
                                 type: 'item',
                                 pageId: 'project.agent.agentbuilder',
                                 path: '/project/project2/agent/agentbuilder',

@@ -2266,8 +2266,7 @@ export const lightThemeOptions: ThemeOptions = {
           },
           "&.Mui-focusVisible": {
             "boxShadow": "none"
-          },
-          "gap": 0
+          }
         }
       }
     },
@@ -2315,10 +2314,9 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "xsmall"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "2px",
                 "width": "24px",
-                "height": "24px"
+                "height": "24px",
+                "fontSize": "1rem"
               }
             },
             {
@@ -2326,8 +2324,6 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "small"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "5px",
                 "width": "30px",
                 "height": "30px"
               }
@@ -2337,8 +2333,6 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "medium"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "8px",
                 "width": "36px",
                 "height": "36px"
               }
@@ -2348,8 +2342,6 @@ export const lightThemeOptions: ThemeOptions = {
                 "size": "large"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "11px",
                 "width": "42px",
                 "height": "42px"
               }
@@ -4982,8 +4974,7 @@ export const darkThemeOptions: ThemeOptions = {
           },
           "&.Mui-focusVisible": {
             "boxShadow": "none"
-          },
-          "gap": 0
+          }
         }
       }
     },
@@ -5031,10 +5022,9 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "xsmall"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "2px",
                 "width": "24px",
-                "height": "24px"
+                "height": "24px",
+                "fontSize": "1rem"
               }
             },
             {
@@ -5042,8 +5032,6 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "small"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "5px",
                 "width": "30px",
                 "height": "30px"
               }
@@ -5053,8 +5041,6 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "medium"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "8px",
                 "width": "36px",
                 "height": "36px"
               }
@@ -5064,8 +5050,6 @@ export const darkThemeOptions: ThemeOptions = {
                 "size": "large"
               },
               "style": {
-                "boxSizing": "border-box",
-                "padding": "11px",
                 "width": "42px",
                 "height": "42px"
               }

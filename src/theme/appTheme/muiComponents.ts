@@ -14,7 +14,7 @@ import {
  * - **컨트롤 높이·입력 세로 패딩·라벨 transform·body2**: `constants.ts` 의 `CONTROL_HEIGHT_BY_SIZE`, `INPUT_PADDING_BLOCK`, `INPUT_LABEL_TRANSFORM`, `TYPOGRAPHY_BODY2`
  *
  * **`MuiButton`**: large/medium/small은 토큰 JSON variants, **xsmall**은 `appMuiButtonVariantAppend` → `merge-theme-with-app-components.ts`가 빌드 시 병합.
- * `IconButton`·`TextField`/`Select` 입력 계열은 **small/medium/large** 높이 스케일을 `variants`로 맞춤(xsmall 없음).
+ * **`MuiIconButton`**: **xsmall** 박스는 `Button`과 동일하게 `CONTROL_HEIGHT_BY_SIZE`(24px). 아이콘 크기는 자식 `SvgIcon`의 `fontSize`로 둡니다. 입력 계열은 small/medium/large만.
  *
  * - **IconButton**: MUI는 `size` + `root` 슬롯 스타일로 크기를 잡음
  *   ([API](https://mui.com/material-ui/api/icon-button/) · [theme-components](https://mui.com/material-ui/customization/theme-components/)).
@@ -68,8 +68,8 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
     },
 
     /**
-     * 아이콘만 있는 버튼 — 사이즈별 정사각형 (피그마 xsmall 포함).
-     * `width`/`height`는 패딩 포함 박스 크기로 통일 (border-box).
+     * 아이콘만 있는 버튼 — 사이즈별 정사각형 (`Button`과 동일 높이 스케일).
+     * `width`/`height`는 패딩 포함 박스 크기로 통일 (border-box). 아이콘은 자식 `fontSize`로 조절.
      */
     MuiIconButton: {
         styleOverrides: {
@@ -78,17 +78,14 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
                     {
                         props: { size: 'xsmall' },
                         style: {
-                            boxSizing: 'border-box',
-                            padding: '2px',
                             width: H.xsmall,
                             height: H.xsmall,
+                            fontSize: '1rem',
                         },
                     },
                     {
                         props: { size: 'small' },
                         style: {
-                            boxSizing: 'border-box',
-                            padding: '5px',
                             width: H.small,
                             height: H.small,
                         },
@@ -96,8 +93,6 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
                     {
                         props: { size: 'medium' },
                         style: {
-                            boxSizing: 'border-box',
-                            padding: '8px',
                             width: H.medium,
                             height: H.medium,
                         },
@@ -105,8 +100,6 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
                     {
                         props: { size: 'large' },
                         style: {
-                            boxSizing: 'border-box',
-                            padding: '11px',
                             width: H.large,
                             height: H.large,
                         },
@@ -420,7 +413,6 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
         styleOverrides: {
             root: {
                 ...BBS,
-                gap: 0,
             },
         },
     },

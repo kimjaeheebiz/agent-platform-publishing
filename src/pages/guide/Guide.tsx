@@ -479,12 +479,6 @@ export const Guide = () => {
                         <Button variant="outlined" endIcon={<Settings />}>
                             Settings
                         </Button>
-                        <IconButton color="primary">
-                            <Add fontSize="inherit" />
-                        </IconButton>
-                        <IconButton color="secondary">
-                            <Settings fontSize="inherit" />
-                        </IconButton>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
                         <Button variant="contained" size="xsmall">
@@ -499,14 +493,17 @@ export const Guide = () => {
                         </Button>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <IconButton color="primary" size="small">
+                        <IconButton color="primary" size="xsmall">
                             <Add fontSize="inherit" />
+                        </IconButton>
+                        <IconButton color="primary" size="small">
+                            <Add fontSize="small" />
                         </IconButton>
                         <IconButton color="primary">
-                            <Add fontSize="inherit" />
+                            <Add />
                         </IconButton>
                         <IconButton color="primary" size="large">
-                            <Add fontSize="inherit" />
+                            <Add fontSize="large" />
                         </IconButton>
                     </Stack>
                 </Box>

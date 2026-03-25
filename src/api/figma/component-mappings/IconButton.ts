@@ -10,10 +10,26 @@ export const IconButtonMapping: ComponentMapping = {
     muiName: 'IconButton',
     
     muiProps: {
-        // size
+        // size — xsmall은 theme.d.ts IconButtonPropsSizeOverrides + MuiIconButton variants (MUI 문서 기본값 없음)
         size: {
             type: 'union',
-            values: ['small', 'medium', 'large'] as const,
+            values: ['xsmall', 'small', 'medium', 'large'] as const,
+            default: 'medium',
+            extractFromFigma: (node) => {
+                const sizeProps =
+                    (node as any).componentProperties?.Size || (node as any).componentProperties?.size;
+                if (sizeProps) {
+                    const raw =
+                        typeof sizeProps === 'object' && 'value' in sizeProps
+                            ? (sizeProps as { value: unknown }).value
+                            : sizeProps;
+                    if (typeof raw === 'string') {
+                        return raw.toLowerCase();
+                    }
+                    return raw;
+                }
+                return null;
+            },
         },
         
         // color
@@ -205,7 +221,7 @@ export const IconButtonMapping: ComponentMapping = {
     // ✅ JSX 생성 템플릿 정의
     generateJSX: (componentName, props, content, sx, properties) => {
         const sxAttribute = sx ? `\n            sx={${sx}}` : '';
-        
+
         // Icon 콘텐츠가 감지된 경우 아이콘 컴포넌트로 렌더링
         if (properties && (properties as any).__iconButtonIconName) {
             const icon = (properties as any).__iconButtonIconName as string;

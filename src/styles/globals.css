@@ -1,15 +1,1 @@
 @import '../assets/fonts/pretendard/pretendard.css';
-
-
-.page-title {
-    font-weight: 700;
-    text-transform: uppercase;
-}
-.MuiTableCell-head,
-.MuiButtonBase-root,
-.MuiChip-root {
-    white-space: nowrap;
-}
-.MuiButtonBase-root {
-    gap: 4px;
-}

@@ -12,11 +12,10 @@ export const PageHeader = ({ title }: PageHeaderProps) => (
             px: 3,
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            flexShrink: 0,
+            alignItems: 'center'
         }}
     >
-        <Typography component="h1" variant="h5" className="page-title" sx={{ fontWeight: 600, m: 0 }}>
+        <Typography component="h1" variant="h5" sx={{ textTransform: 'uppercase' }}>
             {title}
         </Typography>
         <Breadcrumb />
