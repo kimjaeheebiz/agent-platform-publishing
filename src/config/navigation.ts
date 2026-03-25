@@ -9,7 +9,7 @@
 
 import React from 'react';
 import * as MuiIcons from '@mui/icons-material';
-import { MAIN_MENUS, MenuItem, MenuGroup, ActionButton, getMainMenuTitle } from './mainmenu';
+import { MAIN_MENUS, MenuItem, MenuGroup, MenuItemLeaf, MenuAction, getMainMenuTitle } from './mainmenu';
 import { PAGES, findPageById, PageConfig } from './pages';
 
 // =========================================================================
@@ -27,6 +27,10 @@ export interface NavigationMenuChild {
     path?: string;
     parent?: string;
     children?: NavigationMenuGrandChild[];
+    /** `type: 'action'` 행 — 라벨 영역 클릭 (라우트 없음) */
+    onRowClick?: () => void;
+    /** 오른쪽 IconButton (빌드 시 icon 문자열이 확정됨) */
+    iconButton?: { icon: string; onClick?: () => void };
 }
 
 export interface NavigationMenuItem {
@@ -34,7 +38,6 @@ export interface NavigationMenuItem {
     icon: string | React.ReactElement;
     path?: string;
     showInSidebar: boolean;
-    actions?: ActionButton[];
     children?: NavigationMenuChild[];
 }
 
@@ -76,9 +79,13 @@ export const NAVIGATION_MENU: NavigationMenuItem[] = (() => {
         if (depth === 1) {
             const baseItem: NavigationMenuItem = {
                 label: getMainMenuTitle(menu), // ✅ getMainMenuTitle 사용
-                icon: menu.icon || 'HomeOutlined',
+                icon: 'icon' in menu ? menu.icon || 'HomeOutlined' : 'HomeOutlined',
                 showInSidebar: true,
             };
+
+            if (menu.type === 'action') {
+                return null;
+            }
 
             if (menu.type === 'item') {
                 // path 우선순위: menu.path > pages.ts의 path
@@ -103,18 +110,33 @@ export const NAVIGATION_MENU: NavigationMenuItem[] = (() => {
                     ...baseItem,
                     path: menu.path,
                     children: children.length > 0 ? children : undefined,
-                    actions: groupMenu.actions,
                 };
             }
         }
 
         // 2-depth: NavigationMenuChild 생성 (아이콘 없음)
         if (depth === 2) {
+            if (menu.type === 'action') {
+                const row = menu as MenuAction;
+                const ib = row.iconButton;
+                return {
+                    label: getMainMenuTitle(menu),
+                    parent: getParentId(menu.id),
+                    onRowClick: row.onClick,
+                    iconButton: ib
+                        ? {
+                              icon: ib.icon ?? 'Add',
+                              onClick: ib.onClick,
+                          }
+                        : undefined,
+                };
+            }
+
             if (menu.type === 'item') {
                 // path 우선순위: menu.path > pages.ts의 path
                 const pageConfig = menu.pageId ? findPageById(menu.pageId) : null;
                 const menuPath = menu.path || (pageConfig && 'path' in pageConfig ? pageConfig.path : undefined);
-                
+
                 return {
                     label: getMainMenuTitle(menu), // ✅ getMainMenuTitle 사용
                     path: menuPath,
@@ -190,6 +212,10 @@ export function getProjectSubmenuTabs(pathname: string): NavigationMenuGrandChil
 function extractPageIdsFromMenu(menu: MenuItem): string[] {
     const pageIds: string[] = [];
 
+    if (menu.type === 'action') {
+        return pageIds;
+    }
+
     if (menu.type === 'item' && menu.pageId) {
         pageIds.push(menu.pageId);
         // 4뎁스: item의 children(메뉴 미노출)도 라우트 등록을 위해 pageId 수집
@@ -215,6 +241,10 @@ function extractPageIdsFromMenu(menu: MenuItem): string[] {
  */
 function extractRoutesFromMenu(menu: MenuItem): RouteInfo[] {
     const routes: RouteInfo[] = [];
+
+    if (menu.type === 'action') {
+        return routes;
+    }
 
     if (menu.type === 'item' && menu.pageId) {
         const pageConfig = findPageById(menu.pageId);
@@ -303,6 +333,10 @@ export const getIconComponent = (iconName: string) => {
  */
 export const findMenuByUrl = (url: string, menus: MenuItem[] = MAIN_MENUS): MenuItem | null => {
     for (const menu of menus) {
+        if (menu.type === 'action') {
+            continue;
+        }
+
         // path 우선순위: menu.path > pages.ts의 path
         const pageConfig = menu.pageId ? findPageById(menu.pageId) : null;
         const menuPath = menu.path || (pageConfig && 'path' in pageConfig ? pageConfig.path : undefined);
@@ -337,6 +371,10 @@ export const findMenuById = (id: string, menus: MenuItem[] = MAIN_MENUS): MenuIt
     for (const menu of menus) {
         if (menu.id === id) return menu;
 
+        if (menu.type === 'action') {
+            continue;
+        }
+
         if (menu.type === 'item' && menu.children?.length) {
             const found = findMenuById(id, menu.children);
             if (found) return found;
@@ -364,6 +402,10 @@ export const getBreadcrumbPath = (url: string): Array<{ title: string; path?: st
     // 1. 메뉴 구조에서 URL과 일치하는 메뉴 항목 찾기 (mainmenu.ts의 path 우선)
     const findMenuByUrl = (targetUrl: string, menus: MenuItem[], ancestors: MenuItem[] = []): MenuItem | null => {
         for (const menu of menus) {
+            if (menu.type === 'action') {
+                continue;
+            }
+
             const currentAncestors = [...ancestors, menu];
 
             if (menu.type === 'item') {
@@ -376,6 +418,9 @@ export const getBreadcrumbPath = (url: string): Array<{ title: string; path?: st
                     // 부모 메뉴들 + 현재 메뉴 항목 추가
                     breadcrumbs.push(
                         ...currentAncestors.map((m) => {
+                            if (m.type === 'action') {
+                                return { title: getMainMenuTitle(m), path: undefined };
+                            }
                             const mPageConfig = m.pageId ? findPageById(m.pageId) : null;
                             const mPath = m.path || (mPageConfig && 'path' in mPageConfig ? mPageConfig.path : undefined);
                             return {
@@ -427,40 +472,11 @@ export const getAllRoutes = (): RouteInfo[] => {
     return ALL_ROUTES;
 };
 
-/**
- * 메뉴 제목으로 액션 버튼 찾기
- */
-export const getMenuActions = (menuTitle: string): ActionButton[] | undefined => {
-    const search = (menus: MenuItem[]): ActionButton[] | undefined => {
-        for (const menu of menus) {
-            if (getMainMenuTitle(menu) === menuTitle && menu.type === 'group' && menu.actions) {
-                // ✅ getMainMenuTitle 사용
-                return menu.actions;
-            }
-            if (menu.type === 'group' && menu.children) {
-                const found = search(menu.children);
-                if (found) return found;
-            }
-        }
-        return undefined;
-    };
-
-    return search(MAIN_MENUS);
-};
-
-/**
- * 특정 액션 버튼 찾기
- */
-export const findActionButton = (menuTitle: string, actionKey: string): ActionButton | undefined => {
-    const actions = getMenuActions(menuTitle);
-    return actions?.find((action) => action.key === actionKey);
-};
-
 // =========================================================================
 // 내보내기
 // =========================================================================
 
-export type { ActionButton, SortOption, SortDirection, MenuItem, MenuGroup, MenuItemLeaf } from './mainmenu';
+export type { MenuItem, MenuGroup, MenuItemLeaf, MenuAction } from './mainmenu';
 
 export type { PageMetadata, PageConfig } from './pages';
 

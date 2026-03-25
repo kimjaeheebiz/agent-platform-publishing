@@ -8,7 +8,8 @@
  * 
  * 페이지 정보:
  * - 모든 페이지 정보는 `pages.ts`에서 관리 (단일 소스)
- * - 메뉴 아이템은 `pages.ts`의 `id` 값을 참조하여 `pageId` 설정
+ * - `type: 'item'`은 `pages.ts`의 `id`를 `pageId`로 참조
+ * - `type: 'action'`은 페이지·라우트 없이 사이드바 한 줄만 (라벨 `onClick` / `iconButton`은 운영에서 연결)
  * - 피그마에서 페이지를 생성할 때 `pages.ts`에 페이지 정보를 추가하고,
  *   이 파일에 메뉴 구조를 추가하세요.
  */
@@ -17,26 +18,7 @@
 // 타입 정의
 // =========================================================================
 
-export type SortDirection = 'asc' | 'desc' | null;
-
-export interface SortOption {
-    key: string;
-    label: string;
-}
-
-export type ActionButtonType = 'button' | 'sort-group';
-
-export interface ActionButton {
-    key: string;
-    label?: string;
-    type: ActionButtonType;
-    onClick?: () => void;
-    textColor?: string;
-    sortOptions?: SortOption[];
-    onSort?: (key: string, direction: SortDirection) => void;
-}
-
-export type MenuType = 'group' | 'item';
+export type MenuType = 'group' | 'item' | 'action';
 
 interface BaseMenuItem {
     id: string;
@@ -47,10 +29,26 @@ interface BaseMenuItem {
     path?: string; // 메뉴 표시용 경로 (기본값: pages.ts의 path 사용, 변경 필요 시에만 명시)
 }
 
+/**
+ * 라우트·pages.ts 없음. 사이드바 2뎁스 한 줄(라벨 + 선택적 오른쪽 IconButton).
+ */
+export interface MenuAction {
+    id: string;
+    title: string;
+    type: 'action';
+    /** 라벨(행 본문) 클릭 */
+    onClick?: () => void;
+    /** 행 오른쪽 아이콘 버튼. 생략 시 아이콘 없음 */
+    iconButton?: {
+        /** MUI Icons 이름 (기본 Add) */
+        icon?: string;
+        onClick?: () => void;
+    };
+}
+
 export interface MenuGroup extends BaseMenuItem {
     type: 'group';
     children: MenuItem[];
-    actions?: ActionButton[];
 }
 
 export interface MenuItemLeaf extends BaseMenuItem {
@@ -64,7 +62,7 @@ export interface MenuItemLeaf extends BaseMenuItem {
     children?: MenuItemLeaf[];
 }
 
-export type MenuItem = MenuGroup | MenuItemLeaf;
+export type MenuItem = MenuGroup | MenuItemLeaf | MenuAction;
 
 // =========================================================================
 // 메뉴 데이터
@@ -73,8 +71,8 @@ export type MenuItem = MenuGroup | MenuItemLeaf;
 /**
  * 메인 메뉴 구조
  * 
- * pages.ts의 페이지 정보를 참조하여 메뉴를 구성합니다.
- * 각 메뉴 아이템은 `pageId`로 pages.ts의 페이지를 참조합니다.
+ * pages.ts의 페이지 정보를 참조하여 메뉴를 구성합니다 (`item`).
+ * `action` 항목은 pages.ts·라우트와 무관합니다.
  */
 export const MAIN_MENUS: MenuItem[] = [
     {
@@ -90,6 +88,12 @@ export const MAIN_MENUS: MenuItem[] = [
         type: 'group',
         icon: 'FolderOutlined',
         children: [
+            {
+                id: 'project.add',
+                title: '프로젝트 추가',
+                type: 'action',
+                iconButton: { icon: 'AddCircleOutline' },
+            },
             {
                 id: 'project1',
                 title: '프로젝트 1',

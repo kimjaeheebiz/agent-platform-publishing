@@ -8,5 +8,4 @@ export interface NavigationProps {
 
 export interface NavigationState {
     expandedFolders: Set<string>;
-    sortStates: Record<string, 'asc' | 'desc' | null>;
 }

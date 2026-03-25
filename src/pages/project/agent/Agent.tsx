@@ -33,7 +33,6 @@ export const Agent: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
-                    width: '1572px',
                 }}
             >
                 <Stack direction="row" alignItems="center" justifyContent="space-between">

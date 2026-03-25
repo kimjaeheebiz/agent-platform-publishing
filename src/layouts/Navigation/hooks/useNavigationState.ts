@@ -5,8 +5,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MAIN_MENUS, MenuItem, MenuGroup, getMainMenuTitle, findPageById } from '@/config';
-import { SortDirection } from '@/config/navigation';
-
 /**
  * 경로 활성화 체크
  */
@@ -74,7 +72,6 @@ function getFoldersToExpand(currentPath: string): Set<string> {
 export function useNavigationState() {
     const location = useLocation();
     const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
-    const [sortStates, setSortStates] = useState<Record<string, { key: string; direction: SortDirection }>>({});
 
     // 현재 경로에 맞는 폴더 자동 열기
     useEffect(() => {
@@ -94,18 +91,9 @@ export function useNavigationState() {
         });
     };
 
-    const handleSortChange = (key: string, direction: SortDirection) => {
-        setSortStates((prev) => ({
-            ...prev,
-            [key]: { key, direction },
-        }));
-    };
-
     return {
         expandedFolders,
-        sortStates,
         handleFolderToggle,
-        handleSortChange,
         currentPath: location.pathname,
     };
 }

@@ -19,15 +19,25 @@ import {
 } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Brand, ServerChip } from '@/components';
-import { Menu as MenuIcon, DarkModeOutlined, LightModeOutlined, PersonOutline, AccountCircleOutlined, Logout } from '@mui/icons-material';
+import {
+    MenuOutlined,
+    MenuOpenOutlined,
+    DarkModeOutlined,
+    LightModeOutlined,
+    PersonOutline,
+    AccountCircleOutlined,
+    Logout,
+} from '@mui/icons-material';
 import { HEADER_HEIGHT, Z_INDEX } from '@/config';
 
 export interface HeaderProps {
     onMenuToggle?: () => void;
+    /** 펼침: MenuOpenOutlined, 접힘: MenuOutlined */
+    sidebarOpen?: boolean;
     onToggleTheme?: () => void;
 }
 
-export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
+export const Header = ({ onMenuToggle, sidebarOpen = true, onToggleTheme }: HeaderProps) => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isDark = theme.palette.mode === 'dark';
@@ -52,10 +62,15 @@ export const Header = ({ onMenuToggle, onToggleTheme }: HeaderProps) => {
             }}
         >
             <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {onMenuToggle && (
-                        <IconButton color="inherit" aria-label="메뉴 토글" onClick={onMenuToggle} edge="start">
-                            <MenuIcon />
+                        <IconButton
+                            color="inherit"
+                            aria-label={sidebarOpen ? '사이드바 접기' : '사이드바 펼치기'}
+                            onClick={onMenuToggle}
+                            edge="start"
+                        >
+                            {sidebarOpen ? <MenuOpenOutlined /> : <MenuOutlined />}
                         </IconButton>
                     )}
                     <Link

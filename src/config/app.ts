@@ -7,8 +7,6 @@
 import {
     findRouteByUrl,
     getBreadcrumbPath,
-    getMenuActions,
-    findActionButton,
     getIconComponent,
     getParentId,
     getAllRoutes,
@@ -87,8 +85,6 @@ export const getBrowserTitle = (pageId: string): string => {
 export {
     findRouteByUrl,
     getBreadcrumbPath,
-    getMenuActions,
-    findActionButton,
     getIconComponent,
     getParentId,
     getAllRoutes,
@@ -96,5 +92,5 @@ export {
 
 export type { RouteInfo } from './navigation';
 export type { PageMetadata, PageConfig } from './pages';
-export type { MenuItem, MenuGroup, MenuItemLeaf, ActionButton, SortOption, SortDirection } from './mainmenu';
+export type { MenuItem, MenuGroup, MenuItemLeaf, MenuAction } from './mainmenu';
 export type { NavigationMenuItem, NavigationMenuChild, NavigationMenuGrandChild } from './navigation';

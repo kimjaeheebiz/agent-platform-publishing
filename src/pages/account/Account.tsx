@@ -3,12 +3,8 @@ import {
     Avatar,
     Box,
     Button,
-    Card,
-    CardContent,
-    CardHeader,
     Chip,
     FormControl,
-    FormLabel,
     InputLabel,
     MenuItem,
     Paper,
@@ -50,7 +46,6 @@ export const Account: React.FC = () => {
                         sx={{
                             py: '0px',
                             px: '75px',
-                            borderRadius: '4px',
                         }}
                     >
                         <Stack spacing={2} alignItems="center">
@@ -82,80 +77,61 @@ export const Account: React.FC = () => {
                         </Stack>
                     </Stack>
                 </Paper>
-                <Card
-                    elevation={0}
+                <Paper
                     variant="outlined"
                     sx={{
-                        width: '600px',
-                        p: 1,
+                        p: 4,
+                        width: '460px',
                     }}
                 >
-                    <CardHeader title="계정 정보" />
-                    <CardContent>
-                        <Stack spacing={4}>
-                            <Stack spacing={2}>
-                                <FormControl>
-                                    <FormControl
-                                        sx={{
-                                            backgroundColor: '#ffffff',
-                                        }}
-                                    >
-                                        <FormLabel>이름</FormLabel>
-                                    </FormControl>
-                                    <TextField size="medium" label="홍길동" fullWidth />
-                                </FormControl>
-                                <FormControl>
-                                    <FormControl
-                                        sx={{
-                                            backgroundColor: '#ffffff',
-                                        }}
-                                    >
-                                        <FormLabel>소속</FormLabel>
-                                    </FormControl>
-                                    <FormControl>
-                                        <InputLabel id="select-주헥토-label">(주)헥토</InputLabel>
-                                        <Select labelId="select-주헥토-label" label="(주)헥토">
-                                            <MenuItem value={`(주)헥토`}>(주)헥토</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </FormControl>
-                            </Stack>
-                            <Stack spacing={1}>
-                                <Stack>
-                                    <Stack direction="row">
-                                        <Stack spacing={0.5}>
-                                            <Typography variant="h5">비밀번호 변경</Typography>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    color: 'text.secondary',
-                                                }}
-                                            >
-                                                최소 8자 이상, 대문자, 소문자, 특수문자를 각각 1개
-                                                이상 포함
-                                            </Typography>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                                <Stack direction="row" spacing={2}>
-                                    <TextField size="small" label="새 비밀번호" fullWidth />
-                                    <TextField size="small" label="새 비밀번호 확인" fullWidth />
-                                </Stack>
-                            </Stack>
-                            <Stack
-                                direction="row"
-                                spacing={1}
-                                alignItems="center"
-                                justifyContent="flex-end"
-                            >
-                                <Button variant="contained" color="inherit">
-                                    취소
-                                </Button>
-                                <Button variant="contained">저장</Button>
-                            </Stack>
+                    <Stack spacing={4}>
+                        <Stack spacing={2}>
+                            <Typography variant="h5">계정 정보</Typography>
+                            <TextField
+                                size="medium"
+                                label="이름 *"
+                                fullWidth
+                                defaultValue="홍길동"
+                            />
+                            <FormControl>
+                                <InputLabel id="select-소속--label">소속 *</InputLabel>
+                                <Select
+                                    labelId="select-소속--label"
+                                    value="(주)헥토"
+                                    label="소속 *"
+                                >
+                                    <MenuItem value={`(주)헥토`}>(주)헥토</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Stack>
-                    </CardContent>
-                </Card>
+                        <Stack spacing={2}>
+                            <Stack spacing={0.5}>
+                                <Typography variant="h5">비밀번호 변경</Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: 'text.secondary',
+                                    }}
+                                >
+                                    최소 8자 이상, 대문자, 소문자, 특수문자를 각각 1개 이상 포함
+                                </Typography>
+                            </Stack>
+                            <TextField type="password" size="medium" label="새 비밀번호" fullWidth />
+                            <TextField type="password" size="medium" label="새 비밀번호 확인" fullWidth />
+                        </Stack>
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                            justifyContent="flex-end"
+                        >
+                            <Button variant="contained" color="inherit">
+                                취소
+                            </Button>
+                            <Button variant="contained">저장</Button>
+                        </Stack>
+                    </Stack>
+                </Paper>
             </Stack>
         </Box>
     );

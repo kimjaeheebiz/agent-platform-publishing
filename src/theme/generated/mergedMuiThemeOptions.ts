@@ -835,7 +835,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "21": {
       "$type": "lineHeights",
-      "$value": 22
+      "$value": 24
     },
     "22": {
       "$type": "lineHeights",
@@ -855,7 +855,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "26": {
       "$type": "lineHeights",
-      "$value": 22
+      "$value": 24
     },
     "27": {
       "$type": "lineHeights",
@@ -883,7 +883,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "33": {
       "$type": "lineHeights",
-      "$value": 20
+      "$value": 24
     },
     "34": {
       "$type": "lineHeights",
@@ -1556,7 +1556,7 @@ export const lightThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
-        "lineHeight": "{lineHeights.27}",
+        "lineHeight": "{lineHeights.21}",
         "fontSize": "{fontSize.4}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -1632,7 +1632,7 @@ export const lightThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.18}",
+        "lineHeight": "{lineHeights.21}",
         "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -1865,7 +1865,7 @@ export const lightThemeOptions: ThemeOptions = {
         "root": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px",
+          "lineHeight": "24px",
           "&.MuiInputLabel-sizeLarge": {
             "fontSize": "0.9375rem",
             "fontWeight": 400,
@@ -1943,7 +1943,7 @@ export const lightThemeOptions: ThemeOptions = {
         "input": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px"
+          "lineHeight": "24px"
         },
         "root": {
           "&.MuiInputBase-sizeLarge": {
@@ -2021,7 +2021,7 @@ export const lightThemeOptions: ThemeOptions = {
         "input": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px"
+          "lineHeight": "24px"
         },
         "root": {
           "&.MuiInputBase-sizeLarge": {
@@ -2077,7 +2077,7 @@ export const lightThemeOptions: ThemeOptions = {
         "input": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px"
+          "lineHeight": "24px"
         },
         "root": {
           "&.MuiInputBase-sizeLarge": {
@@ -2133,7 +2133,7 @@ export const lightThemeOptions: ThemeOptions = {
         "select": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px",
+          "lineHeight": "24px",
           "variants": [
             {
               "props": {
@@ -2224,7 +2224,7 @@ export const lightThemeOptions: ThemeOptions = {
           "style": {
             "fontSize": "0.8125rem",
             "fontWeight": 500,
-            "lineHeight": "22px",
+            "lineHeight": "24px",
             "textTransform": "uppercase",
             "minHeight": "36px"
           }
@@ -2285,7 +2285,7 @@ export const lightThemeOptions: ThemeOptions = {
         "sizeMedium": {
           "fontSize": "0.8125rem",
           "fontWeight": 500,
-          "lineHeight": "22px",
+          "lineHeight": "24px",
           "textTransform": "none",
           "minHeight": "36px",
           "height": "36px",
@@ -3551,7 +3551,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "21": {
       "$type": "lineHeights",
-      "$value": 22
+      "$value": 24
     },
     "22": {
       "$type": "lineHeights",
@@ -3571,7 +3571,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "26": {
       "$type": "lineHeights",
-      "$value": 22
+      "$value": 24
     },
     "27": {
       "$type": "lineHeights",
@@ -3599,7 +3599,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "33": {
       "$type": "lineHeights",
-      "$value": 20
+      "$value": 24
     },
     "34": {
       "$type": "lineHeights",
@@ -4272,7 +4272,7 @@ export const darkThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-1}",
-        "lineHeight": "{lineHeights.27}",
+        "lineHeight": "{lineHeights.21}",
         "fontSize": "{fontSize.4}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -4348,7 +4348,7 @@ export const darkThemeOptions: ThemeOptions = {
       "$value": {
         "fontFamily": "{fontFamily.primary}",
         "fontWeight": "{fontWeights.pretendard-variable-2}",
-        "lineHeight": "{lineHeights.18}",
+        "lineHeight": "{lineHeights.21}",
         "fontSize": "{fontSize.2}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
@@ -4581,7 +4581,7 @@ export const darkThemeOptions: ThemeOptions = {
         "root": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px",
+          "lineHeight": "24px",
           "&.MuiInputLabel-sizeLarge": {
             "fontSize": "0.9375rem",
             "fontWeight": 400,
@@ -4659,7 +4659,7 @@ export const darkThemeOptions: ThemeOptions = {
         "input": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px"
+          "lineHeight": "24px"
         },
         "root": {
           "&.MuiInputBase-sizeLarge": {
@@ -4737,7 +4737,7 @@ export const darkThemeOptions: ThemeOptions = {
         "input": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px"
+          "lineHeight": "24px"
         },
         "root": {
           "&.MuiInputBase-sizeLarge": {
@@ -4793,7 +4793,7 @@ export const darkThemeOptions: ThemeOptions = {
         "input": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px"
+          "lineHeight": "24px"
         },
         "root": {
           "&.MuiInputBase-sizeLarge": {
@@ -4849,7 +4849,7 @@ export const darkThemeOptions: ThemeOptions = {
         "select": {
           "fontSize": "0.8125rem",
           "fontWeight": 400,
-          "lineHeight": "22px",
+          "lineHeight": "24px",
           "variants": [
             {
               "props": {
@@ -4940,7 +4940,7 @@ export const darkThemeOptions: ThemeOptions = {
           "style": {
             "fontSize": "0.8125rem",
             "fontWeight": 500,
-            "lineHeight": "22px",
+            "lineHeight": "24px",
             "textTransform": "uppercase",
             "minHeight": "36px"
           }
@@ -5001,7 +5001,7 @@ export const darkThemeOptions: ThemeOptions = {
         "sizeMedium": {
           "fontSize": "0.8125rem",
           "fontWeight": 500,
-          "lineHeight": "22px",
+          "lineHeight": "24px",
           "textTransform": "none",
           "minHeight": "36px",
           "height": "36px",

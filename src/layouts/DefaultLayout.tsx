@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
@@ -14,6 +15,7 @@ export const DefaultLayout = () => {
     const location = useLocation();
     const currentRoute = findRouteByUrl(location.pathname);
     const { toggleTheme } = useColorMode();
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     return (
         <Box
@@ -27,7 +29,11 @@ export const DefaultLayout = () => {
             }}
         >
             {/* <Header> */}
-            <Header onToggleTheme={toggleTheme} />
+            <Header
+                sidebarOpen={sidebarOpen}
+                onMenuToggle={() => setSidebarOpen((v) => !v)}
+                onToggleTheme={toggleTheme}
+            />
 
             {/* MainArea */}
             <Box
@@ -38,7 +44,7 @@ export const DefaultLayout = () => {
                 }}
             >
                 {/* <Sidebar> */}
-                <Sidebar />
+                <Sidebar open={sidebarOpen} />
 
                 {/* Main */}
                 <Box

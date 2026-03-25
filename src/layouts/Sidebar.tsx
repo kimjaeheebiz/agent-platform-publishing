@@ -1,28 +1,40 @@
-import { Drawer } from '@mui/material';
-import { SIDEBAR_WIDTH, HEADER_HEIGHT, Z_INDEX } from '@/config';
+import { Drawer, useTheme } from '@mui/material';
+import { SIDEBAR_WIDTH, SIDEBAR_MINI_WIDTH, HEADER_HEIGHT, Z_INDEX } from '@/config';
 import { Navigation } from './Navigation/Navigation';
 
-export const Sidebar = () => {
+export interface SidebarProps {
+    /** false이면 미니 너비 + 네비 라벨 숨김 */
+    open?: boolean;
+}
+
+export const Sidebar = ({ open = true }: SidebarProps) => {
+    const theme = useTheme();
+    const width = open ? SIDEBAR_WIDTH : SIDEBAR_MINI_WIDTH;
+    const widthTransition = theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.shortest,
+    });
+
     return (
         <Drawer
             variant="permanent"
-            open={true}
-            onClose={undefined}
             sx={{
-                width: SIDEBAR_WIDTH,
+                width,
                 flexShrink: 0,
                 zIndex: Z_INDEX.SIDEBAR,
+                transition: widthTransition,
                 '& .MuiDrawer-paper': {
-                    width: SIDEBAR_WIDTH,
+                    width,
                     boxSizing: 'border-box',
-                    transition: 'none',
+                    transition: widthTransition,
                     overflow: 'auto',
+                    overflowX: 'hidden',
                     top: `${HEADER_HEIGHT}px`,
                     height: `calc(100% - ${HEADER_HEIGHT}px)`,
                 },
             }}
         >
-            <Navigation open={true} />
+            <Navigation open={open} />
         </Drawer>
     );
 };
