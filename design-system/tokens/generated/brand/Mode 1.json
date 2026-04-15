@@ -9,7 +9,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "number",
-        "$value": "20"
+        "$value": 20
       },
       "medium": {
         "$extensions": {
@@ -19,7 +19,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "number",
-        "$value": "24"
+        "$value": 24
       },
       "large": {
         "$extensions": {
@@ -29,7 +29,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "number",
-        "$value": "28"
+        "$value": 28
       },
       "extraLarge": {
         "$extensions": {
@@ -39,7 +39,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "number",
-        "$value": "50"
+        "$value": 50
       }
     }
   },
