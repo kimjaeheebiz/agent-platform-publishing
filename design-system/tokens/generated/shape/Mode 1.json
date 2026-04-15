@@ -7,7 +7,7 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "number",
-    "$value": "4"
+    "$value": 4
   },
   "none": {
     "$extensions": {
@@ -17,7 +17,7 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "number",
-    "$value": "0"
+    "$value": 0
   },
   "borderRadiusMd": {
     "$extensions": {
@@ -27,7 +27,7 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "number",
-    "$value": "8"
+    "$value": 8
   },
   "borderRadiusLg": {
     "$extensions": {
@@ -37,6 +37,6 @@
       "com.figma.hiddenFromPublishing": false
     },
     "$type": "number",
-    "$value": "16"
+    "$value": 16
   }
 }

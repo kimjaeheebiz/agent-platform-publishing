@@ -972,7 +972,7 @@
     },
     "2": {
       "$type": "letterSpacing",
-      "$value": 0.46
+      "$value": "0%"
     },
     "3": {
       "$type": "letterSpacing",
@@ -1571,7 +1571,7 @@
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.uppercase}",
@@ -1721,7 +1721,7 @@
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.3}",
+        "letterSpacing": "{letterSpacing.2}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
