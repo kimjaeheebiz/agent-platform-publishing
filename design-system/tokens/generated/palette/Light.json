@@ -130,7 +130,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#00000014",
+      "$value": "#0000000f",
       "$description": "Reflects the action.disabledBackground variable from the theme object"
     },
     "focus": {
