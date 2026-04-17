@@ -95,7 +95,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{grey.900}"
+      "$value": "#00000099"
     },
     "hover": {
       "$extensions": {
@@ -130,7 +130,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#0000001f",
+      "$value": "#00000014",
       "$description": "Reflects the action.disabledBackground variable from the theme object"
     },
     "focus": {
