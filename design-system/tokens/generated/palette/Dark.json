@@ -32,7 +32,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#ffffff61",
+      "$value": "#ffffff66",
       "$description": "Reflects the text.disabled variable from the theme object"
     },
     "_states": {
@@ -362,7 +362,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#ffffff61",
+      "$value": "#ffffff66",
       "$description": "Reflects the action.disabled variable from the theme object"
     }
   },
@@ -1039,7 +1039,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "#ffffff61"
+        "$value": "#ffffff66"
       },
       "knowFillDisabled": {
         "$extensions": {
