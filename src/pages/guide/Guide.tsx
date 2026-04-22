@@ -104,10 +104,28 @@ export const Guide = () => {
             : [];
     };
 
+    const getSafeContrastTextColor = (backgroundColor?: string) => {
+        if (!backgroundColor) {
+            return theme.palette.text.primary;
+        }
+
+        try {
+            return theme.palette.getContrastText(backgroundColor);
+        } catch {
+            return theme.palette.text.primary;
+        }
+    };
+
+    const themeColorNames = ['primary', 'secondary', 'info', 'success', 'error', 'warning'] as const;
+    const themeColorTones = ['light', 'main', 'dark'] as const;
+    const themeColorStateKeys = ['hover', 'selected', 'focusVisible', 'outlinedBorder', 'focus'] as const;
+
     const [checked, setChecked] = React.useState(false);
     const [switchChecked, setSwitchChecked] = React.useState(false);
     const [radioValue, setRadioValue] = React.useState('option1');
     const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [alertDialogOpen, setAlertDialogOpen] = React.useState(false);
+    const [detailDialogOpen, setDetailDialogOpen] = React.useState(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [toggleValueSmall, setToggleValueSmall] = React.useState('left');
     const [toggleValueMedium, setToggleValueMedium] = React.useState('left');
@@ -211,33 +229,68 @@ export const Guide = () => {
                             Theme Color (Mode/Theme 자동 반영)
                         </Typography>
                         <Typography component="code" variant="caption" sx={codeHintSx}>
-                            {`{colorName}.{tone}`}
+                            {`{colorName}.{tone} / {colorName}._states.{state}`}
                         </Typography>
                     </Stack>
                     <Grid container spacing={2} sx={{ mb: 5 }}>
-                        {(['primary', 'secondary', 'info', 'success', 'error', 'warning'] as const).map((colorName) => (
-                            <Grid key={colorName} size={2}>
+                        {themeColorNames.map((colorName) => (
+                            <Grid key={colorName} size={{ xs: 12, xl: 6 }}>
                                 <Typography variant="caption" sx={{ mb: 0.5 }}>
                                     {colorName}
                                 </Typography>
-                                <Stack direction="row">
-                                    {(['light', 'main', 'dark'] as const).map((tone) => (
-                                        <Box
-                                            key={`${colorName}-${tone}`}
-                                            sx={{
-                                                width: 40,
-                                                height: 30,
-                                                bgcolor: `${colorName}.${tone}`,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                color: 'primary.contrastText',
-                                                typography: 'caption',
-                                            }}
-                                        >
-                                            {tone}
-                                        </Box>
-                                    ))}
+                                <Stack direction="row" flexWrap="wrap">
+                                    {themeColorTones.map((tone) => {
+                                        const toneColor = theme.palette[colorName][tone];
+
+                                        return (
+                                            <Box
+                                                key={`${colorName}-${tone}`}
+                                                sx={{
+                                                    width: 40,
+                                                    height: 30,
+                                                    bgcolor: toneColor,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: getSafeContrastTextColor(toneColor),
+                                                    typography: 'caption',
+                                                }}
+                                            >
+                                                {tone}
+                                            </Box>
+                                        );
+                                    })}
+                                    {themeColorStateKeys
+                                        .map((stateKey) => {
+                                            const stateColor = (
+                                                theme.palette[colorName] as typeof theme.palette.primary & {
+                                                    _states?: Partial<Record<(typeof themeColorStateKeys)[number], string>>;
+                                                }
+                                            )._states?.[stateKey];
+
+                                            if (!stateColor) {
+                                                return null;
+                                            }
+
+                                            return (
+                                                <Box
+                                                    key={`${colorName}-${stateKey}`}
+                                                    sx={{
+                                                        width: 90,
+                                                        height: 30,
+                                                        bgcolor: stateColor,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: 'text.primary',
+                                                        typography: 'caption',
+                                                    }}
+                                                >
+                                                    {stateKey}
+                                                </Box>
+                                            );
+                                        })
+                                        .filter(Boolean)}
                                 </Stack>
                             </Grid>
                         ))}
@@ -258,26 +311,30 @@ export const Guide = () => {
                                 {getColorNamesForGroup(groupName).map((colorName) => (
                                     <Grid
                                         key={colorName}
-                                        size={{ xs: 12, xl: 4 }}>
+                                        size={{ xs: 12, xl: 6 }}>
                                         <Typography variant="caption">{colorName}</Typography>
                                         <Stack direction="row" flexWrap="wrap">
-                                            {getShadesForColor(groupName, colorName).map((shade) => (
-                                                <Box
-                                                    key={`${colorName}-${shade}`}
-                                                    sx={{
-                                                        width: 40,
-                                                        height: 30,
-                                                        bgcolor: `${groupName}.${colorName}.${shade}`,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        color: parseInt(shade) >= 500 ? '#fff' : '#000',
-                                                        typography: 'caption',
-                                                    }}
-                                                >
-                                                    {shade}
-                                                </Box>
-                                            ))}
+                                            {getShadesForColor(groupName, colorName).map((shade) => {
+                                                const bgColorValue = theme.brand?.colors?.[groupName]?.[colorName]?.[shade];
+
+                                                return (
+                                                    <Box
+                                                        key={`${colorName}-${shade}`}
+                                                        sx={{
+                                                            width: 40,
+                                                            height: 30,
+                                                            bgcolor: `${groupName}.${colorName}.${shade}`,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            color: getSafeContrastTextColor(bgColorValue),
+                                                            typography: 'caption',
+                                                        }}
+                                                    >
+                                                        {shade}
+                                                    </Box>
+                                                );
+                                            })}
                                         </Stack>
                                     </Grid>
                                 ))}
@@ -308,29 +365,34 @@ export const Guide = () => {
                                 key={colorName}
                                 size={{
                                     xs: 12,
-                                    xl: 4
+                                    xl: 6
                                 }}>
                                 <Typography variant="caption" sx={{ mb: 0.5 }}>
                                     {colorName}
                                 </Typography>
                                 <Stack direction="row" flexWrap="wrap">
-                                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
-                                        <Box
-                                            key={`${colorName}-${shade}`}
-                                            sx={{
-                                                width: 40,
-                                                height: 30,
-                                                bgcolor: (colorPalette as Record<string, string>)[shade],
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                color: shade >= 500 ? '#fff' : '#000',
-                                                typography: 'caption',
-                                            }}
-                                        >
-                                            {shade}
-                                        </Box>
-                                    ))}
+                                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700'].map((shade) => {
+                                        const bgColor = (colorPalette as Record<string, string>)[String(shade)];
+                                        const textColor = getSafeContrastTextColor(bgColor);
+
+                                        return (
+                                            <Box
+                                                key={`${colorName}-${shade}`}
+                                                sx={{
+                                                    width: 40,
+                                                    height: 30,
+                                                    bgcolor: bgColor,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: textColor,
+                                                    typography: 'caption',
+                                                }}
+                                            >
+                                                {shade}
+                                            </Box>
+                                        );
+                                    })}
                                 </Stack>
                             </Grid>
                         ))}
@@ -1057,22 +1119,57 @@ export const Guide = () => {
                     </Typography>
                     <Stack direction="row" spacing={1}>
                         <Button variant="contained" onClick={() => setDialogOpen(true)}>
-                            Open Dialog
+                            Open Confirm Dialog
+                        </Button>
+                        <Button variant="contained" color="warning" onClick={() => setAlertDialogOpen(true)}>
+                            Open Alert Dialog
+                        </Button>
+                        <Button variant="outlined" onClick={() => setDetailDialogOpen(true)}>
+                            Open Detail Dialog
                         </Button>
                         <Button variant="outlined" onClick={handleMenuOpen}>
                             Open Menu
                         </Button>
                     </Stack>
 
-                    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                        <DialogTitle>Dialog Title</DialogTitle>
+                    <Dialog fullWidth maxWidth="xs" open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                        <DialogTitle>Confirm Dialog</DialogTitle>
                         <DialogContent>
-                            <Typography>This is a dialog content. You can put any content here.</Typography>
+                            <Typography variant="body2">This is a confirm dialog.</Typography>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-                            <Button onClick={() => setDialogOpen(false)} autoFocus>
-                                OK
+                            <Button variant="contained" color="inherit" onClick={() => setDialogOpen(false)}>
+                                취소
+                            </Button>
+                            <Button variant="contained" onClick={() => setDialogOpen(false)} autoFocus>
+                                확인
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog fullWidth maxWidth="xs" open={alertDialogOpen} onClose={() => setAlertDialogOpen(false)}>
+                        <DialogTitle>Alert Dialog</DialogTitle>
+                        <DialogContent>
+                            <Typography variant="body2">This is an alert dialog.</Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button variant="contained" onClick={() => setAlertDialogOpen(false)} autoFocus>
+                                확인
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog fullWidth maxWidth="md" open={detailDialogOpen} onClose={() => setDetailDialogOpen(false)}>
+                        <DialogTitle>Dialog Title</DialogTitle>
+                        <DialogContent dividers>
+                            <Typography variant="body2">This is a detail dialog with dividers.</Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button variant="contained" color="inherit" onClick={() => setDetailDialogOpen(false)}>
+                                취소
+                            </Button>
+                            <Button variant="contained" onClick={() => setDetailDialogOpen(false)}>
+                                확인
                             </Button>
                         </DialogActions>
                     </Dialog>
