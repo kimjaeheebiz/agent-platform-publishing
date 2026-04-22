@@ -1,5 +1,5 @@
 /**
- * Navigation 폴더형 메뉴 컴포넌트 (2-depth, 3-depth)
+ * Navigation 폴더형 메뉴 컴포넌트 (2 depth, 3 depth)
  */
 
 import { Collapse, List } from '@mui/material';

@@ -972,7 +972,7 @@
     },
     "2": {
       "$type": "letterSpacing",
-      "$value": 0.46
+      "$value": "0%"
     },
     "3": {
       "$type": "letterSpacing",
@@ -1451,7 +1451,7 @@
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.uppercase}",
@@ -1601,7 +1601,7 @@
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.3}",
+        "letterSpacing": "{letterSpacing.2}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -1939,7 +1939,6 @@
             "fontSize": "0.8125rem",
             "fontWeight": 500,
             "lineHeight": "20px",
-            "letterSpacing": 0.46,
             "textTransform": "uppercase",
             "minHeight": "30px"
           }
@@ -1964,7 +1963,6 @@
           "fontSize": "0.8125rem",
           "fontWeight": 500,
           "lineHeight": "20px",
-          "letterSpacing": 0.46,
           "textTransform": "none"
         }
       }
@@ -2147,18 +2145,18 @@
     "text": {
       "primary": "#212121",
       "secondary": "#00000099",
-      "disabled": "#00000061"
+      "disabled": "#00000066"
     },
     "background": {
       "default": "#ffffff",
       "paper": "#ffffff"
     },
     "action": {
-      "active": "#212121",
+      "active": "#00000099",
       "hover": "#0000000a",
       "selected": "#0000001a",
-      "disabled": "#00000061",
-      "disabledBackground": "#0000001f",
+      "disabled": "#00000066",
+      "disabledBackground": "#0000000f",
       "focus": "#0000001f"
     },
     "common": {

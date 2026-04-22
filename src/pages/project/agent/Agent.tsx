@@ -48,7 +48,7 @@ export const Agent: React.FC = () => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
                             size="medium"
-                            placeholder="에이전트 이름, 소유자 이름, 소유자 이메일"
+                            placeholder="에이전트 이름, 등록자 이름, 등록자 이메일"
                             slotProps={{
                                 input: {
                                     startAdornment: (
@@ -75,7 +75,7 @@ export const Agent: React.FC = () => {
                                 <TableCell>에이전트</TableCell>
                                 <TableCell>설명</TableCell>
                                 <TableCell>상태</TableCell>
-                                <TableCell>소유자</TableCell>
+                                <TableCell>등록자</TableCell>
                                 <TableCell>수정일</TableCell>
                                 <TableCell>관리</TableCell>
                             </TableRow>

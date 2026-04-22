@@ -989,7 +989,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "2": {
       "$type": "letterSpacing",
-      "$value": 0.46
+      "$value": "0%"
     },
     "3": {
       "$type": "letterSpacing",
@@ -1468,7 +1468,7 @@ export const lightThemeOptions: ThemeOptions = {
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.uppercase}",
@@ -1618,7 +1618,7 @@ export const lightThemeOptions: ThemeOptions = {
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.3}",
+        "letterSpacing": "{letterSpacing.2}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -1970,6 +1970,10 @@ export const lightThemeOptions: ThemeOptions = {
               "height": "auto"
             }
           },
+          "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+            "borderColor": "#0000001f",
+            "backgroundColor": "#0000000f"
+          },
           "variants": [
             {
               "props": {
@@ -2237,7 +2241,6 @@ export const lightThemeOptions: ThemeOptions = {
             "fontSize": "0.8125rem",
             "fontWeight": 500,
             "lineHeight": "20px",
-            "letterSpacing": 0.46,
             "textTransform": "uppercase",
             "minHeight": "30px"
           }
@@ -2249,7 +2252,7 @@ export const lightThemeOptions: ThemeOptions = {
           "style": {
             "fontSize": "0.75rem",
             "lineHeight": "20px",
-            "padding": "2px 6px",
+            "padding": "1px 6px",
             "minWidth": 0,
             "minHeight": "24px"
           }
@@ -2294,14 +2297,14 @@ export const lightThemeOptions: ThemeOptions = {
           "fontSize": "0.8125rem",
           "fontWeight": 500,
           "lineHeight": "20px",
-          "letterSpacing": 0.46,
           "textTransform": "none",
           "minHeight": "30px",
           "height": "30px",
           "padding": "4px 12px"
         },
         "root": {
-          "textTransform": "none"
+          "textTransform": "none",
+          "whiteSpace": "nowrap"
         }
       }
     },
@@ -2428,6 +2431,27 @@ export const lightThemeOptions: ThemeOptions = {
       "styleOverrides": {
         "head": {
           "backgroundColor": "#0000000a"
+        }
+      }
+    },
+    "MuiDialogTitle": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "18px"
+        }
+      }
+    },
+    "MuiDialogContent": {
+      "styleOverrides": {
+        "root": {
+          "padding": "24px"
+        }
+      }
+    },
+    "MuiDialogActions": {
+      "styleOverrides": {
+        "root": {
+          "padding": "12px 24px"
         }
       }
     }
@@ -2609,18 +2633,18 @@ export const lightThemeOptions: ThemeOptions = {
     "text": {
       "primary": "#212121",
       "secondary": "#00000099",
-      "disabled": "#00000061"
+      "disabled": "#00000066"
     },
     "background": {
       "default": "#ffffff",
       "paper": "#ffffff"
     },
     "action": {
-      "active": "#212121",
+      "active": "#00000099",
       "hover": "#0000000a",
       "selected": "#0000001a",
-      "disabled": "#00000061",
-      "disabledBackground": "#0000001f",
+      "disabled": "#00000066",
+      "disabledBackground": "#0000000f",
       "focus": "#0000001f"
     },
     "common": {
@@ -3697,7 +3721,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "2": {
       "$type": "letterSpacing",
-      "$value": 0.46
+      "$value": "0%"
     },
     "3": {
       "$type": "letterSpacing",
@@ -4176,7 +4200,7 @@ export const darkThemeOptions: ThemeOptions = {
         "fontWeight": "{fontWeights.pretendard-variable-2}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.uppercase}",
@@ -4326,7 +4350,7 @@ export const darkThemeOptions: ThemeOptions = {
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.3}",
+        "letterSpacing": "{letterSpacing.2}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -4678,6 +4702,10 @@ export const darkThemeOptions: ThemeOptions = {
               "height": "auto"
             }
           },
+          "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+            "borderColor": "#ffffff1f",
+            "backgroundColor": "#ffffff0f"
+          },
           "variants": [
             {
               "props": {
@@ -4945,7 +4973,6 @@ export const darkThemeOptions: ThemeOptions = {
             "fontSize": "0.8125rem",
             "fontWeight": 500,
             "lineHeight": "20px",
-            "letterSpacing": 0.46,
             "textTransform": "uppercase",
             "minHeight": "30px"
           }
@@ -4957,7 +4984,7 @@ export const darkThemeOptions: ThemeOptions = {
           "style": {
             "fontSize": "0.75rem",
             "lineHeight": "20px",
-            "padding": "2px 6px",
+            "padding": "1px 6px",
             "minWidth": 0,
             "minHeight": "24px"
           }
@@ -5002,14 +5029,14 @@ export const darkThemeOptions: ThemeOptions = {
           "fontSize": "0.8125rem",
           "fontWeight": 500,
           "lineHeight": "20px",
-          "letterSpacing": 0.46,
           "textTransform": "none",
           "minHeight": "30px",
           "height": "30px",
           "padding": "4px 12px"
         },
         "root": {
-          "textTransform": "none"
+          "textTransform": "none",
+          "whiteSpace": "nowrap"
         }
       }
     },
@@ -5136,6 +5163,27 @@ export const darkThemeOptions: ThemeOptions = {
       "styleOverrides": {
         "head": {
           "backgroundColor": "#ffffff14"
+        }
+      }
+    },
+    "MuiDialogTitle": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "18px"
+        }
+      }
+    },
+    "MuiDialogContent": {
+      "styleOverrides": {
+        "root": {
+          "padding": "24px"
+        }
+      }
+    },
+    "MuiDialogActions": {
+      "styleOverrides": {
+        "root": {
+          "padding": "12px 24px"
         }
       }
     }
@@ -5317,18 +5365,18 @@ export const darkThemeOptions: ThemeOptions = {
     "text": {
       "primary": "#ffffff",
       "secondary": "#ffffff99",
-      "disabled": "#ffffff61"
+      "disabled": "#ffffff66"
     },
     "background": {
       "default": "#212121",
       "paper": "#212121"
     },
     "action": {
-      "active": "#ffffff",
+      "active": "#ffffff99",
       "hover": "#ffffff14",
       "selected": "#ffffff29",
-      "disabled": "#ffffff61",
-      "disabledBackground": "#ffffff1f",
+      "disabled": "#ffffff66",
+      "disabledBackground": "#ffffff0f",
       "focus": "#ffffff1f"
     },
     "common": {

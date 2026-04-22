@@ -1,6 +1,5 @@
 /**
  * 프로젝트 영역 3뎁스 메뉴 — 피그마 Submenu / MUI Tabs 스타일
- * (본문 상단, paper 배경 + 하단 divider, 선택 탭 primary + 인디케이터)
  */
 import { Box, Tab, Tabs } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';

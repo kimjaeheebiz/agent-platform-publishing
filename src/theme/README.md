@@ -13,6 +13,11 @@
 
 - `index.ts` → `createTheme` **단일 인자**로 `mergedMuiThemeOptions.ts` 사용 (`createLightTheme` / `createDarkTheme`).
 
+## 주요 파일
+
+- **`theme.d.ts`** — MUI 모듈 타입 확장(`declare module`): `Theme`·`ThemeOptions`의 `brand`, 동적 `palette` 키, Button·IconButton·입력 계열 `size` 오버라이드 등. 런타임 코드가 아니며 import 없이 TypeScript에만 반영됩니다.
+- **`generated/mergedMuiThemeOptions.ts`** — `npm run build:theme`로 생성되는 최종 MUI `ThemeOptions` 소스. 수동 편집하지 않습니다.
+
 ## 소스 분리
 
 | 구분 | 위치 |

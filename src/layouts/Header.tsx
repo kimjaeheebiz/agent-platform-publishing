@@ -57,7 +57,6 @@ export const Header = ({ onMenuToggle, sidebarOpen = true, onToggleTheme }: Head
             sx={{
                 minHeight: `${HEADER_HEIGHT}px`,
                 backgroundColor: appBarBg,
-                borderBottom: 'none',
                 zIndex: Z_INDEX.HEADER,
             }}
         >
@@ -96,7 +95,7 @@ export const Header = ({ onMenuToggle, sidebarOpen = true, onToggleTheme }: Head
                         color="inherit"
                         size="small"
                         aria-label="계정 메뉴"
-                        aria-controls={userMenuOpen ? 'header-user-menu' : undefined}
+                        aria-controls={userMenuOpen ? 'header-account-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={userMenuOpen ? 'true' : undefined}
                         onClick={(e) => setUserMenuAnchor(e.currentTarget)}
@@ -108,7 +107,7 @@ export const Header = ({ onMenuToggle, sidebarOpen = true, onToggleTheme }: Head
                         <Typography variant="body2">홍길동</Typography>
                     </Button>
                     <Menu
-                        id="header-user-menu"
+                        id="header-account-menu"
                         anchorEl={userMenuAnchor}
                         open={userMenuOpen}
                         onClose={() => setUserMenuAnchor(null)}

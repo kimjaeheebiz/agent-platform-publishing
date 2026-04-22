@@ -19,7 +19,7 @@ export const Navigation = ({ open }: NavigationProps) => {
 
     const handleNavigation = (path: string) => path && navigate(path);
 
-    const menuItems = NAVIGATION_MENU.filter((item) => item.showInSidebar).map((item) => {
+    const menuItems = NAVIGATION_MENU.filter((item) => item.showSidebar).map((item) => {
         const IconComponent = getIconComponent(item.icon as string);
         return {
             ...item,

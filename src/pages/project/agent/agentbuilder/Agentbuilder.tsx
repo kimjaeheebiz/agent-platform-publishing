@@ -55,9 +55,6 @@ export const Agentbuilder: React.FC = () => {
                     <Button variant="contained" size="small" color="inherit">
                         가져오기
                     </Button>
-                    <Button variant="contained" size="small" color="inherit">
-                        내보내기
-                    </Button>
                 </Stack>
                 <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
                     <Button variant="contained" size="small" color="inherit">

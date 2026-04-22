@@ -1,5 +1,5 @@
 /**
- * Navigation 메뉴 아이템 컴포넌트 (1-depth)
+ * Navigation 메뉴 아이템 컴포넌트 (1 depth)
  */
 
 import type { ReactNode } from 'react';

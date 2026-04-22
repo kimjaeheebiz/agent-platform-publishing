@@ -30,7 +30,7 @@ export const FilterToggleGroup: React.FC<FilterToggleGroupProps> = ({
     );
     const [internalValue, setInternalValue] = useState(defaultValue);
     const isControlled = value !== '';
-    const resolvedValue = isControlled ? value : internalValue;
+    const selectedValue = isControlled ? value : internalValue;
 
     useEffect(() => {
         if (!isControlled) {
@@ -48,14 +48,14 @@ export const FilterToggleGroup: React.FC<FilterToggleGroupProps> = ({
     };
 
     return (
-        <ToggleButtonGroup exclusive value={resolvedValue} onChange={handleChange} aria-label={ariaLabel} size={size} color="primary">
+        <ToggleButtonGroup exclusive value={selectedValue} onChange={handleChange} aria-label={ariaLabel} size={size} color="primary">
             {(options || []).map((option) => (
-                <ToggleButton key={option.value} value={option.value} sx={{ gap: 1 }}>
+                <ToggleButton key={option.value} value={option.value} sx={{ gap: 0.5 }}>
                     {option.label}
                     <Chip
                         label={option.count}
                         size="small"
-                        color={option.value === resolvedValue ? 'primary' : 'default'}
+                        color={option.value === selectedValue ? 'primary' : 'default'}
                         sx={{
                             minWidth: '20px',
                             height: '20px',

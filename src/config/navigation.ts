@@ -37,7 +37,7 @@ export interface NavigationMenuItem {
     label: string;
     icon: string | React.ReactElement;
     path?: string;
-    showInSidebar: boolean;
+    showSidebar: boolean;
     children?: NavigationMenuChild[];
 }
 
@@ -75,12 +75,12 @@ export const NAVIGATION_MENU: NavigationMenuItem[] = (() => {
         menu: MenuItem,
         depth: number = 1,
     ): NavigationMenuItem | NavigationMenuChild | null => {
-        // 1-depth: NavigationMenuItem 생성
+        // 1 depth: NavigationMenuItem 생성
         if (depth === 1) {
             const baseItem: NavigationMenuItem = {
                 label: getMainMenuTitle(menu), // ✅ getMainMenuTitle 사용
                 icon: 'icon' in menu ? menu.icon || 'HomeOutlined' : 'HomeOutlined',
-                showInSidebar: true,
+                showSidebar: true,
             };
 
             if (menu.type === 'action') {
@@ -114,7 +114,7 @@ export const NAVIGATION_MENU: NavigationMenuItem[] = (() => {
             }
         }
 
-        // 2-depth: NavigationMenuChild 생성 (아이콘 없음)
+        // 2 depth: NavigationMenuChild 생성 (아이콘 없음)
         if (depth === 2) {
             if (menu.type === 'action') {
                 const row = menu as MenuAction;
@@ -183,8 +183,8 @@ export const NAVIGATION_MENU: NavigationMenuItem[] = (() => {
 })();
 
 /**
- * `/project/:projectId/...` 구간에서 3뎁스 탭 목록.
- * `NAVIGATION_MENU`의 프로젝트 > 프로젝트 N > (에이전트·CREDENTIAL·…) 와 동일 소스입니다.
+ * `/project/:projectId/...` 구간에서 3뎁스 탭 메뉴
+ * `NAVIGATION_MENU`의 프로젝트 > {프로젝트 이름} > (에이전트·CREDENTIAL·…)와 동일 소스
  */
 export function getProjectSubmenuTabs(pathname: string): NavigationMenuGrandChild[] | null {
     const m = pathname.match(/^\/project\/([^/]+)/);
@@ -394,7 +394,7 @@ export const findMenuById = (id: string, menus: MenuItem[] = MAIN_MENUS): MenuIt
  * 1. mainmenu.ts에서 URL과 일치하는 메뉴 항목 찾기 (path 우선)
  * 2. 메뉴에서 못 찾으면 pages.ts에서 URL로 페이지 찾기
  * 
- * 동일한 pageId가 여러 메뉴에 있을 수 있으므로, URL과 일치하는 메뉴 항목을 찾습니다.
+ * 동일한 pageId가 여러 메뉴에 있을 수 있으므로, URL과 일치하는 메뉴 항목 찾기
  */
 export const getBreadcrumbPath = (url: string): Array<{ title: string; path?: string }> => {
     const breadcrumbs: Array<{ title: string; path?: string }> = [];

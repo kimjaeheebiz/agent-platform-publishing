@@ -1,3 +1,27 @@
+/**
+ * MUI Material UI 공식 문서
+ *
+ * Palette:        https://mui.com/material-ui/customization/palette/
+ * Typography:     https://mui.com/material-ui/react-typography/
+ * Button:         https://mui.com/material-ui/react-button/
+ * Toggle Button:  https://mui.com/material-ui/react-toggle-button/
+ * Chip:           https://mui.com/material-ui/react-chip/
+ * Avatar:         https://mui.com/material-ui/react-avatar/
+ * Form:
+ *   Text Field:   https://mui.com/material-ui/react-text-field/
+ *   Select:       https://mui.com/material-ui/react-select/
+ *   Form control: https://mui.com/material-ui/react-form-control/
+ *   Checkbox:     https://mui.com/material-ui/react-checkbox/
+ *   Switch:       https://mui.com/material-ui/react-switch/
+ *   Radio Group:  https://mui.com/material-ui/react-radio-button/
+ * Card:           https://mui.com/material-ui/react-card/
+ * Table:          https://mui.com/material-ui/react-table/
+ * List:           https://mui.com/material-ui/react-list/
+ * Alert:          https://mui.com/material-ui/react-alert/
+ * Dialog:         https://mui.com/material-ui/react-dialog/
+ * Menu:           https://mui.com/material-ui/react-menu/
+ * Snackbar:       https://mui.com/material-ui/react-snackbar/
+ */
 import React from 'react';
 import { deepPurple, grey, blue, indigo, green, red } from '@mui/material/colors';
 import {
@@ -109,22 +133,22 @@ export const Guide = () => {
 
     // 섹션 링크
     const sectionLinks = [
-        { id: 'sectionColors', label: 'Colors' },
+        { id: 'sectionPalette', label: 'Palette' },
         { id: 'sectionTypography', label: 'Typography' },
-        { id: 'sectionButtons', label: 'Buttons' },
-        { id: 'sectionToggleButtons', label: 'Toggle Buttons' },
-        { id: 'sectionChipsAvatars', label: 'Chips & Avatars' },
-        { id: 'sectionFormControls', label: 'Form Controls' },
-        { id: 'sectionCards', label: 'Cards' },
-        { id: 'sectionTables', label: 'Tables' },
-        { id: 'sectionLists', label: 'Lists' },
-        { id: 'sectionAlerts', label: 'Alerts' },
-        { id: 'sectionDialogs', label: 'Dialogs & Menus' },
+        { id: 'sectionButton', label: 'Button' },
+        { id: 'sectionToggleButton', label: 'Toggle Button' },
+        { id: 'sectionChipAvatar', label: 'Chip & Avatar' },
+        { id: 'sectionForm', label: 'Form' },
+        { id: 'sectionCard', label: 'Card' },
+        { id: 'sectionTable', label: 'Table' },
+        { id: 'sectionList', label: 'List' },
+        { id: 'sectionAlert', label: 'Alert' },
+        { id: 'sectionDialogMenu', label: 'Dialog & Menu' },
         { id: 'sectionSnackbar', label: 'Snackbar' },
         { id: 'sectionCustom', label: 'Custom' },
     ];
 
-    const [activeSection, setActiveSection] = React.useState<string>('sectionColors');
+    const [activeSection, setActiveSection] = React.useState<string>('sectionPalette');
 
     const toggleSizeState: Record<
         'small' | 'medium' | 'large',
@@ -176,10 +200,10 @@ export const Guide = () => {
                 ))}
             </Tabs>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {/* Colors */}
-                <Box component="section" className="section" id="sectionColors">
+                {/* Palette */}
+                <Box component="section" className="section" id="sectionPalette">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Colors
+                        Palette
                     </Typography>
 
                     <Stack direction="row" spacing={0.5} alignItems="flex-end" sx={{ mb: 1 }}>
@@ -439,10 +463,10 @@ export const Guide = () => {
                     <Typography variant="inherit">Inherit</Typography>
                 </Box>
 
-                {/* Buttons */}
-                <Box component="section" className="section" id="sectionButtons">
+                {/* Button */}
+                <Box component="section" className="section" id="sectionButton">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Buttons
+                        Button
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
                         <Button variant="contained">Contained</Button>
@@ -508,10 +532,10 @@ export const Guide = () => {
                     </Stack>
                 </Box>
 
-                {/* Toggle Buttons */}
-                <Box component="section" className="section" id="sectionToggleButtons">
+                {/* Toggle Button */}
+                <Box component="section" className="section" id="sectionToggleButton">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Toggle Buttons
+                        Toggle Button
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                         {(['small', 'medium', 'large'] as const).map((size) => {
@@ -533,10 +557,10 @@ export const Guide = () => {
                     </Box>
                 </Box>
 
-                {/* Chips & Avatars */}
-                <Box component="section" className="section" id="sectionChipsAvatars">
+                {/* Chip & Avatar */}
+                <Box component="section" className="section" id="sectionChipAvatar">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Chips & Avatars
+                        Chip & Avatar
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
                         <Chip label="Default" />
@@ -602,7 +626,7 @@ export const Guide = () => {
                 </Box>
 
                 {/* Form */}
-                <Box component="section" className="section" id="sectionFormControls">
+                <Box component="section" className="section" id="sectionForm">
                     <Typography component="h2" variant="h4" gutterBottom>
                         Form
                     </Typography>
@@ -674,7 +698,31 @@ export const Guide = () => {
                         </Grid>
                     </Grid>
 
-                    {/* Form Sizes */}
+                    <Typography component="h3" variant="h5" gutterBottom sx={{ mt: 3 }}>
+                        Outlined (disabled · readOnly)
+                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid size={3}>
+                            <TextField
+                                label="Outlined disabled"
+                                variant="outlined"
+                                defaultValue="Cannot edit"
+                                disabled
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={3}>
+                            <TextField
+                                label="Outlined readOnly"
+                                variant="outlined"
+                                defaultValue="Selectable, not editable"
+                                fullWidth
+                                slotProps={{ htmlInput: { readOnly: true } }}
+                            />
+                        </Grid>
+                    </Grid>
+
+                    {/* Form sizes */}
                     <Typography component="h3" variant="h5" gutterBottom sx={{ mt: 3 }}>
                         Sizes
                     </Typography>
@@ -771,10 +819,10 @@ export const Guide = () => {
                     </Grid>
                 </Box>
 
-                {/* Cards */}
-                <Box component="section" className="section" id="sectionCards">
+                {/* Card */}
+                <Box component="section" className="section" id="sectionCard">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Cards
+                        Card
                     </Typography>
                     <Stack direction="row" spacing={2} flexWrap="wrap">
                         <Card sx={{ minWidth: 275 }}>
@@ -807,10 +855,10 @@ export const Guide = () => {
                     </Stack>
                 </Box>
 
-                {/* Tables */}
-                <Box component="section" className="section" id="sectionTables">
+                {/* Table */}
+                <Box component="section" className="section" id="sectionTable">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Tables
+                        Table
                     </Typography>
 
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
@@ -910,10 +958,10 @@ export const Guide = () => {
                     </Box>
                 </Box>
 
-                {/* Lists */}
-                <Box component="section" className="section" id="sectionLists">
+                {/* List */}
+                <Box component="section" className="section" id="sectionList">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Lists
+                        List
                     </Typography>
                     <Stack direction="row" spacing={2} flexWrap="wrap">
                         <Box>
@@ -975,10 +1023,10 @@ export const Guide = () => {
                     </Stack>
                 </Box>
 
-                {/* Alerts */}
-                <Box component="section" className="section" id="sectionAlerts">
+                {/* Alert */}
+                <Box component="section" className="section" id="sectionAlert">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Alerts
+                        Alert
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid size={3}>
@@ -1002,10 +1050,10 @@ export const Guide = () => {
                     </Grid>
                 </Box>
 
-                {/* Dialogs & Menus */}
-                <Box component="section" className="section" id="sectionDialogs">
+                {/* Dialog & Menu */}
+                <Box component="section" className="section" id="sectionDialogMenu">
                     <Typography component="h2" variant="h4" gutterBottom>
-                        Dialogs & Menus
+                        Dialog & Menu
                     </Typography>
                     <Stack direction="row" spacing={1}>
                         <Button variant="contained" onClick={() => setDialogOpen(true)}>

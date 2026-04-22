@@ -243,6 +243,11 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
                         height: 'auto',
                     },
                 },
+                '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '__PALETTE_DIVIDER__',
+                    backgroundColor: '__PALETTE_BACKGROUND_DISABLED__',
+                    
+                },
                 variants: [
                     {
                         props: { size: 'small' },
@@ -434,6 +439,7 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
         styleOverrides: {
             root: {
                 textTransform: 'none',
+                whiteSpace: 'nowrap',
                 // lineHeight·fontSize는 `core.button.*` → `mui-components-from-tokens` 가 sizeSmall/Medium/Large에 주입
             },
             sizeSmall: {
@@ -487,6 +493,32 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
             },
         },
     },
+
+    
+    /**
+     * Dialog
+     */
+    MuiDialogTitle: {
+        styleOverrides: {
+            root: {
+                fontSize: '18px',
+            },
+        },
+    },
+    MuiDialogContent: {
+        styleOverrides: {
+            root: {
+                padding: '24px',
+            },
+      },
+    },
+    MuiDialogActions: {
+        styleOverrides: {
+            root: {
+                padding: '12px 24px',
+            },
+        },
+    },
 };
 
 /**
@@ -501,7 +533,7 @@ export const appMuiButtonVariantAppend: Pick<NonNullable<ThemeOptions['component
                 style: {
                     fontSize: '0.75rem',
                     lineHeight: '20px',
-                    padding: '2px 6px',
+                    padding: '1px 6px',
                     minWidth: 0,
                     minHeight: H.xsmall,
                 },

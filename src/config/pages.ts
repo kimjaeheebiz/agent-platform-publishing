@@ -20,10 +20,10 @@
  * 페이지 메타데이터
  */
 export interface PageMetadata {
-    showPageHeader?: boolean; // 페이지 헤더 표시 여부 (기본: true)
     layout?: 'default' | 'auth' | 'error'; // 레이아웃 타입 (기본: default)
-    showBackButton?: boolean; // 뒤로가기 버튼 표시 여부 (4뎁스 페이지용)
+    showPageHeader?: boolean; // 페이지 헤더 표시 여부 (기본: true)
     breadcrumbs?: boolean; // Breadcrumb 표시 여부 (기본: true)
+    showBackButton?: boolean; // 뒤로가기 버튼 표시 여부 (4뎁스 페이지용)
 }
 
 /**
@@ -68,6 +68,7 @@ export const PAGES: Record<string, PageConfig> = {
         id: 'project.agent.agentbuilder',
         title: '에이전트 이름 1',
         path: '/project/agent/agentbuilder',
+        showPageHeader: false,
         showBackButton: true,
     },
     'project.credential': {

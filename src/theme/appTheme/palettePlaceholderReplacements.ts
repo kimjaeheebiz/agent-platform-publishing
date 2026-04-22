@@ -14,7 +14,7 @@ export function getPalettePlaceholderReplacements(
     // 확장 팔레트(토큰 `_states` 등)는 타입에 없음
     const p = palette as Record<string, unknown> & {
         divider?: string;
-        action?: { hover?: string; selected?: string };
+        action?: { hover?: string; selected?: string; disabledBackground?: string };
         primary?: { main?: string; _states?: { selected?: string } };
         secondary?: { main?: string; _states?: { selected?: string } };
         error?: { main?: string; _states?: { selected?: string } };
@@ -26,6 +26,7 @@ export function getPalettePlaceholderReplacements(
     return {
         __PALETTE_DIVIDER__: p.divider,
         __PALETTE_ACTION_HOVER__: p.action?.hover,
+        __PALETTE_BACKGROUND_DISABLED__: p.action?.disabledBackground,
         __CHIP_PRIMARY_BG__: p.primary?._states?.selected ?? p.action?.selected,
         __CHIP_PRIMARY_FG__: p.primary?.main,
         __CHIP_SECONDARY_BG__: p.secondary?._states?.selected ?? p.action?.selected,
