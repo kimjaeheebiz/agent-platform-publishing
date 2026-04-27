@@ -533,9 +533,26 @@ export const appMuiButtonVariantAppend: Pick<NonNullable<ThemeOptions['component
                 style: {
                     fontSize: '0.75rem',
                     lineHeight: '20px',
-                    padding: '1px 6px',
                     minWidth: 0,
                     minHeight: H.xsmall,
+                },
+            },
+            {
+                props: { size: 'xsmall', variant: 'text' },
+                style: {
+                    padding: '2px 4px',
+                },
+            },
+            {
+                props: { size: 'xsmall', variant: 'contained' },
+                style: {
+                    padding: '2px 6px',
+                },
+            },
+            {
+                props: { size: 'xsmall', variant: 'outlined' },
+                style: {
+                    padding: '1px 5px',
                 },
             },
         ],

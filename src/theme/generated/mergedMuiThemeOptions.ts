@@ -2252,9 +2252,35 @@ export const lightThemeOptions: ThemeOptions = {
           "style": {
             "fontSize": "0.75rem",
             "lineHeight": "20px",
-            "padding": "1px 6px",
             "minWidth": 0,
             "minHeight": "24px"
+          }
+        },
+        {
+          "props": {
+            "size": "xsmall",
+            "variant": "text"
+          },
+          "style": {
+            "padding": "2px 4px"
+          }
+        },
+        {
+          "props": {
+            "size": "xsmall",
+            "variant": "contained"
+          },
+          "style": {
+            "padding": "2px 6px"
+          }
+        },
+        {
+          "props": {
+            "size": "xsmall",
+            "variant": "outlined"
+          },
+          "style": {
+            "padding": "1px 5px"
           }
         }
       ],
@@ -4984,9 +5010,35 @@ export const darkThemeOptions: ThemeOptions = {
           "style": {
             "fontSize": "0.75rem",
             "lineHeight": "20px",
-            "padding": "1px 6px",
             "minWidth": 0,
             "minHeight": "24px"
+          }
+        },
+        {
+          "props": {
+            "size": "xsmall",
+            "variant": "text"
+          },
+          "style": {
+            "padding": "2px 4px"
+          }
+        },
+        {
+          "props": {
+            "size": "xsmall",
+            "variant": "contained"
+          },
+          "style": {
+            "padding": "2px 6px"
+          }
+        },
+        {
+          "props": {
+            "size": "xsmall",
+            "variant": "outlined"
+          },
+          "style": {
+            "padding": "1px 5px"
           }
         }
       ],

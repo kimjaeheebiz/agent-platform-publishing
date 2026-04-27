@@ -530,67 +530,96 @@ export const Guide = () => {
                     <Typography component="h2" variant="h4" gutterBottom>
                         Button
                     </Typography>
-                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                        <Button variant="contained">Contained</Button>
-                        <Button variant="outlined">Outlined</Button>
-                        <Button variant="text">Text</Button>
-                        <Button variant="contained" disabled>
-                            Disabled
-                        </Button>
-                    </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                        <Button variant="contained" color="primary">
-                            Primary
-                        </Button>
-                        <Button variant="contained" color="secondary">
-                            Secondary
-                        </Button>
-                        <Button variant="contained" color="success">
-                            Success
-                        </Button>
-                        <Button variant="contained" color="error">
-                            Error
-                        </Button>
-                        <Button variant="contained" color="warning">
-                            Warning
-                        </Button>
-                        <Button variant="contained" color="info">
-                            Info
-                        </Button>
-                    </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                        <Button variant="contained" startIcon={<Add />}>
-                            Add
-                        </Button>
-                        <Button variant="outlined" endIcon={<Settings />}>
-                            Settings
-                        </Button>
-                    </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
-                        <Button variant="contained" size="xsmall">
-                            Extra Small
-                        </Button>
-                        <Button variant="contained" size="small">
-                            Small
-                        </Button>
-                        <Button variant="contained">Default(Medium)</Button>
-                        <Button variant="contained" size="large">
-                            Large
-                        </Button>
-                    </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                        <IconButton color="primary" size="xsmall">
-                            <Add fontSize="inherit" />
-                        </IconButton>
-                        <IconButton color="primary" size="small">
-                            <Add fontSize="small" />
-                        </IconButton>
-                        <IconButton color="primary">
-                            <Add />
-                        </IconButton>
-                        <IconButton color="primary" size="large">
-                            <Add fontSize="large" />
-                        </IconButton>
+                    <Stack direction="column" spacing={1}>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>variant</Typography>
+                            <Button variant="text">Text(Default)</Button>
+                            <Button variant="contained">Contained</Button>
+                            <Button variant="outlined">Outlined</Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>disabled</Typography>
+                            <Button variant="text" disabled>Text(Default)</Button>
+                            <Button variant="contained" disabled>Contained</Button>
+                            <Button variant="outlined" disabled>Outlined</Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>color</Typography>
+                            <Button variant="contained" color="primary">
+                                Primary
+                            </Button>
+                            <Button variant="contained" color="secondary">
+                                Secondary
+                            </Button>
+                            <Button variant="contained" color="success">
+                                Success
+                            </Button>
+                            <Button variant="contained" color="error">
+                                Error
+                            </Button>
+                            <Button variant="contained" color="warning">
+                                Warning
+                            </Button>
+                            <Button variant="contained" color="info">
+                                Info
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>icon</Typography>
+                            <Button variant="contained" startIcon={<Add />}>
+                                Add
+                            </Button>
+                            <Button variant="outlined" endIcon={<Settings />}>
+                                Settings
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>size(text)</Typography>
+                            <Button size="xsmall">Extra Small</Button>
+                            <Button size="small">Small</Button>
+                            <Button>Medium(Default)</Button>
+                            <Button size="large">Large</Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>size(contained)</Typography>
+                            <Button variant="contained" size="xsmall">
+                                Extra Small
+                            </Button>
+                            <Button variant="contained" size="small">
+                                Small
+                            </Button>
+                            <Button variant="contained">Medium(Default)</Button>
+                            <Button variant="contained" size="large">
+                                Large
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>size(outlined)</Typography>
+                            <Button variant="outlined" size="xsmall">
+                                Extra Small
+                            </Button>
+                            <Button variant="outlined" size="small">
+                                Small
+                            </Button>
+                            <Button variant="outlined">Medium(Default)</Button>
+                            <Button variant="outlined" size="large">
+                                Large
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <IconButton color="primary" size="xsmall">
+                                <Add fontSize="inherit" />
+                            </IconButton>
+                            <IconButton color="primary" size="small">
+                                <Add fontSize="small" />
+                            </IconButton>
+                            <IconButton color="primary">
+                                <Add />
+                            </IconButton>
+                            <IconButton color="primary" size="large">
+                                <Add fontSize="large" />
+                            </IconButton>
+                        </Stack>
                     </Stack>
                 </Box>
 
