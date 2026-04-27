@@ -132,7 +132,7 @@ export function NavigationDepth2List({
                             onClick={handleRowClick}
                             selected={isChildActive}
                             sx={{
-                                pl: variant === 'flyout' ? 2 : 9,
+                                pl: variant === 'flyout' ? 2 : 8,
                                 pr: secondaryAction ? 6 : 2,
                             }}
                         >

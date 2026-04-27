@@ -79,7 +79,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { Add, Search, Star, Settings, Person, Delete, Edit, Share, Home, Work, School } from '@mui/icons-material';
-import { StatusChip, FavoriteButton, FilterToggleGroup } from '@/components';
+import { StatusChip, ServerChip, FavoriteButton, FilterToggleGroup, Brand } from '@/components';
 
 export const Guide = () => {
     const theme = useTheme();
@@ -1301,7 +1301,23 @@ export const Guide = () => {
                     </Typography>
                     <Stack spacing={2}>
                         <Stack direction="row" spacing={2} alignItems="center">
-                            <Typography variant="subtitle2" sx={{ width: 120 }}>
+                            <Typography variant="subtitle2" sx={{ width: 140 }}>
+                                Brand - logo(default)
+                            </Typography>
+                            <Brand size="small" />
+                            <Brand size="medium" />
+                            <Brand size="large" />
+                        </Stack>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 140 }}>
+                                Brand - mark
+                            </Typography>
+                            <Brand variant="mark" size="small" />
+                            <Brand variant="mark" size="medium" />
+                            <Brand variant="mark" size="large" />
+                        </Stack>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 140 }}>
                                 FilterToggleGroup
                             </Typography>
                             <FilterToggleGroup
@@ -1315,8 +1331,8 @@ export const Guide = () => {
                                 size="small"
                             />
                         </Stack>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <Typography variant="subtitle2" sx={{ width: 120 }}>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 148 }}>
                                 StatusChip
                             </Typography>
                             <StatusChip status="active" />
@@ -1326,7 +1342,15 @@ export const Guide = () => {
                             <StatusChip status="expired" />
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" sx={{ width: 120 }}>
+                            <Typography variant="subtitle2" sx={{ width: 148 }}>
+                                ServerChip
+                            </Typography>
+                            <ServerChip state="local" />
+                            <ServerChip state="dev" />
+                            <ServerChip state="stage" />
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" sx={{ width: 148 }}>
                                 FavoriteButton
                             </Typography>
                             <FavoriteButton />
