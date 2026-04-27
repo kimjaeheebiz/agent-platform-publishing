@@ -681,24 +681,45 @@ export const Guide = () => {
                     <Typography component="h2" variant="h4" gutterBottom>
                         Toggle Button
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                        {(['small', 'medium', 'large'] as const).map((size) => {
-                            const [value, setValue] = toggleSizeState[size];
-                            return (
-                                <ToggleButtonGroup
-                                    key={size}
-                                    size={size}
-                                    value={value}
-                                    exclusive
-                                    onChange={(e, v) => v && setValue(v)}
-                                >
-                                    <ToggleButton value="left">{sizeToLabel[size]}</ToggleButton>
-                                    <ToggleButton value="center">{sizeToLabel[size]}</ToggleButton>
-                                    <ToggleButton value="right">{sizeToLabel[size]}</ToggleButton>
-                                </ToggleButtonGroup>
-                            );
-                        })}
-                    </Box>
+                    <Stack direction="column" spacing={1}>
+                        <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+                            {(['small', 'medium', 'large'] as const).map((size) => {
+                                const [value, setValue] = toggleSizeState[size];
+                                return (
+                                    <ToggleButtonGroup
+                                        key={`default-${size}`}
+                                        size={size}
+                                        value={value}
+                                        exclusive
+                                        onChange={(e, v) => v && setValue(v)}
+                                    >
+                                        <ToggleButton value="left">{sizeToLabel[size]}</ToggleButton>
+                                        <ToggleButton value="center">{sizeToLabel[size]}</ToggleButton>
+                                        <ToggleButton value="right">{sizeToLabel[size]}</ToggleButton>
+                                    </ToggleButtonGroup>
+                                );
+                            })}
+                        </Stack>
+                        <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+                            {(['small', 'medium', 'large'] as const).map((size) => {
+                                const [value, setValue] = toggleSizeState[size];
+                                return (
+                                    <ToggleButtonGroup
+                                        key={`primary-${size}`}
+                                        color="primary"
+                                        size={size}
+                                        value={value}
+                                        exclusive
+                                        onChange={(e, v) => v && setValue(v)}
+                                    >
+                                        <ToggleButton value="left">{sizeToLabel[size]}</ToggleButton>
+                                        <ToggleButton value="center">{sizeToLabel[size]}</ToggleButton>
+                                        <ToggleButton value="right">{sizeToLabel[size]}</ToggleButton>
+                                    </ToggleButtonGroup>
+                                );
+                            })}
+                        </Stack>
+                    </Stack>
                 </Box>
 
                 {/* Chip & Avatar */}
@@ -1320,6 +1341,17 @@ export const Guide = () => {
                             <Typography variant="subtitle2" sx={{ width: 140 }}>
                                 FilterToggleGroup
                             </Typography>
+                            <Typography variant="subtitle2">default</Typography>
+                            <FilterToggleGroup
+                                options={[
+                                    { value: 'all', label: '전체', count: 100 },
+                                    { value: 'filter1', label: '필터명 1', count: 99 },
+                                    { value: 'filter2', label: '필터명 2', count: 1 },
+                                ]}
+                                value={filterToggleValue}
+                                onChange={setFilterToggleValue}
+                            />
+                            <Typography variant="subtitle2">small</Typography>
                             <FilterToggleGroup
                                 options={[
                                     { value: 'all', label: '전체', count: 100 },
