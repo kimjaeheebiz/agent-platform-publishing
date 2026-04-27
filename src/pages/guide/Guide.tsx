@@ -509,20 +509,73 @@ export const Guide = () => {
                     <Typography component="h2" variant="h4" gutterBottom>
                         Typography
                     </Typography>
-                    <Typography variant="h1">Heading 1</Typography>
-                    <Typography variant="h2">Heading 2</Typography>
-                    <Typography variant="h3">Heading 3</Typography>
-                    <Typography variant="h4">Heading 4</Typography>
-                    <Typography variant="h5">Heading 5</Typography>
-                    <Typography variant="h6">Heading 6</Typography>
-                    <Typography variant="subtitle1">Subtitle 1</Typography>
-                    <Typography variant="subtitle2">Subtitle 2</Typography>
-                    <Typography variant="body1">Body 1</Typography>
-                    <Typography variant="body2">Body 2</Typography>
-                    <Typography variant="caption">Caption</Typography>
-                    {` `}
-                    <Typography variant="overline">Overline</Typography>
-                    <Typography variant="inherit">Inherit</Typography>
+                    <Stack direction="column">
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="h1" minWidth={100}>h1</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">3.75rem(60px) / 600</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="h2" minWidth={100}>h2</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">2.125rem(34px) / 600</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="h3" minWidth={100}>h3</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">1.5rem(24px) / 600</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="h4" minWidth={100}>h4</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">1.25rem(20px) / 600</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="h5" minWidth={100}>h5</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">1rem(16px) / 600</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="h6" minWidth={100}>h6</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">0.875rem(14px) / 600</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="subtitle1" minWidth={100}>subtitle1</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">1rem(16px) / 500</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="subtitle2" minWidth={100}>subtitle2</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">0.875rem(14px) / 500</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="body1" minWidth={100}>body1</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">0.875rem(14px) / 400</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="body2" minWidth={100}>body2</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">0.8125rem(13px) / 400</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="caption" minWidth={100}>caption</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">0.75rem(12px) / 400</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="overline" minWidth={100}>overline</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">0.75rem(12px) / 400 / uppercase</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <Typography variant="inherit" minWidth={100}>inherit</Typography>
+                            <Typography variant="body2" component="span" color="text.secondary">부모 스타일 상속</Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} paddingTop={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={92}>Color</Typography>
+                            <Typography color="primary">primary</Typography>
+                            <Typography color="secondary">secondary</Typography>
+                            <Typography color="success">success</Typography>
+                            <Typography color="error">error</Typography>
+                            <Typography color="warning">warning</Typography>
+                            <Typography color="info">info</Typography>
+                            <Typography>default</Typography>
+                            <Typography color="text.main">text.main(default)</Typography>
+                            <Typography color="text.secondary">text.secondary</Typography>
+                            <Typography color="text.disabled">text.disabled</Typography>
+                        </Stack>
+                    </Stack>
                 </Box>
 
                 {/* Button */}
