@@ -32,7 +32,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#00000066",
+      "$value": "#0000006b",
       "$description": "Reflects the text.disabled variable from the theme object"
     },
     "_states": {
