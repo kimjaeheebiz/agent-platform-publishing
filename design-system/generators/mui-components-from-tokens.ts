@@ -33,7 +33,8 @@ export const MUI_TYPO_SLOT_MAPPINGS: readonly TypoSlotMapping[] = [
     { muiComponent: 'MuiChip', styleOverrideSlot: 'label', tokenPath: ['chip', 'label'] },
     { muiComponent: 'MuiTooltip', styleOverrideSlot: 'tooltip', tokenPath: ['tooltip', 'label'] },
     { muiComponent: 'MuiBadge', styleOverrideSlot: 'badge', tokenPath: ['badge', 'label'] },
-    { muiComponent: 'MuiAlert', styleOverrideSlot: 'message', tokenPath: ['alert', 'title'] },
+    { muiComponent: 'MuiAlert', styleOverrideSlot: 'message', tokenPath: ['alert', 'description'] },
+    { muiComponent: 'MuiAlertTitle', styleOverrideSlot: 'root', tokenPath: ['alert', 'title'] },
     // TextField는 MUI에서 `MuiTextField` 슬롯이 root뿐이라 label/input/helperText styleOverrides는 DOM에 안 붙음.
     // 실제 입력은 OutlinedInput / FilledInput / Input, 라벨은 InputLabel, 도움말은 FormHelperText.
     // InputLabel 타이포는 `applyInputLabelTypography`(value / valueLarge / shrink용 label)에서 처리.

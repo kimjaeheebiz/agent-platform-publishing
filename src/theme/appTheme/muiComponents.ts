@@ -9,7 +9,8 @@ import {
 /**
  * 앱 전역 MUI `components` — 한 파일에서 문서와 동일한 형태로 관리합니다.
  *
- * - **토큰 테마** (`theme.light.json` 등): 피그마/Token Studio → `npm run build:theme` → `generated/mergedMuiThemeOptions.ts` 에 병합
+ * - **토큰 테마** (`theme.light.json` 등): 피그마/Token Studio → `npm run build:theme` → `generated/mergedMuiThemeOptions.ts` 로 출력 후 `appComponents`와 병합.
+ * - **컴포넌트 커스텀**: `appComponents`는 본 파일만 수정 — 생성된 `mergedMuiThemeOptions.ts`는 직접 편집하지 않음.
  * - **팔레트 의존 색**: 정적 객체 한계로 `__CHIP_*` / `__PALETTE_*` 문자열 사용 → 치환 규칙은 `palettePlaceholderReplacements.ts`
  * - **컨트롤 높이·입력 세로 패딩·라벨 transform·body2**: `constants.ts` 의 `CONTROL_HEIGHT_BY_SIZE`, `INPUT_PADDING_BLOCK`, `INPUT_LABEL_TRANSFORM`, `TYPOGRAPHY_BODY2`
  *
@@ -63,6 +64,19 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
                     color: '__CHIP_SUCCESS_FG__',
                     '& .MuiChip-icon, & .MuiChip-deleteIcon': { color: '__CHIP_SUCCESS_FG__' },
                 },
+            },
+        },
+    },
+
+    /**
+     * Alert — 아이콘 래퍼 세로 패딩 (MUI 기본 `7px 0` → `6px 0`).
+     *
+     * @see https://mui.com/material-ui/api/alert/
+     */
+    MuiAlert: {
+        styleOverrides: {
+            icon: {
+                padding: '6px 0',
             },
         },
     },
@@ -419,6 +433,13 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
             root: {
                 ...BBS,
             },
+            /** 아이콘-라벨 간격: MUI 기본 8px → 4px */
+            startIcon: {
+                marginRight: '4px',
+            },
+            endIcon: {
+                marginLeft: '4px',
+            },
         },
     },
 
@@ -494,28 +515,27 @@ export const appComponents: NonNullable<ThemeOptions['components']> = {
         },
     },
 
-    
     /**
-     * Dialog
+     * Dialog — [MUI Dialog](https://mui.com/material-ui/react-dialog/)
      */
     MuiDialogTitle: {
         styleOverrides: {
             root: {
                 fontSize: '18px',
+                paddingTop: '24px',
+                '&:has(+ .MuiDialogContent-dividers)': {
+                    paddingTop: '16px',
+                },
             },
         },
-    },
-    MuiDialogContent: {
-        styleOverrides: {
-            root: {
-                padding: '24px',
-            },
-      },
     },
     MuiDialogActions: {
         styleOverrides: {
             root: {
-                padding: '12px 24px',
+                padding: '0 24px 24px',
+                '.MuiDialogContent-dividers ~ &': {
+                    padding: '16px 24px',
+                },
             },
         },
     },

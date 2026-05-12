@@ -790,7 +790,7 @@
     },
     "14": {
       "$type": "lineHeights",
-      "$value": "143%"
+      "$value": "140%"
     },
     "15": {
       "$type": "lineHeights",
@@ -968,7 +968,7 @@
     },
     "1": {
       "$type": "letterSpacing",
-      "$value": 0.15
+      "$value": "0%"
     },
     "2": {
       "$type": "letterSpacing",
@@ -1314,9 +1314,9 @@
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
+        "fontWeight": "{fontWeights.pretendard-variable-0}",
         "lineHeight": "{lineHeights.6}",
-        "fontSize": "{fontSize.5}",
+        "fontSize": "{fontSize.3}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1328,10 +1328,10 @@
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
+        "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.14}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.1}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -1601,7 +1601,7 @@
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.1}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -1766,8 +1766,17 @@
     "MuiAlert": {
       "styleOverrides": {
         "message": {
-          "fontSize": "1rem",
-          "fontWeight": 500,
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.4
+        }
+      }
+    },
+    "MuiAlertTitle": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "0.875rem",
+          "fontWeight": 600,
           "lineHeight": 1.5
         }
       }
@@ -2145,7 +2154,7 @@
     "text": {
       "primary": "#212121",
       "secondary": "#00000099",
-      "disabled": "#00000066"
+      "disabled": "#0000006b"
     },
     "background": {
       "default": "#ffffff",

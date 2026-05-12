@@ -78,7 +78,21 @@ import {
     ListItemText as ListItemTextComponent,
     useTheme,
 } from '@mui/material';
-import { Add, Search, Star, Settings, Person, Delete, Edit, Share, Home, Work, School } from '@mui/icons-material';
+import {
+    Add,
+    Search,
+    Star,
+    Settings,
+    Person,
+    Delete,
+    Edit,
+    Share,
+    Home,
+    Work,
+    School,
+    ChevronLeft,
+    ChevronRight,
+} from '@mui/icons-material';
 import { StatusChip, ServerChip, FavoriteButton, FilterToggleGroup, Brand } from '@/components';
 
 export const Guide = () => {
@@ -511,59 +525,59 @@ export const Guide = () => {
                     </Typography>
                     <Stack direction="column">
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h1" minWidth={100}>h1</Typography>
+                            <Typography variant="h1" minWidth={120}>h1</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">3.75rem(60px) / 600</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h2" minWidth={100}>h2</Typography>
+                            <Typography variant="h2" minWidth={120}>h2</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">2.125rem(34px) / 600</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h3" minWidth={100}>h3</Typography>
+                            <Typography variant="h3" minWidth={120}>h3</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">1.5rem(24px) / 600</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h4" minWidth={100}>h4</Typography>
+                            <Typography variant="h4" minWidth={120}>h4</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">1.25rem(20px) / 600</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h5" minWidth={100}>h5</Typography>
+                            <Typography variant="h5" minWidth={120}>h5</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">1rem(16px) / 600</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="h6" minWidth={100}>h6</Typography>
+                            <Typography variant="h6" minWidth={120}>h6</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">0.875rem(14px) / 600</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="subtitle1" minWidth={100}>subtitle1</Typography>
+                            <Typography variant="subtitle1" minWidth={120}>subtitle1</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">1rem(16px) / 500</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>subtitle2</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>subtitle2</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">0.875rem(14px) / 500</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="body1" minWidth={100}>body1</Typography>
+                            <Typography variant="body1" minWidth={120}>body1</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">0.875rem(14px) / 400</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="body2" minWidth={100}>body2</Typography>
+                            <Typography variant="body2" minWidth={120}>body2</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">0.8125rem(13px) / 400</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="caption" minWidth={100}>caption</Typography>
+                            <Typography variant="caption" minWidth={120}>caption</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">0.75rem(12px) / 400</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="overline" minWidth={100}>overline</Typography>
+                            <Typography variant="overline" minWidth={120}>overline</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">0.75rem(12px) / 400 / uppercase</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center">
-                            <Typography variant="inherit" minWidth={100}>inherit</Typography>
+                            <Typography variant="inherit" minWidth={120}>inherit</Typography>
                             <Typography variant="body2" component="span" color="text.secondary">부모 스타일 상속</Typography>
                         </Stack>
                         <Stack direction="row" spacing={1} paddingTop={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={92}>Color</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>Color</Typography>
                             <Typography color="primary">primary</Typography>
                             <Typography color="secondary">secondary</Typography>
                             <Typography color="success">success</Typography>
@@ -585,19 +599,43 @@ export const Guide = () => {
                     </Typography>
                     <Stack direction="column" spacing={1}>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>variant</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>variant</Typography>
                             <Button variant="text">Text(Default)</Button>
                             <Button variant="contained">Contained</Button>
                             <Button variant="outlined">Outlined</Button>
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>disabled</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>disabled</Typography>
                             <Button variant="text" disabled>Text(Default)</Button>
                             <Button variant="contained" disabled>Contained</Button>
                             <Button variant="outlined" disabled>Outlined</Button>
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>color</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>color(text)</Typography>
+                            <Button variant="text" color="primary">
+                                Primary
+                            </Button>
+                            <Button variant="text" color="secondary">
+                                Secondary
+                            </Button>
+                            <Button variant="text" color="success">
+                                Success
+                            </Button>
+                            <Button variant="text" color="error">
+                                Error
+                            </Button>
+                            <Button variant="text" color="warning">
+                                Warning
+                            </Button>
+                            <Button variant="text" color="info">
+                                Info
+                            </Button>
+                            <Button variant="text" color="inherit">
+                                Inherit
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={120}>color(contained)</Typography>
                             <Button variant="contained" color="primary">
                                 Primary
                             </Button>
@@ -616,9 +654,36 @@ export const Guide = () => {
                             <Button variant="contained" color="info">
                                 Info
                             </Button>
+                            <Button variant="contained" color="inherit">
+                                Inherit
+                            </Button>
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>icon</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>color(outlined)</Typography>
+                            <Button variant="outlined" color="primary">
+                                Primary
+                            </Button>
+                            <Button variant="outlined" color="secondary">
+                                Secondary
+                            </Button>
+                            <Button variant="outlined" color="success">
+                                Success
+                            </Button>
+                            <Button variant="outlined" color="error">
+                                Error
+                            </Button>
+                            <Button variant="outlined" color="warning">
+                                Warning
+                            </Button>
+                            <Button variant="outlined" color="info">
+                                Info
+                            </Button>
+                            <Button variant="outlined" color="inherit">
+                                Inherit
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={120}>icon</Typography>
                             <Button variant="contained" startIcon={<Add />}>
                                 Add
                             </Button>
@@ -627,14 +692,14 @@ export const Guide = () => {
                             </Button>
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>size(text)</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>size(text)</Typography>
                             <Button size="xsmall">Extra Small</Button>
                             <Button size="small">Small</Button>
                             <Button>Medium(Default)</Button>
                             <Button size="large">Large</Button>
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>size(contained)</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>size(contained)</Typography>
                             <Button variant="contained" size="xsmall">
                                 Extra Small
                             </Button>
@@ -647,7 +712,7 @@ export const Guide = () => {
                             </Button>
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle2" minWidth={100}>size(outlined)</Typography>
+                            <Typography variant="subtitle2" minWidth={120}>size(outlined)</Typography>
                             <Button variant="outlined" size="xsmall">
                                 Extra Small
                             </Button>
@@ -656,6 +721,40 @@ export const Guide = () => {
                             </Button>
                             <Button variant="outlined">Medium(Default)</Button>
                             <Button variant="outlined" size="large">
+                                Large
+                            </Button>
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="subtitle2" minWidth={120}>size(add icon)</Typography>
+                            <Button
+                                variant="outlined"
+                                size="xsmall"
+                                startIcon={<ChevronLeft fontSize="inherit" />}
+                                endIcon={<ChevronRight fontSize="inherit" />}
+                            >
+                                Extra Small
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<ChevronLeft fontSize="inherit" />}
+                                endIcon={<ChevronRight fontSize="inherit" />}
+                            >
+                                Small
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                startIcon={<ChevronLeft fontSize="inherit" />}
+                                endIcon={<ChevronRight fontSize="inherit" />}
+                            >
+                                Medium(Default)
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                startIcon={<ChevronLeft fontSize="inherit" />}
+                                endIcon={<ChevronRight fontSize="inherit" />}
+                            >
                                 Large
                             </Button>
                         </Stack>
@@ -1210,6 +1309,12 @@ export const Guide = () => {
                             <Alert severity="error">
                                 <AlertTitle>Error</AlertTitle>
                                 This is an error alert with title!
+                            </Alert>
+                        </Grid>
+                        <Grid size={3}>
+                            <Alert severity="success">
+                                <AlertTitle>Success</AlertTitle>
+                                This is a success Alert with an encouraging title.
                             </Alert>
                         </Grid>
                     </Grid>

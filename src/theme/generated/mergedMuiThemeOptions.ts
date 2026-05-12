@@ -807,7 +807,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "14": {
       "$type": "lineHeights",
-      "$value": "143%"
+      "$value": "140%"
     },
     "15": {
       "$type": "lineHeights",
@@ -985,7 +985,7 @@ export const lightThemeOptions: ThemeOptions = {
     },
     "1": {
       "$type": "letterSpacing",
-      "$value": 0.15
+      "$value": "0%"
     },
     "2": {
       "$type": "letterSpacing",
@@ -1331,9 +1331,9 @@ export const lightThemeOptions: ThemeOptions = {
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
+        "fontWeight": "{fontWeights.pretendard-variable-0}",
         "lineHeight": "{lineHeights.6}",
-        "fontSize": "{fontSize.5}",
+        "fontSize": "{fontSize.3}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -1345,10 +1345,10 @@ export const lightThemeOptions: ThemeOptions = {
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
+        "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.14}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.1}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -1618,7 +1618,7 @@ export const lightThemeOptions: ThemeOptions = {
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.1}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -1827,8 +1827,20 @@ export const lightThemeOptions: ThemeOptions = {
     "MuiAlert": {
       "styleOverrides": {
         "message": {
-          "fontSize": "1rem",
-          "fontWeight": 500,
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.4
+        },
+        "icon": {
+          "padding": "6px 0"
+        }
+      }
+    },
+    "MuiAlertTitle": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "0.875rem",
+          "fontWeight": 600,
           "lineHeight": 1.5
         }
       }
@@ -2296,6 +2308,12 @@ export const lightThemeOptions: ThemeOptions = {
           "&.Mui-focusVisible": {
             "boxShadow": "none"
           }
+        },
+        "startIcon": {
+          "marginRight": "4px"
+        },
+        "endIcon": {
+          "marginLeft": "4px"
         }
       }
     },
@@ -2463,21 +2481,21 @@ export const lightThemeOptions: ThemeOptions = {
     "MuiDialogTitle": {
       "styleOverrides": {
         "root": {
-          "fontSize": "18px"
-        }
-      }
-    },
-    "MuiDialogContent": {
-      "styleOverrides": {
-        "root": {
-          "padding": "24px"
+          "fontSize": "18px",
+          "paddingTop": "24px",
+          "&:has(+ .MuiDialogContent-dividers)": {
+            "paddingTop": "16px"
+          }
         }
       }
     },
     "MuiDialogActions": {
       "styleOverrides": {
         "root": {
-          "padding": "12px 24px"
+          "padding": "0 24px 24px",
+          ".MuiDialogContent-dividers ~ &": {
+            "padding": "16px 24px"
+          }
         }
       }
     }
@@ -2659,7 +2677,7 @@ export const lightThemeOptions: ThemeOptions = {
     "text": {
       "primary": "#212121",
       "secondary": "#00000099",
-      "disabled": "#00000066"
+      "disabled": "#0000006b"
     },
     "background": {
       "default": "#ffffff",
@@ -3565,7 +3583,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "14": {
       "$type": "lineHeights",
-      "$value": "143%"
+      "$value": "140%"
     },
     "15": {
       "$type": "lineHeights",
@@ -3743,7 +3761,7 @@ export const darkThemeOptions: ThemeOptions = {
     },
     "1": {
       "$type": "letterSpacing",
-      "$value": 0.15
+      "$value": "0%"
     },
     "2": {
       "$type": "letterSpacing",
@@ -4089,9 +4107,9 @@ export const darkThemeOptions: ThemeOptions = {
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
+        "fontWeight": "{fontWeights.pretendard-variable-0}",
         "lineHeight": "{lineHeights.6}",
-        "fontSize": "{fontSize.5}",
+        "fontSize": "{fontSize.3}",
         "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
@@ -4103,10 +4121,10 @@ export const darkThemeOptions: ThemeOptions = {
       "$type": "typography",
       "$value": {
         "fontFamily": "{fontFamily.primary}",
-        "fontWeight": "{fontWeights.pretendard-variable-2}",
+        "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.14}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.1}",
+        "letterSpacing": "{letterSpacing.0}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -4376,7 +4394,7 @@ export const darkThemeOptions: ThemeOptions = {
         "fontWeight": "{fontWeights.pretendard-variable-1}",
         "lineHeight": "{lineHeights.18}",
         "fontSize": "{fontSize.2}",
-        "letterSpacing": "{letterSpacing.2}",
+        "letterSpacing": "{letterSpacing.1}",
         "paragraphSpacing": "{paragraphSpacing.0}",
         "paragraphIndent": "{paragraphIndent.0}",
         "textCase": "{textCase.none}",
@@ -4585,8 +4603,20 @@ export const darkThemeOptions: ThemeOptions = {
     "MuiAlert": {
       "styleOverrides": {
         "message": {
-          "fontSize": "1rem",
-          "fontWeight": 500,
+          "fontSize": "0.8125rem",
+          "fontWeight": 400,
+          "lineHeight": 1.4
+        },
+        "icon": {
+          "padding": "6px 0"
+        }
+      }
+    },
+    "MuiAlertTitle": {
+      "styleOverrides": {
+        "root": {
+          "fontSize": "0.875rem",
+          "fontWeight": 600,
           "lineHeight": 1.5
         }
       }
@@ -5054,6 +5084,12 @@ export const darkThemeOptions: ThemeOptions = {
           "&.Mui-focusVisible": {
             "boxShadow": "none"
           }
+        },
+        "startIcon": {
+          "marginRight": "4px"
+        },
+        "endIcon": {
+          "marginLeft": "4px"
         }
       }
     },
@@ -5221,21 +5257,21 @@ export const darkThemeOptions: ThemeOptions = {
     "MuiDialogTitle": {
       "styleOverrides": {
         "root": {
-          "fontSize": "18px"
-        }
-      }
-    },
-    "MuiDialogContent": {
-      "styleOverrides": {
-        "root": {
-          "padding": "24px"
+          "fontSize": "18px",
+          "paddingTop": "24px",
+          "&:has(+ .MuiDialogContent-dividers)": {
+            "paddingTop": "16px"
+          }
         }
       }
     },
     "MuiDialogActions": {
       "styleOverrides": {
         "root": {
-          "padding": "12px 24px"
+          "padding": "0 24px 24px",
+          ".MuiDialogContent-dividers ~ &": {
+            "padding": "16px 24px"
+          }
         }
       }
     }
@@ -5417,7 +5453,7 @@ export const darkThemeOptions: ThemeOptions = {
     "text": {
       "primary": "#ffffff",
       "secondary": "#ffffff99",
-      "disabled": "#ffffff66"
+      "disabled": "#ffffff6b"
     },
     "background": {
       "default": "#212121",
