@@ -1908,13 +1908,13 @@ export const lightThemeOptions: ThemeOptions = {
             "transform": "translate(0, 0px) scale(1)"
           },
           "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
-            "transform": "translate(14px, 7px) scale(1)"
+            "transform": "translate(14px, 6px) scale(1)"
           },
           "&.MuiInputLabel-standard": {
             "transform": "translate(0, 10px) scale(1)"
           },
           "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled": {
-            "transform": "translate(14px, 5px) scale(1)"
+            "transform": "translate(14px, 3px) scale(1)"
           },
           "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard": {
             "transform": "translate(0, 9px) scale(1)"
@@ -1926,7 +1926,7 @@ export const lightThemeOptions: ThemeOptions = {
               },
               "style": {
                 "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 5px) scale(1)"
+                  "transform": "translate(14px, 3px) scale(1)"
                 },
                 "&.MuiInputLabel-standard": {
                   "transform": "translate(0, 9px) scale(1)"
@@ -1939,7 +1939,7 @@ export const lightThemeOptions: ThemeOptions = {
               },
               "style": {
                 "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 10px) scale(1)"
+                  "transform": "translate(14px, 9px) scale(1)"
                 },
                 "&.MuiInputLabel-standard": {
                   "transform": "translate(0, 14px) scale(1)"
@@ -1963,7 +1963,7 @@ export const lightThemeOptions: ThemeOptions = {
               "fontSize": "0.9375rem",
               "fontWeight": 400,
               "lineHeight": "24px",
-              "paddingBlock": "10px",
+              "paddingBlock": "9px",
               "height": "auto"
             },
             "minHeight": "42px"
@@ -1971,14 +1971,14 @@ export const lightThemeOptions: ThemeOptions = {
           "&.MuiInputBase-sizeSmall": {
             "minHeight": "30px",
             "& .MuiOutlinedInput-input": {
-              "paddingBlock": "5px",
+              "paddingBlock": "3px",
               "height": "auto"
             }
           },
           "&.MuiInputBase-sizeMedium": {
             "minHeight": "36px",
             "& .MuiOutlinedInput-input": {
-              "paddingBlock": "7px",
+              "paddingBlock": "6px",
               "height": "auto"
             }
           },
@@ -1994,7 +1994,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "30px",
                 "& .MuiOutlinedInput-input": {
-                  "paddingBlock": "5px",
+                  "paddingBlock": "3px",
                   "height": "auto"
                 }
               }
@@ -2006,7 +2006,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "36px",
                 "& .MuiOutlinedInput-input": {
-                  "paddingBlock": "7px",
+                  "paddingBlock": "6px",
                   "height": "auto"
                 }
               }
@@ -2018,7 +2018,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "42px",
                 "& .MuiOutlinedInput-input": {
-                  "paddingBlock": "10px",
+                  "paddingBlock": "9px",
                   "height": "auto"
                 }
               }
@@ -2055,7 +2055,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "30px",
                 "& .MuiFilledInput-input": {
-                  "paddingBlock": "5px",
+                  "paddingBlock": "3px",
                   "height": "auto"
                 }
               }
@@ -2067,7 +2067,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "36px",
                 "& .MuiFilledInput-input": {
-                  "paddingBlock": "7px",
+                  "paddingBlock": "6px",
                   "height": "auto"
                 }
               }
@@ -2079,7 +2079,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "42px",
                 "& .MuiFilledInput-input": {
-                  "paddingBlock": "10px",
+                  "paddingBlock": "9px",
                   "height": "auto"
                 }
               }
@@ -2111,7 +2111,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "30px",
                 "& .MuiInput-input": {
-                  "paddingBlock": "5px",
+                  "paddingBlock": "3px",
                   "height": "auto"
                 }
               }
@@ -2123,7 +2123,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "36px",
                 "& .MuiInput-input": {
-                  "paddingBlock": "7px",
+                  "paddingBlock": "6px",
                   "height": "auto"
                 }
               }
@@ -2135,7 +2135,7 @@ export const lightThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "42px",
                 "& .MuiInput-input": {
-                  "paddingBlock": "10px",
+                  "paddingBlock": "9px",
                   "height": "auto"
                 }
               }
@@ -2157,7 +2157,7 @@ export const lightThemeOptions: ThemeOptions = {
               },
               "style": {
                 "minHeight": "30px",
-                "paddingBlock": "5px"
+                "paddingBlock": "3px"
               }
             },
             {
@@ -2166,7 +2166,7 @@ export const lightThemeOptions: ThemeOptions = {
               },
               "style": {
                 "minHeight": "36px",
-                "paddingBlock": "7px"
+                "paddingBlock": "6px"
               }
             },
             {
@@ -2175,7 +2175,7 @@ export const lightThemeOptions: ThemeOptions = {
               },
               "style": {
                 "minHeight": "42px",
-                "paddingBlock": "10px"
+                "paddingBlock": "9px"
               }
             }
           ]
@@ -4684,13 +4684,13 @@ export const darkThemeOptions: ThemeOptions = {
             "transform": "translate(0, 0px) scale(1)"
           },
           "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
-            "transform": "translate(14px, 7px) scale(1)"
+            "transform": "translate(14px, 6px) scale(1)"
           },
           "&.MuiInputLabel-standard": {
             "transform": "translate(0, 10px) scale(1)"
           },
           "&.MuiInputLabel-sizeSmall.MuiInputLabel-outlined, &.MuiInputLabel-sizeSmall.MuiInputLabel-filled": {
-            "transform": "translate(14px, 5px) scale(1)"
+            "transform": "translate(14px, 3px) scale(1)"
           },
           "&.MuiInputLabel-sizeSmall.MuiInputLabel-standard": {
             "transform": "translate(0, 9px) scale(1)"
@@ -4702,7 +4702,7 @@ export const darkThemeOptions: ThemeOptions = {
               },
               "style": {
                 "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 5px) scale(1)"
+                  "transform": "translate(14px, 3px) scale(1)"
                 },
                 "&.MuiInputLabel-standard": {
                   "transform": "translate(0, 9px) scale(1)"
@@ -4715,7 +4715,7 @@ export const darkThemeOptions: ThemeOptions = {
               },
               "style": {
                 "&.MuiInputLabel-outlined, &.MuiInputLabel-filled": {
-                  "transform": "translate(14px, 10px) scale(1)"
+                  "transform": "translate(14px, 9px) scale(1)"
                 },
                 "&.MuiInputLabel-standard": {
                   "transform": "translate(0, 14px) scale(1)"
@@ -4739,7 +4739,7 @@ export const darkThemeOptions: ThemeOptions = {
               "fontSize": "0.9375rem",
               "fontWeight": 400,
               "lineHeight": "24px",
-              "paddingBlock": "10px",
+              "paddingBlock": "9px",
               "height": "auto"
             },
             "minHeight": "42px"
@@ -4747,14 +4747,14 @@ export const darkThemeOptions: ThemeOptions = {
           "&.MuiInputBase-sizeSmall": {
             "minHeight": "30px",
             "& .MuiOutlinedInput-input": {
-              "paddingBlock": "5px",
+              "paddingBlock": "3px",
               "height": "auto"
             }
           },
           "&.MuiInputBase-sizeMedium": {
             "minHeight": "36px",
             "& .MuiOutlinedInput-input": {
-              "paddingBlock": "7px",
+              "paddingBlock": "6px",
               "height": "auto"
             }
           },
@@ -4770,7 +4770,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "30px",
                 "& .MuiOutlinedInput-input": {
-                  "paddingBlock": "5px",
+                  "paddingBlock": "3px",
                   "height": "auto"
                 }
               }
@@ -4782,7 +4782,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "36px",
                 "& .MuiOutlinedInput-input": {
-                  "paddingBlock": "7px",
+                  "paddingBlock": "6px",
                   "height": "auto"
                 }
               }
@@ -4794,7 +4794,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "42px",
                 "& .MuiOutlinedInput-input": {
-                  "paddingBlock": "10px",
+                  "paddingBlock": "9px",
                   "height": "auto"
                 }
               }
@@ -4831,7 +4831,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "30px",
                 "& .MuiFilledInput-input": {
-                  "paddingBlock": "5px",
+                  "paddingBlock": "3px",
                   "height": "auto"
                 }
               }
@@ -4843,7 +4843,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "36px",
                 "& .MuiFilledInput-input": {
-                  "paddingBlock": "7px",
+                  "paddingBlock": "6px",
                   "height": "auto"
                 }
               }
@@ -4855,7 +4855,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "42px",
                 "& .MuiFilledInput-input": {
-                  "paddingBlock": "10px",
+                  "paddingBlock": "9px",
                   "height": "auto"
                 }
               }
@@ -4887,7 +4887,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "30px",
                 "& .MuiInput-input": {
-                  "paddingBlock": "5px",
+                  "paddingBlock": "3px",
                   "height": "auto"
                 }
               }
@@ -4899,7 +4899,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "36px",
                 "& .MuiInput-input": {
-                  "paddingBlock": "7px",
+                  "paddingBlock": "6px",
                   "height": "auto"
                 }
               }
@@ -4911,7 +4911,7 @@ export const darkThemeOptions: ThemeOptions = {
               "style": {
                 "minHeight": "42px",
                 "& .MuiInput-input": {
-                  "paddingBlock": "10px",
+                  "paddingBlock": "9px",
                   "height": "auto"
                 }
               }
@@ -4933,7 +4933,7 @@ export const darkThemeOptions: ThemeOptions = {
               },
               "style": {
                 "minHeight": "30px",
-                "paddingBlock": "5px"
+                "paddingBlock": "3px"
               }
             },
             {
@@ -4942,7 +4942,7 @@ export const darkThemeOptions: ThemeOptions = {
               },
               "style": {
                 "minHeight": "36px",
-                "paddingBlock": "7px"
+                "paddingBlock": "6px"
               }
             },
             {
@@ -4951,7 +4951,7 @@ export const darkThemeOptions: ThemeOptions = {
               },
               "style": {
                 "minHeight": "42px",
-                "paddingBlock": "10px"
+                "paddingBlock": "9px"
               }
             }
           ]

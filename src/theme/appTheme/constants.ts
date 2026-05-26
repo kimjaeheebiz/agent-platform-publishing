@@ -26,9 +26,9 @@ export const BUTTON_BASE_STYLE = {
  * `outlinedSmall` → OutlinedInput · Select · MuiInput · MuiFilledInput 등 small 입력 공통.
  */
 export const INPUT_PADDING_BLOCK = {
-    outlinedSmall: '5px',
-    medium: '7px',
-    large: '10px',
+    outlinedSmall: '3px',
+    medium: '6px',
+    large: '9px',
 } as const;
 
 /**
@@ -41,7 +41,7 @@ export const INPUT_PADDING_BLOCK = {
  */
 export const INPUT_LABEL_TRANSFORM = {
     /** outlined / filled, size medium(기본)·미지정 */
-    outlinedFilledRest: 'translate(14px, 7px) scale(1)',
+    outlinedFilledRest: 'translate(14px, 6px) scale(1)',
     /** outlined / filled, shrink·focused */
     outlinedFilledShrink: 'translate(14px, -6px) scale(1)',
     /** standard, medium·기본 */
@@ -49,11 +49,11 @@ export const INPUT_LABEL_TRANSFORM = {
     /** standard, shrink (small shrink 동일) */
     standardShrink: 'translate(0, 0px) scale(1)',
     /** outlined / filled, size small */
-    outlinedFilledSmall: 'translate(14px, 5px) scale(1)',
+    outlinedFilledSmall: 'translate(14px, 3px) scale(1)',
     /** standard, size small */
     standardSmall: 'translate(0, 9px) scale(1)',
     /** outlined / filled, size large */
-    outlinedFilledLarge: 'translate(14px, 10px) scale(1)',
+    outlinedFilledLarge: 'translate(14px, 9px) scale(1)',
     /** standard, size large */
     standardLarge: 'translate(0, 14px) scale(1)',
 } as const;
